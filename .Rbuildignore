@@ -1,9 +1,11 @@
-^.vscode
+.vscode
 ^scripts
 ^work
 ^Makefile
 ^highs*.tar.gz
-^src/highs/build
-^src/highs/.clang-format
-^src/highs/.coin-or
-^src/highs/.github
+^src/HiGHS/build
+^src/HiGHS/.clang-format
+^src/HiGHS/.coin-or
+^src/HiGHS/.github
+^src/HiGHS/.git
+^src/HiGHS/check
