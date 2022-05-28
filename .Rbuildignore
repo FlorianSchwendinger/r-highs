@@ -1,0 +1,9 @@
+^.vscode
+^scripts
+^work
+^Makefile
+^highs*.tar.gz
+^src/highs/build
+^src/highs/.clang-format
+^src/highs/.coin-or
+^src/highs/.github

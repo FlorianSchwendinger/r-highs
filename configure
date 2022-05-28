@@ -1,0 +1,34 @@
+#!/bin/sh
+
+: ${R_HOME=`R RHOME`}
+if test -z "${R_HOME}"; then
+    echo "'R_HOME' could not be found!"
+    exit 1
+fi
+
+
+if [ -z "$(cmake --version 2>&1 | grep 'version')" ]; then
+    echo "Could not find 'cmake'!"
+    exit 1
+fi
+
+
+sed -i 's/option(BUILD_TESTING "Build Tests" ON)/option(BUILD_TESTING "Build Tests" OFF)/' src/highs/CMakeLists.txt
+
+
+RHIGHS_PKG_HOME=`pwd`
+RHIGHS_SRC_DIR=${RHIGHS_PKG_HOME}/src/highs
+RHIGHS_BUILD_DIR=${RHIGHS_SRC_DIR}/build
+RHIGHS_LIB_DIR=${RHIGHS_PKG_HOME}/src/highslib
+
+mkdir -p ${RHIGHS_BUILD_DIR}
+mkdir -p ${RHIGHS_LIB_DIR}
+cd ${RHIGHS_BUILD_DIR}
+cmake -DCMAKE_INSTALL_PREFIX=${RHIGHS_LIB_DIR} ..
+make install
+rm -rf ${RHIGHS_SRC_DIR}
+
+
+
+
+# bash src/scripts/compile.sh
