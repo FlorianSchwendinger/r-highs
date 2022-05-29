@@ -150,7 +150,7 @@ int32_t model_get_ncons(SEXP mpt) {
 Rcpp::IntegerVector model_get_vartype(SEXP mpt) {
     Rcpp::XPtr<HighsModel>model(mpt);
     IntegerVector type(model->lp_.integrality_.size());
-    for(std::size_t i = 0; i < type.size(); ++i) {
+    for (std::size_t i = 0; i < type.size(); ++i) {
         type[i] = static_cast<int32_t>(model->lp_.integrality_[i]);
     }
     return type;
