@@ -13,8 +13,7 @@ if [ -z "$(cmake --version 2>&1 | grep 'version')" ]; then
 fi
 
 
-sed -i 's/option(BUILD_TESTING "Build Tests" ON)/option(BUILD_TESTING "Build Tests" OFF)/' src/HiGHS/CMakeLists.txt
-sed -i 's/option(SHARED "Build shared libraries" ON)/option(SHARED "Build shared libraries" OFF)/' src/HiGHS/CMakeLists.txt
+cp -f src/patches/CMakeLists-win.txt src/HiGHS/CMakeLists.txt
 
 
 RHIGHS_PKG_HOME=`pwd`
