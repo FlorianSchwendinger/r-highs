@@ -7,14 +7,35 @@ if test -z "${R_HOME}"; then
 fi
 
 
-if [ -z "$(cmake --version 2>&1 | grep 'version')" ]; then
+if test -z "${MAKE}"; then MAKE=`which make` 2> /dev/null; fi
+if test -z "${MAKE}"; then MAKE=`which /Applications/Xcode.app/Contents/Developer/usr/bin/make` 2> /dev/null; fi
+
+
+if test -z "${CMAKE_EXE}"; then CMAKE_EXE=`which cmake4` 2> /dev/null; fi
+if test -z "${CMAKE_EXE}"; then CMAKE_EXE=`which cmake3` 2> /dev/null; fi
+if test -z "${CMAKE_EXE}"; then CMAKE_EXE=`which cmake2` 2> /dev/null; fi
+if test -z "${CMAKE_EXE}"; then CMAKE_EXE=`which cmake` 2> /dev/null; fi
+if test -z "${CMAKE_EXE}"; then CMAKE_EXE=`which /Applications/CMake.app/Contents/bin/cmake` 2> /dev/null; fi
+
+
+if test -z "${CMAKE_EXE}"; then
     echo "Could not find 'cmake'!"
     exit 1
 fi
 
 
-sed -i 's/option(BUILD_TESTING "Build Tests" ON)/option(BUILD_TESTING "Build Tests" OFF)/' src/HiGHS/CMakeLists.txt
-sed -i 's/option(SHARED "Build shared libraries" ON)/option(SHARED "Build shared libraries" OFF)/' src/HiGHS/CMakeLists.txt
+if test "$(uname -s)" = "Darwin"; then
+    if test "$(uname -m)" = "x86_64"; then
+        echo "Detected 'darwin' with 'M1'"
+        cp -f src/patches/CMakeLists-darwin-M1.txt src/HiGHS/CMakeLists.txt
+    else
+        echo "Detected 'darwin' without 'M1'"
+        cp -f src/patches/CMakeLists-unix.txt src/HiGHS/CMakeLists.txt
+    fi
+else
+    echo "Detected non 'darwin'"
+    cp -f src/patches/CMakeLists-unix.txt src/HiGHS/CMakeLists.txt
+fi
 
 
 RHIGHS_PKG_HOME=`pwd`
@@ -22,11 +43,21 @@ RHIGHS_SRC_DIR=${RHIGHS_PKG_HOME}/src/HiGHS
 RHIGHS_BUILD_DIR=${RHIGHS_SRC_DIR}/build
 RHIGHS_LIB_DIR=${RHIGHS_PKG_HOME}/src/highslib
 
+
+echo "MAKE: '${MAKE}'"
+echo "CMAKE: '${CMAKE_EXE}'"
+echo "RHIGHS_LIB_DIR: '${RHIGHS_LIB_DIR}'"
+
+
 mkdir -p ${RHIGHS_BUILD_DIR}
 mkdir -p ${RHIGHS_LIB_DIR}
 cd ${RHIGHS_BUILD_DIR}
-cmake -DCMAKE_INSTALL_PREFIX=${RHIGHS_LIB_DIR} ..
-make install
+${CMAKE_EXE} -DCMAKE_INSTALL_PREFIX=${RHIGHS_LIB_DIR} ..
+${MAKE} install
 rm -rf ${RHIGHS_SRC_DIR}
 
-# bash src/scripts/compile.sh
+
+if [ -z "$(ls ${RHIGHS_LIB_DIR} | grep 'include')" ]; then
+    echo "'HiGHS' libraries could not be found!"
+    exit 1
+fi

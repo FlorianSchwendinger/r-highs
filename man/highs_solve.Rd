@@ -15,7 +15,7 @@ highs_solve(
   types,
   maximum = FALSE,
   offset = 0,
-  control = list(),
+  control = list(log_to_console = FALSE),
   dry_run = FALSE
 )
 }
@@ -41,7 +41,7 @@ highs_solve(
 \code{"SI"} or \code{"4"} for semi integer and
 \code{"II"} or \code{"5"} for implicit integer.}
 
-\item{maximum}{TODO}
+\item{maximum}{a logical}
 
 \item{offset}{a numeric value giving the offset.}
 

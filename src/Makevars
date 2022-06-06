@@ -5,4 +5,4 @@ CXX_STD=CXX11
 
 
 PKG_LIBS= -Lhighslib/lib/ -lhighs
-PKG_CPPFLAGS=-Ihighslib/include
+PKG_CPPFLAGS=-Ihighslib/include -Ihighslib/include/highs
