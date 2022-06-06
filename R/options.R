@@ -2,7 +2,6 @@
 #' Available Solver Options
 #'
 #' Reference for the available solver options.
-#' The main usage is for internal reasons, that we 
 #'
 #' @returns A \code{data.frame} containing the available solver options.
 #' @examples
@@ -153,12 +152,32 @@ solver_get_options <- function(solver, keys = NULL) {
 }
 
 
+force_type <- function(obj, type) {
+    force <- list(bool = as.logical, integer = as.integer, 
+                  double = as.double, string = as.character)[[type]]
+    force(obj)
+}
+
+
+assert_type <- function(obj, type) {
+    if (type == "bool") {
+        checkmate::assert_logical(obj, len = 1L, any.missing = FALSE)
+    } else if (type == "integer") {
+        checkmate::assert_integer(obj, len = 1L, any.missing = FALSE)
+    } else if (type == "double") {
+        checkmate::assert_double(obj, len = 1L, any.missing = FALSE)
+    } else if (type == "string") {
+        checkmate::assert_string(obj)
+    } else {
+        stop("unallowed type")
+    }
+}
+
+
 solver_set_options <- function(solver, kwargs = list()) {
     if (length(kwargs) == 0) return(invisible(NULL))
     option_names <- highs_available_solver_options()
     assert_character(names(kwargs), min.len = 1L, any.missing = FALSE)
-    forcers <- list(bool = as.logical, integer = as.integer,
-                    double = as.double, string = as.character)
     m <- match(names(kwargs), option_names[["option"]])
     if (anyNA(m)) {
         stop("unknown option")
@@ -168,13 +187,11 @@ solver_set_options <- function(solver, kwargs = list()) {
     for (i in seq_along(kwargs)) {
         key <- names(kwargs)[i]
         value <- kwargs[[i]]
-        force_type <- forcers[[option_types[key]]]
-        solver_set_option(solver, key, force_type(value))
+        dtype <- option_types[key]
+        val <- force_type(value, dtype)
+        assert_type(val, dtype)
+        solver_set_option(solver, key, val)
     }
     return(invisible(NULL))
 }
 
-
-highs_options <- function(solver, ...) {
-    list(...)
-}

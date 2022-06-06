@@ -17,7 +17,7 @@ inst: build
 check: build
 	R CMD check highs*.tar.gz
 
-manual:
+manual: clean
 	R CMD Rd2pdf --output=Manual.pdf .
 
 clean:

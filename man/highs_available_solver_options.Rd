@@ -11,7 +11,6 @@ A \code{data.frame} containing the available solver options.
 }
 \description{
 Reference for the available solver options.
-The main usage is for internal reasons, that we
 }
 \examples{
 highs_available_solver_options()

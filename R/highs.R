@@ -1,86 +1,15 @@
 #' @import checkmate
 #' @importFrom Rcpp evalCpp
-#' @importFrom R6 R6Class
 #' @importFrom stats setNames
 #' @importFrom utils modifyList capture.output
 #' @useDynLib highs, .registration=TRUE
 NULL
 
 
-HighsModel <- R6::R6Class("highs_model",
-    public = list(
-        nvars = NULL,
-        ncons = NULL,
-        model = NULL,
-        initialize = function() {
-            self$model <- new_model()
-        },
-        objective = function(Q = NULL, L) {
-            assert_numeric(L, any.missing = FALSE)
-            model_set_ncol(self$model, length(L))
-            model_set_objective(model, L)
-        },
-        constraints = function(A, lhs, rhs) {
-            model_set_nrow(model, ncons)
-
-        },
-        types = function() {
-
-        },
-        bounds = function(lower, upper) {
-
-        },
-        maximum = function(sense = FALSE) {
-            model_set_sense(self$model, sense)
-        }
-    )
-)
-
-
-HighsSolver <- R6::R6Class("highs_model",
-    public = list(
-        model = NULL,
-        solver = NULL,
-        initialize = function(model) {
-            self$model <- model
-        },
-        variables_constraints = function() {
-
-        },
-        add_constraints = function() {
-
-        },
-        solve = function(control = list()) {
-
-        },
-        info = function() {
-
-        },
-        solution = function() {
-
-        },
-        status = function() {
-
-        }
-    )
-)
-
-highs_model <- function() {
-    env <- new.env()
-
-}
-
-
-highs_solver <- function(model, ...) {
-
-}
-
-
 csc_to_matrix <- function(start, index, value, nrow = max(index + 1L), ncol = length(start) - 1L) {
     stopifnot(length(index) == length(value))
     ind <- index + 1L
     M <- matrix(0, nrow, ncol)
-    i <- 3L
     for (i in seq_along(index)) {
         row_id <- ind[i]
         col_id <- min(which(start >= i) - 1L)
@@ -88,7 +17,6 @@ csc_to_matrix <- function(start, index, value, nrow = max(index + 1L), ncol = le
     }
     M
 }
-
 
 
 #' Solve an Optimization Problems
@@ -113,20 +41,39 @@ csc_to_matrix <- function(start, index, value, nrow = max(index + 1L), ncol = le
 #' @param control a list giving additional options for the solver
 #' @param dry_run a logical if true only the model is returned.
 #' @examples
-#' # Min    f  =  x_0 +  x_1 + 3
-#' # s.t.                x_1 <= 7
-#' #        5 <=  x_0 + 2x_1 <= 15
-#' #        6 <= 3x_0 + 2x_1
-#' # 0 <= x_0 <= 4; 1 <= x_1
+#' library("highs")
+#' # Minimize:
+#' #  x_0 +  x_1 + 3
+#' # Subject to:
+#' #               x_1 <=  7
+#' #  5 <=  x_0 + 2x_1 <= 15
+#' #  6 <= 3x_0 + 2x_1
+#' #  0 <= x_0 <= 4
+#' #  1 <= x_1
 #' A <- rbind(c(0, 1), c(1, 2), c(3, 2))
 #' s <- highs_solve(L = c(1.0, 1), lower = c(0, 1), upper = c(4, Inf),
 #'                  A = A, lhs = c(-Inf, 5, 6), rhs = c(7, 15, Inf),
 #'                  offset = 3)
 #' s[["objective_value"]]
+#' s[["primal_solution"]]
+#'
+#' # Minimize:
+#' #  -x_2 - 3x_3 + (1/2) * (2 x_1^2 - 2 x_1x_3 + 0.2 x_2^2 + 2 x_3^2)
+#' # Subject to:
+#' #  x_1 + x_3 <= 2
+#' #  0 <= x
+#' L <- c(0, -1, -3)
+#' Q <- rbind(c(2, 0.0, -1), c(0, 0.2, 0), c(-1, 0.0, 2))
+#' A <- cbind(1, 0, 1)
+#' s <- highs_solve(Q = Q, L = L, lower = 0, A = A, rhs = 2)
+#' s[["objective_value"]]
+#' s[["primal_solution"]]
 #' @export
 highs_solve <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types, maximum = FALSE,
-                        offset = 0, control = list(log_to_console = FALSE), dry_run = FALSE) {
+                        offset = 0, control = list(), dry_run = FALSE) {
     assert_numeric(L, any.missing = FALSE)
+    default_control <- list(log_to_console = FALSE)
+    control <- modifyList(default_control, control)
     nvars <- length(L)
     if (missing(A)) {
         A <- lhs <- rhs <- NULL
