@@ -23,3 +23,10 @@ manual:
 clean:
 	rm -f Manual.pdf README.knit.md README.html
 	rm -rf .Rd2pdf*
+
+
+check_mac_m1: build
+	R -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'macos-m1-bigsur-release')"
+
+check_mac_old: build
+	R -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'macos-highsierra-release-cran')"

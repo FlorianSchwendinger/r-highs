@@ -2,7 +2,7 @@
 #' @importFrom Rcpp evalCpp
 #' @importFrom R6 R6Class
 #' @importFrom stats setNames
-#' @importFrom utils modifyList
+#' @importFrom utils modifyList capture.output
 #' @useDynLib highs, .registration=TRUE
 NULL
 
@@ -108,7 +108,7 @@ csc_to_matrix <- function(start, index, value, nrow = max(index + 1L), ncol = le
 #'      \code{"SC"} or \code{"3"} for semi continuous,
 #'      \code{"SI"} or \code{"4"} for semi integer and
 #'      \code{"II"} or \code{"5"} for implicit integer.
-#' @param maximum TODO
+#' @param maximum a logical
 #' @param offset a numeric value giving the offset.
 #' @param control a list giving additional options for the solver
 #' @param dry_run a logical if true only the model is returned.
@@ -125,7 +125,7 @@ csc_to_matrix <- function(start, index, value, nrow = max(index + 1L), ncol = le
 #' s[["objective_value"]]
 #' @export
 highs_solve <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types, maximum = FALSE,
-                        offset = 0, control = list(), dry_run = FALSE) {
+                        offset = 0, control = list(log_to_console = FALSE), dry_run = FALSE) {
     assert_numeric(L, any.missing = FALSE)
     nvars <- length(L)
     if (missing(A)) {
@@ -150,7 +150,6 @@ highs_solve <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types, maximum =
         types <- rep.int(0L, nvars)
     } else {
         if (is.character(types)) {
-            types <- c("C", "I", "SI")
             types <- match(types, c("C", "I", "SC", "SI", "II")) - 1L
         } else {
             types <- types - 1L
@@ -190,8 +189,9 @@ highs_solve <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types, maximum =
         model_set_offset(model, offset)
     }
     if (dry_run) return(model)
-    solver <- new_solver(model)
+    capture.output(solver <- new_solver(model))
     solver_set_options(solver, control)
+
     run_status <- solver_run(solver)
     status <- solver_status(solver)
     solution <- solver_solution(solver)

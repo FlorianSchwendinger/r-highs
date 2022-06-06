@@ -133,7 +133,7 @@ highs_available_solver_options <- function() {
 
 
 solver_get_options <- function(solver, keys = NULL) {
-    assert_character(keys)
+    assert_character(keys, null.ok = TRUE)
     option_names <- highs_available_solver_options()
     getters <- list(bool = solver_get_bool_option, integer = solver_get_int_option,
                     double = solver_get_dbl_option, string = solver_get_str_option)
@@ -145,7 +145,11 @@ solver_get_options <- function(solver, keys = NULL) {
         key <- row[["option"]]
         opts[[key]] <- solver_get_option(solver, key)
     }
-    opts
+    if (length(keys) > 0L) {
+        opts[which(names(opts) %in% keys)]
+    } else {
+        opts
+    }
 }
 
 
@@ -173,5 +177,4 @@ solver_set_options <- function(solver, kwargs = list()) {
 
 highs_options <- function(solver, ...) {
     list(...)
-
 }

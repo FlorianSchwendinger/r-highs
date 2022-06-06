@@ -5,6 +5,11 @@
 using namespace Rcpp;
 
 
+static void R_message_handler(HighsLogType type, const char* message, void* log_callback_data) {
+  Rcpp::Rcout << message << std::endl;
+}
+
+
 // [[Rcpp::export]]
 SEXP new_model() {
     Rcpp::XPtr<HighsModel> highs_model(new HighsModel(), true);
@@ -160,6 +165,7 @@ Rcpp::IntegerVector model_get_vartype(SEXP mpt) {
 SEXP new_solver(SEXP mpt) {
     Rcpp::XPtr<HighsModel>model(mpt);
     Rcpp::XPtr<Highs> highs(new Highs(), true);
+    highs->setLogCallback(R_message_handler);
     HighsStatus return_status = highs->passModel(*model.get());
     if (return_status != HighsStatus::kOk) {
         return R_NilValue;
