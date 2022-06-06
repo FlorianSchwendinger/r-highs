@@ -1,4 +1,7 @@
 
+readme:
+	R -e 'rmarkdown::render("README.Rmd", clean = FALSE)'
+
 compile_attributes:
 	R -e 'Rcpp::compileAttributes(".")'
 
@@ -18,5 +21,5 @@ manual:
 	R CMD Rd2pdf --output=Manual.pdf .
 
 clean:
-	rm -f Manual.pdf
+	rm -f Manual.pdf README.knit.md README.html
 	rm -rf .Rd2pdf*

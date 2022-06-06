@@ -1,6 +1,9 @@
 .vscode
 ^scripts
 ^work
+^README.knit.md
+^README.html
+^README.Rmd
 ^Makefile
 ^highs*.tar.gz
 ^src/HiGHS/build

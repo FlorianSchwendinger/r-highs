@@ -94,15 +94,14 @@ csc_to_matrix <- function(start, index, value, nrow = max(index + 1L), ncol = le
 #' Solve an Optimization Problems
 #'
 #' Solve linear and quadratic mixed integer optimization problems.
-#' 
 #'
 #' @param Q a numeric symatric matrix giving the quadratic part of the objective.
 #' @param L a numeric vector giving the linear part of the objective function.
-#' @param lower a numeric vector 
-#' @param upper a numeric vector 
+#' @param lower a numeric vector giving the lower bounds of the variables.
+#' @param upper a numeric vector giving the upper bounds of the variables.
 #' @param A a numeric matrix giving the quadratic part of the objective.
-#' @param lhs a numeric vector 
-#' @param rhs a numeric vector 
+#' @param lhs a numeric vector giving the left hand-side of the linear constraints.
+#' @param rhs a numeric vector giving the right hand-side of the linear constraints.
 #' @param types a integer vector or character vector giving the variable types.
 #'      \code{"C"} or \code{"1"} for continuous,
 #'      \code{"I"} or \code{"2"} for integer,

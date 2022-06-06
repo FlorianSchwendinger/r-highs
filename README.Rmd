@@ -1,0 +1,81 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# **R** HIGHS Interface
+
+This repository contains an **R** interface to the **HiGHS** solver.
+The [HiGHS](https://github.com/ERGO-Code/HiGHS) solver,
+is a **high**-performance open-source **solver** for
+solving linear programming (LP), mixed-integer programming
+(MIP) and quadratic programming (QP) optimization problems.
+
+
+## Installation
+```{r, eval = FALSE}
+remotes::install_gitlab("roigrp/solver/highs")
+```
+
+
+## Basic usage
+```{r}
+library("highs")
+
+args(highs_solve)
+```
+
+
+### LP
+```{r}
+# Minimize
+#  x_0 +  x_1 + 3
+# Subject to
+#                 x_1 <= 7
+#  5 <=   x_0 + 2 x_1 <= 15
+#  6 <= 3 x_0 + 2 x_1
+#  0 <=   x_0         <= 4
+#  1 <=           x_1
+A <- rbind(c(0, 1), c(1, 2), c(3, 2))
+s <- highs_solve(L = c(1.0, 1), lower = c(0, 1), upper = c(4, Inf),
+                 A = A, lhs = c(-Inf, 5, 6), rhs = c(7, 15, Inf),
+                 offset = 3)
+str(s)
+```
+
+
+## QP
+```{r}
+# Minimize
+#  0.5 x^2 - 2 x + y
+# Subject to
+#  x <= 3
+zero <- .Machine$double.eps * 100
+Q <- rbind(c(1, 0), c(0, zero))
+L <- c(-2, 1)
+A <- t(c(1, 0))
+
+cntrl <- list(log_dev_level = 0L)
+s <- highs_solve(Q = Q, L = L, A = A, lhs = 0, rhs = 3, control = cntrl)
+str(s)
+```
+
+
+## Options
+The function `highs_available_solver_options` lists the available solver options
+```{r}
+highs_available_solver_options()
+```
+
+for additional information see the [HiGHS homepage](https://highs.dev/).	
+
