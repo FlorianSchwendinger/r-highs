@@ -3,7 +3,7 @@ Type: Package
 Title: Highs Optimization Solver
 Version: 0.1-1
 Authors@R: c(person("Florian", "Schwendinger", email = "FlorianSchwendinger@gmx.at", role = c("aut", "cre")),
-             person("Dirk", "Schumacher", role = "ctb"))
+             person("Dirk", "Schumacher", role = "aut"))
 Description: R interfact to HiGHS, an optimization solver for solving mixed intger 
         optimization problems with quadratic or linear objective and linear constraints.
 License: GPL (>= 2)
