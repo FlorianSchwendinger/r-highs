@@ -1,7 +1,7 @@
 #' @import checkmate
 #' @importFrom Rcpp evalCpp
 #' @importFrom stats setNames
-#' @importFrom utils modifyList capture.output
+#' @importFrom utils modifyList capture.output tail
 #' @useDynLib highs, .registration=TRUE
 NULL
 
@@ -75,7 +75,7 @@ highs_solve <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types, maximum =
     default_control <- list(log_to_console = FALSE)
     control <- modifyList(default_control, control)
     nvars <- length(L)
-    if (missing(A)) {
+    if (missing(A) || NROW(A) == 0L) {
         A <- lhs <- rhs <- NULL
         ncons <- 0L
     } else {
@@ -84,6 +84,7 @@ highs_solve <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types, maximum =
         ncons <- cscA[["nrow"]]
     }
     model <- new_model()
+    INF <- solver_infinity(model)
     model_set_ncol(model, nvars)
     model_set_nrow(model, ncons)
     model_set_sense(model, maximum)
@@ -93,7 +94,7 @@ highs_solve <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types, maximum =
         model_set_hessian(model, format = "square", dim = nvars,
             start = cscQ[["col_ptr"]], index = cscQ[["row_id"]], value = cscQ[["value"]])
     }
-    if (missing(types)) {
+    if (missing(types) || length(types) == 0L) {
         types <- rep.int(0L, nvars)
     } else {
         if (is.character(types)) {
@@ -104,31 +105,32 @@ highs_solve <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types, maximum =
         assert_integerish(types, lower = 0, upper = 4L, any.missing = FALSE)
         model_set_vartype(model, as.integer(types))
     }
-    if (missing(lower)) {
-        lower <- rep.int(.Machine[["double.xmin"]], nvars)
+    if (missing(lower) || length(lower) == 0L) {
+        lower <- rep.int(-INF, nvars)
     } else if (length(lower) == 1L) {
         lower <- rep.int(lower, nvars)
     }
-    if (missing(upper)) {
-        upper <- rep.int(.Machine[["double.xmax"]], nvars)
+    if (missing(upper) || length(upper) == 0L) {
+        upper <- rep.int(INF, nvars)
     } else if (length(upper) == 1L) {
         upper <- rep.int(upper, nvars)
     }
-    lower <- replace(lower, lower == -Inf, .Machine[["double.xmin"]])
-    upper <- replace(upper, upper ==  Inf, .Machine[["double.xmax"]])
+
+    lower <- replace(lower, lower == -Inf, -INF)
+    upper <- replace(upper, upper ==  Inf, INF)
     model_set_lower(model, lower)
     model_set_upper(model, upper)
     if (ncons > 0L) {
         model_set_constraint_matrix(model, "colwise",
             start = cscA[["col_ptr"]], index = cscA[["row_id"]], value = cscA[["value"]])
-        if (missing(lhs)) {
-            lhs <- rep.int(.Machine[["double.xmin"]], ncons)
+        if (missing(lhs) || length(lhs) == 0L) {
+            lhs <- rep.int(-INF, ncons)
         }
-        if (missing(rhs)) {
-            rhs <- rep.int(.Machine[["double.xmin"]], ncons)
+        if (missing(rhs) || length(rhs) == 0L) {
+            rhs <- rep.int(INF, ncons)
         }
-        lhs <- replace(lhs, lhs == -Inf, .Machine[["double.xmin"]])
-        rhs <- replace(rhs, rhs ==  Inf, .Machine[["double.xmax"]])
+        lhs <- replace(lhs, lhs == -Inf, -INF)
+        rhs <- replace(rhs, rhs ==  Inf, INF)
         model_set_lhs(model, lhs)
         model_set_rhs(model, rhs)
     }
@@ -136,13 +138,18 @@ highs_solve <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types, maximum =
         model_set_offset(model, offset)
     }
     if (dry_run) return(model)
-    capture.output(solver <- new_solver(model))
+    init_msg <- capture.output(solver <- new_solver(model))
+    if (is.null(solver)) {
+        stop(paste(tail(init_msg, -3), collapse = "\n"))
+    }
     solver_set_options(solver, control)
 
     run_status <- solver_run(solver)
     status <- solver_status(solver)
+    status_message <- solver_status_message(solver)
+
     solution <- solver_solution(solver)
     info <- solver_info(solver)
     list(primal_solution = solution[["col_value"]], objective_value = info[["objective_function_value"]],
-         status = status, solver_msg = solution, info = info)
+         status = status, status_message = status_message, solver_msg = solution, info = info)
 }

@@ -296,14 +296,36 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// solver_status_message
+std::string solver_status_message(SEXP hi);
+RcppExport SEXP _highs_solver_status_message(SEXP hiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_status_message(hi));
+    return rcpp_result_gen;
+END_RCPP
+}
 // solver_status
-std::string solver_status(SEXP hi);
+int32_t solver_status(SEXP hi);
 RcppExport SEXP _highs_solver_status(SEXP hiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
     rcpp_result_gen = Rcpp::wrap(solver_status(hi));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_infinity
+double_t solver_infinity(SEXP hi);
+RcppExport SEXP _highs_solver_infinity(SEXP hiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_infinity(hi));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -464,7 +486,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_highs_solver_run", (DL_FUNC) &_highs_solver_run, 1},
     {"_highs_solver_write_model", (DL_FUNC) &_highs_solver_write_model, 2},
     {"_highs_solver_write_basis", (DL_FUNC) &_highs_solver_write_basis, 2},
+    {"_highs_solver_status_message", (DL_FUNC) &_highs_solver_status_message, 1},
     {"_highs_solver_status", (DL_FUNC) &_highs_solver_status, 1},
+    {"_highs_solver_infinity", (DL_FUNC) &_highs_solver_infinity, 1},
     {"_highs_solver_info", (DL_FUNC) &_highs_solver_info, 1},
     {"_highs_solver_solution", (DL_FUNC) &_highs_solver_solution, 1},
     {"_highs_solver_get_bool_option", (DL_FUNC) &_highs_solver_get_bool_option, 2},

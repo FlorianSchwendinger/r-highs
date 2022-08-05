@@ -97,8 +97,16 @@ solver_write_basis <- function(hi, filename) {
     .Call(`_highs_solver_write_basis`, hi, filename)
 }
 
+solver_status_message <- function(hi) {
+    .Call(`_highs_solver_status_message`, hi)
+}
+
 solver_status <- function(hi) {
     .Call(`_highs_solver_status`, hi)
+}
+
+solver_infinity <- function(hi) {
+    .Call(`_highs_solver_infinity`, hi)
 }
 
 solver_info <- function(hi) {

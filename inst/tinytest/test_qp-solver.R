@@ -1,3 +1,8 @@
+if (FALSE) {
+    library("highs")
+}
+
+
 # Test unconstrained QP
 # minimize -x_2 - 3x_3 + (1/2)(2x_1^2 - 2x_1x_3 + 0.2x_2^2 + 2x_3^2)
 L <- c(0, -1, -3)

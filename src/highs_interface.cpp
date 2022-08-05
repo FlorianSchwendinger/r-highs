@@ -266,11 +266,27 @@ int32_t solver_write_basis(SEXP hi, const std::string filename) {
 
 
 // [[Rcpp::export]]
-std::string solver_status(SEXP hi) {
+std::string solver_status_message(SEXP hi) {
     Rcpp::XPtr<Highs>highs(hi);
     const HighsModelStatus& model_status = highs->getModelStatus();
     return highs->modelStatusToString(model_status);
 }
+
+
+// [[Rcpp::export]]
+int32_t solver_status(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    const HighsModelStatus& model_status = highs->getModelStatus();
+    return static_cast<int32_t>(model_status);
+}
+
+
+// [[Rcpp::export]]
+double_t  solver_infinity(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    return highs->getInfinity();
+}
+
 
 // [[Rcpp::export]]
 Rcpp::List solver_info(SEXP hi) {
