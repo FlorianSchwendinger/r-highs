@@ -23,19 +23,13 @@ fi
 if test -z "${RHIGHS_LIB_DIR}"; then
     R_HIGHS_PKG_HOME=`pwd`
     bash inst/build_highs.sh
-    exit 1
-    # rm -rf HiGHS
     cd ${R_HIGHS_PKG_HOME}
+    rm -rf inst/HiGHS
     R_HIGHS_LIB_DIR=${R_HIGHS_PKG_HOME}/src/highslib
 fi
 
 
 sed -e "s|@RHIGHS_LIB_DIR@|$R_HIGHS_LIB_DIR|g" src/Makevars.in > src/Makevars
-echo ""
-echo "--------------- Makevars Start"
-cat src/Makevars
-echo "--------------- Makevars End"
-echo ""
 
 
 if [ -z "$(ls ${R_HIGHS_LIB_DIR} | grep 'include')" ]; then
