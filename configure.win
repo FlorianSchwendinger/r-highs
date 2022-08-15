@@ -12,6 +12,7 @@ if [ -z "$(cmake --version 2>&1 | grep 'version')" ]; then
     exit 1
 fi
 
+# export VERBOSE=1
 
 cp -f src/patches/CMakeLists_win-static.txt src/HiGHS/CMakeLists.txt
 
