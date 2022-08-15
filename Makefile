@@ -25,6 +25,12 @@ clean:
 	rm -rf .Rd2pdf*
 
 
+check_fedora: build
+	R -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'fedora-clang-devel')"
+
+check_win: build
+	R -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'windows-x86_64-devel')"
+
 check_mac_m1: build
 	R -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'macos-m1-bigsur-release')"
 
