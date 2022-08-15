@@ -6,58 +6,39 @@ if test -z "${R_HOME}"; then
     exit 1
 fi
 
+# RHIGHS_LIB_DIR=/home/f/bin/highs/highs-gcc-static-2
+# RHIGHS_LIB_DIR=/home/f/bin/highs/highs-clang-static-2
 
-if test -z "${MAKE}"; then MAKE=`which make` 2> /dev/null; fi
-if test -z "${MAKE}"; then MAKE=`which /Applications/Xcode.app/Contents/Developer/usr/bin/make` 2> /dev/null; fi
+# export VERBOSE=1
+# echo ""
+# echo "CXX: `R CMD config CXX`"
+# echo "clang++: " `whereis clang++`
+# echo ""
+# echo "/Library/Developer/CommandLineTools/usr/bin/clang++:"
+# echo "`/Library/Developer/CommandLineTools/usr/bin/clang++ --version`"
+# echo " /usr/bin/clang++:"
+# echo "`/usr/bin/clang++ --version`"
 
 
-if test -z "${CMAKE_EXE}"; then CMAKE_EXE=`which cmake4` 2> /dev/null; fi
-if test -z "${CMAKE_EXE}"; then CMAKE_EXE=`which cmake3` 2> /dev/null; fi
-if test -z "${CMAKE_EXE}"; then CMAKE_EXE=`which cmake2` 2> /dev/null; fi
-if test -z "${CMAKE_EXE}"; then CMAKE_EXE=`which cmake` 2> /dev/null; fi
-if test -z "${CMAKE_EXE}"; then CMAKE_EXE=`which /Applications/CMake.app/Contents/bin/cmake` 2> /dev/null; fi
-
-
-if test -z "${CMAKE_EXE}"; then
-    echo "Could not find 'cmake'!"
-    exit 1
+if test -z "${RHIGHS_LIB_DIR}"; then
+    R_HIGHS_PKG_HOME=`pwd`
+    cd src
+    bash build_highs.sh
+    rm -rf HiGHS
+    cd ${R_HIGHS_PKG_HOME}
+    R_HIGHS_LIB_DIR=${R_HIGHS_PKG_HOME}/src/highslib
 fi
 
 
-if test "$(uname -s)" = "Darwin"; then
-    if test "$(uname -m)" = "x86_64"; then
-        echo "Detected 'darwin' with 'M1'"
-        cp -f src/patches/CMakeLists-darwin-M1.txt src/HiGHS/CMakeLists.txt
-    else
-        echo "Detected 'darwin' without 'M1'"
-        cp -f src/patches/CMakeLists-unix.txt src/HiGHS/CMakeLists.txt
-    fi
-else
-    echo "Detected non 'darwin'"
-    cp -f src/patches/CMakeLists-unix.txt src/HiGHS/CMakeLists.txt
-fi
+sed -e "s|@RHIGHS_LIB_DIR@|$R_HIGHS_LIB_DIR|g" src/Makevars.in > src/Makevars
+echo ""
+echo "--------------- Makevars Start"
+cat src/Makevars
+echo "--------------- Makevars End"
+echo ""
 
 
-RHIGHS_PKG_HOME=`pwd`
-RHIGHS_SRC_DIR=${RHIGHS_PKG_HOME}/src/HiGHS
-RHIGHS_BUILD_DIR=${RHIGHS_SRC_DIR}/build
-RHIGHS_LIB_DIR=${RHIGHS_PKG_HOME}/src/highslib
-
-
-echo "MAKE: '${MAKE}'"
-echo "CMAKE: '${CMAKE_EXE}'"
-echo "RHIGHS_LIB_DIR: '${RHIGHS_LIB_DIR}'"
-
-
-mkdir -p ${RHIGHS_BUILD_DIR}
-mkdir -p ${RHIGHS_LIB_DIR}
-cd ${RHIGHS_BUILD_DIR}
-${CMAKE_EXE} -DCMAKE_INSTALL_PREFIX=${RHIGHS_LIB_DIR} ..
-${MAKE} install
-rm -rf ${RHIGHS_SRC_DIR}
-
-
-if [ -z "$(ls ${RHIGHS_LIB_DIR} | grep 'include')" ]; then
+if [ -z "$(ls ${R_HIGHS_LIB_DIR} | grep 'include')" ]; then
     echo "'HiGHS' libraries could not be found!"
     exit 1
 fi

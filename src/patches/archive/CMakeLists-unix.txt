@@ -15,7 +15,7 @@ set(CMAKE_CXX_COMPILER_NAMES clang++ icpc c++ ${CMAKE_CXX_COMPILER_NAMES})
 
 # set default build type before project call, as it otherwise seems to fail for some plattforms
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
+    set(CMAKE_BUILD_TYPE RELEASE)
 endif()
 
 project(HIGHS VERSION 1.2 LANGUAGES CXX C)
@@ -188,7 +188,6 @@ endif()
 # if zlib is found, then we can enable reading zlib-compressed input
 find_package(ZLIB 1.2.3)
 
-if (NOT FAST_BUILD)
 
 include(CPack)
 set(CPACK_RESOURCE_FILE_LICENSE "${HIGHS_SOURCE_DIR}/COPYING")
@@ -212,6 +211,7 @@ message(STATUS "Git hash: " ${GITHASH})
 string(TIMESTAMP TODAY "%Y-%m-%d")
 message(STATUS "Compilation date: " ${TODAY})
 
+if (NOT FAST_BUILD)
 # For the moment keep above coverage part in case we are testing at CI.
 option(CI "CI extended tests" ON)
 
@@ -309,7 +309,7 @@ option(SHARED "Build shared libraries" OFF)
 set(BUILD_SHARED_LIBS ${SHARED})
 message(STATUS "Build shared libraries: " ${SHARED})
 
-if(CMAKE_BUILD_TYPE STREQUAL Release)
+if(CMAKE_BUILD_TYPE STREQUAL RELEASE)
     set(HiGHSRELEASE ON)
 endif()
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
@@ -372,6 +372,10 @@ message(STATUS "FAST_BUILD set to on.
 
 option(EXP "Experimental mode: run unit tests with doctest." OFF)
 
+if(CMAKE_BUILD_TYPE STREQUAL RELEASE)
+    set(HiGHSRELEASE ON)
+endif()
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 configure_file(${HIGHS_SOURCE_DIR}/src/HConfig.h.in ${HIGHS_BINARY_DIR}/HConfig.h)
 
 set(CMAKE_PLATFORM_USES_PATH_WHEN_NO_SONAME FALSE)
@@ -380,11 +384,12 @@ set(CMAKE_PLATFORM_USES_PATH_WHEN_NO_SONAME FALSE)
 add_subdirectory(src)
 
 option(JULIA "Build library and executable for Julia" OFF)
+option(CMAKE_TARGETS "Install module to find HiGHS targets" OFF)
 
 # No changes in app/ apart from a relative path
 add_subdirectory(app)
 
-target_include_directories(highs PUBLIC ${HIGHS_SOURCE_DIR})
+# target_include_directories(highs PUBLIC ${HIGHS_SOURCE_DIR})
 
 # check/ not added here, instead define fewer tests:
 # build, 3 feas, 1 infeas, 1 unbounded. 1 parallel, 1 no presolve
@@ -508,7 +513,7 @@ install(TARGETS libhighs EXPORT highs-targets
     LIBRARY
     ARCHIVE
     RUNTIME
-    PUBLIC_HEADER)
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/highs)
 
 
 endif()

@@ -13,19 +13,22 @@ if [ -z "$(cmake --version 2>&1 | grep 'version')" ]; then
 fi
 
 
-cp -f src/patches/CMakeLists-win.txt src/HiGHS/CMakeLists.txt
+cp -f src/patches/CMakeLists_win-static.txt src/HiGHS/CMakeLists.txt
 
 
-RHIGHS_PKG_HOME=`pwd`
-RHIGHS_SRC_DIR=${RHIGHS_PKG_HOME}/src/HiGHS
-RHIGHS_BUILD_DIR=${RHIGHS_SRC_DIR}/build
-RHIGHS_LIB_DIR=${RHIGHS_PKG_HOME}/src/highslib
+R_HIGHS_PKG_HOME=`pwd`
+R_HIGHS_SRC_DIR=${R_HIGHS_PKG_HOME}/src/HiGHS
+R_HIGHS_BUILD_DIR=${R_HIGHS_SRC_DIR}/build
+R_HIGHS_LIB_DIR=${R_HIGHS_PKG_HOME}/src/highslib
 
-mkdir -p ${RHIGHS_BUILD_DIR}
-mkdir -p ${RHIGHS_LIB_DIR}
-cd ${RHIGHS_BUILD_DIR}
-cmake -DCMAKE_INSTALL_PREFIX=${RHIGHS_LIB_DIR} ..
+mkdir -p ${R_HIGHS_BUILD_DIR}
+mkdir -p ${R_HIGHS_LIB_DIR}
+cd ${R_HIGHS_BUILD_DIR}
+cmake -DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} ..
 make install
-rm -rf ${RHIGHS_SRC_DIR}
+rm -rf ${R_HIGHS_SRC_DIR}
+cd ${R_HIGHS_PKG_HOME}
+
+sed -e "s|@RHIGHS_LIB_DIR@|$R_HIGHS_LIB_DIR|g" src/Makevars.in > src/Makevars.win
 
 # bash src/scripts/compile.sh

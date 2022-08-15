@@ -1,5 +1,4 @@
 .vscode
-^scripts
 ^work
 ^README.knit.md
 ^README.html
@@ -11,4 +10,3 @@
 ^src/HiGHS/.coin-or
 ^src/HiGHS/.github
 ^src/HiGHS/.git
-^src/HiGHS/check
