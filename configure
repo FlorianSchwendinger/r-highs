@@ -22,9 +22,9 @@ fi
 
 if test -z "${RHIGHS_LIB_DIR}"; then
     R_HIGHS_PKG_HOME=`pwd`
-    cd src
-    bash build_highs.sh
-    rm -rf HiGHS
+    bash inst/build_highs.sh
+    exit 1
+    # rm -rf HiGHS
     cd ${R_HIGHS_PKG_HOME}
     R_HIGHS_LIB_DIR=${R_HIGHS_PKG_HOME}/src/highslib
 fi
