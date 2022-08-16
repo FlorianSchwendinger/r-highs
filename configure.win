@@ -20,8 +20,9 @@ fi
 # MinGW produces an error which based on the available documentation
 # it should not when "-std=gnu++11" is set. 
 # Since we do not use this functionality we just deactivate it.
-READER_CPP=inst/HiGHS/extern/filereaderlp/reader.cpp
-sed -e "s|.*strdup|// strdup|" ${READER_CPP} > ${READER_CPP}
+#
+# READER_CPP=inst/HiGHS/extern/filereaderlp/reader.cpp
+# sed -e "s|.*strdup|// strdup|" ${READER_CPP} > inst/HiGHS/extern/filereaderlp/reader_mod.cpp
 
 # export VERBOSE=1
 
