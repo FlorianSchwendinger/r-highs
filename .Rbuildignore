@@ -5,9 +5,9 @@
 ^README.Rmd
 ^Makefile
 ^highs*.tar.gz
-^src/HiGHS/CITATION.cff
-^src/HiGHS/build
-^src/HiGHS/.clang-format
-^src/HiGHS/.coin-or
-^src/HiGHS/.github
-^src/HiGHS/.git
+^inst/HiGHS/build
+^inst/HiGHS/.clang-format
+^inst/HiGHS/.coin-or
+^inst/HiGHS/.github
+^inst/HiGHS/.git
+^inst/HiGHS/CITATION.cff
