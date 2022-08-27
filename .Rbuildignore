@@ -10,3 +10,4 @@
 ^inst/HiGHS/.coin-or
 ^inst/HiGHS/.github
 ^inst/HiGHS/.git
+^inst/HiGHS/CITATION.cff

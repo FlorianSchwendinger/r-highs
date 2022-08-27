@@ -12,7 +12,7 @@ Description: R interface to 'HiGHS', an optimization solver for solving mixed in
         optimization problems with quadratic or linear objective and linear constraints.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.7), checkmate
-SystemRequirements: PkgConfig, ZLIB (>=1.2.3), CMAKE (>=3.15), C++11
+SystemRequirements: Bash, PkgConfig, ZLIB (>=1.2.3), CMAKE (>=3.15), C++11
 Suggests: tinytest
 LinkingTo: Rcpp
 RoxygenNote: 7.2.0
