@@ -74,8 +74,35 @@ str(s)
 ## Options
 The function `highs_available_solver_options` lists the available solver options
 ```{r}
-highs_available_solver_options()
+d <- highs_available_solver_options()
+d[["option"]] <- sprintf("`%s`", d[["option"]])
+knitr::kable(d, row.names = FALSE)
 ```
 
 for additional information see the [HiGHS homepage](https://highs.dev/).	
+
+
+## Status codes
+HiGHS currently has the following status codes defined in `HConst.h"`.
+
+| enumerator               | status | message                            |
+| -------------------------|-------:|------------------------------------|
+| `kNotset`                |      0 | `"Not Set"`                        |
+| `kLoadError`             |      1 | `"Load error"`                     |
+| `kModelError`            |      2 | `"Model error"`                    |
+| `kPresolveError`         |      3 | `"Presolve error"`                 |
+| `kSolveError`            |      4 | `"Solve error"`                    |
+| `kPostsolveError`        |      5 | `"Postsolve error"`                |
+| `kModelEmpty`            |      6 | `"Empty"`                          |
+| `kOptimal`               |      7 | `"Optimal"`                        |
+| `kInfeasible`            |      8 | `"Infeasible"`                     |
+| `kUnboundedOrInfeasible` |      9 | `"Primal infeasible or unbounded"` |
+| `kUnbounded`             |     10 | `"Unbounded"`                      |
+| `kObjectiveBound`        |     11 | `"Bound on objective reached"`     |
+| `kObjectiveTarget`       |     12 | `"Target for objective reached"`   |
+| `kTimeLimit`             |     13 | `"Time limit reached"`             |
+| `kIterationLimit`        |     14 | `"Iteration limit reached"`        |
+| `kUnknown`               |     15 | `"Unknown"`                        |
+| `kMin`                   |      0 | `"Not Set"`                        |
+| `kMax`                   |     15 | `"Unknown"`                        |
 

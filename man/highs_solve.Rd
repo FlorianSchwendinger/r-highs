@@ -35,19 +35,34 @@ highs_solve(
 \item{rhs}{a numeric vector giving the right hand-side of the linear constraints.}
 
 \item{types}{a integer vector or character vector giving the variable types.
-\code{"C"} or \code{"1"} for continuous,
-\code{"I"} or \code{"2"} for integer,
-\code{"SC"} or \code{"3"} for semi continuous,
-\code{"SI"} or \code{"4"} for semi integer and
-\code{"II"} or \code{"5"} for implicit integer.}
+\code{'C'} or \code{'1'} for continuous,
+\code{'I'} or \code{'2'} for integer,
+\code{'SC'} or \code{'3'} for semi continuous,
+\code{'SI'} or \code{'4'} for semi integer and
+\code{'II'} or \code{'5'} for implicit integer.}
 
-\item{maximum}{a logical}
+\item{maximum}{a logical if \code{TRUE} the solver searches for a maximum,
+if \code{FALSE} the solver searches for a minimum.}
 
-\item{offset}{a numeric value giving the offset.}
+\item{offset}{a numeric value giving the offset (default is \code{0}).}
 
-\item{control}{a list giving additional options for the solver}
+\item{control}{a list giving additional options for the solver,
+see \link{highs_available_solver_options} or the \code{README} file
+for a list of all available options.}
 
 \item{dry_run}{a logical if true only the model is returned.}
+}
+\value{
+A \code{list} containing the result provided by the solver,
+ containing the following named objects:
+\item{\code{primal_solution}}{a numeric vector giving the primal solution.}
+\item{\code{objective_value}}{a numeric giving the objective value.}
+\item{\code{status}}{an integer giving the status code}
+\item{\code{status_message}}{a character string giving the status message (explaination of the \code{status_code}).}
+\item{\code{solver_msg}}{a list giving the original (not canonicalized) solver message.}
+\item{\code{info}}{a list giving additional information provided by the solver.}
+
+Additional information on can be found in the \code{README} file.
 }
 \description{
 Solve linear and quadratic mixed integer optimization problems.

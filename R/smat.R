@@ -5,7 +5,6 @@
 # Test if the object is a \code{"dgCMatrix"}.
 #
 # @param x an object to be tested.
-# @export
 is_dgc <- function(x) inherits(x, "dgCMatrix")
 
 
@@ -14,7 +13,6 @@ is_dgc <- function(x) inherits(x, "dgCMatrix")
 # Test if the object is a \code{"simple_triplet_matrix"}.
 #
 # @param x an object to be tested.
-# @export
 is_stm <- function(x) inherits(x, "simple_triplet_matrix")
 
 
@@ -23,13 +21,8 @@ is_stm <- function(x) inherits(x, "simple_triplet_matrix")
 # Test if the object is a dense matrix.
 #
 # @param x an object to be tested.
-# @export
 is_dmat <- function(x) inherits(x, "matrix") && length(dim(x)) == 2L
 
-
-as_dense <- function(x) {
-
-}
 
 
 # Convert Matrix into Compressed Sparse Column Format
@@ -40,7 +33,6 @@ as_dense <- function(x) {
 #
 # @references
 # \url{https://www.gnu.org/software/gsl/doc/html/spmatrix.html}
-# @export
 as_csc <- function(x) {
     if (is_dgc(x)) {
         dim <- x@Dim
