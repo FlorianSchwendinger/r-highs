@@ -42,10 +42,11 @@ s <- highs_solve(L = c(1.0, 1), lower = c(0, 1), upper = c(4, Inf),
                  A = A, lhs = c(-Inf, 5, 6), rhs = c(7, 15, Inf),
                  offset = 3)
 str(s)
-#> List of 5
+#> List of 6
 #>  $ primal_solution: num [1:2] 0.5 2.25
 #>  $ objective_value: num 5.75
-#>  $ status         : chr "Optimal"
+#>  $ status         : int 7
+#>  $ status_message : chr "Optimal"
 #>  $ solver_msg     :List of 6
 #>   ..$ value_valid: logi TRUE
 #>   ..$ dual_valid : logi TRUE
@@ -86,17 +87,19 @@ Q <- rbind(c(1, 0), c(0, zero))
 L <- c(-2, 1)
 A <- t(c(1, 0))
 
-s <- highs_solve(Q = Q, L = L, A = A, lhs = 0, rhs = 3)
+cntrl <- list(log_dev_level = 0L)
+s <- highs_solve(Q = Q, L = L, A = A, lhs = 0, rhs = 3, control = cntrl)
 str(s)
-#> List of 5
-#>  $ primal_solution: num [1:2] 2 0
-#>  $ objective_value: num -2
-#>  $ status         : chr "Optimal"
+#> List of 6
+#>  $ primal_solution: num [1:2] 2e+00 -1e+07
+#>  $ objective_value: num -1e+07
+#>  $ status         : int 7
+#>  $ status_message : chr "Optimal"
 #>  $ solver_msg     :List of 6
 #>   ..$ value_valid: logi TRUE
 #>   ..$ dual_valid : logi TRUE
-#>   ..$ col_value  : num [1:2] 2 0
-#>   ..$ col_dual   : num [1:2] 0 1
+#>   ..$ col_value  : num [1:2] 2e+00 -1e+07
+#>   ..$ col_dual   : num [1:2] 0 0
 #>   ..$ row_value  : num 2
 #>   ..$ row_dual   : num 0
 #>  $ info           :List of 18
@@ -104,12 +107,12 @@ str(s)
 #>   ..$ mip_node_count            : num -1
 #>   ..$ simplex_iteration_count   : int 0
 #>   ..$ ipm_iteration_count       : int 0
-#>   ..$ qp_iteration_count        : int 3
+#>   ..$ qp_iteration_count        : int 5
 #>   ..$ crossover_iteration_count : int 0
 #>   ..$ primal_solution_status    : chr "Feasible"
 #>   ..$ dual_solution_status      : chr "Feasible"
 #>   ..$ basis_validity            : int 0
-#>   ..$ objective_function_value  : num -2
+#>   ..$ objective_function_value  : num -1e+07
 #>   ..$ mip_dual_bound            : num 0
 #>   ..$ mip_gap                   : num Inf
 #>   ..$ num_primal_infeasibilities: int 0
@@ -126,85 +129,114 @@ The function `highs_available_solver_options` lists the available solver
 options
 
 ``` r
-highs_available_solver_options()
-#>                                           option    type category
-#> 5                  allow_unbounded_or_infeasible    bool advanced
-#> 34                     allowed_cost_scale_factor integer advanced
-#> 33                   allowed_matrix_scale_factor integer advanced
-#> 32                             cost_scale_factor integer advanced
-#> 63     dual_simplex_cost_perturbation_multiplier  double advanced
-#> 65           dual_simplex_pivot_growth_tolerance  double advanced
-#> 62 dual_steepest_edge_weight_log_error_threshold  double advanced
-#> 67                        factor_pivot_threshold  double advanced
-#> 68                        factor_pivot_tolerance  double advanced
-#> 31                                   keep_n_rows integer advanced
-#> 11                     less_infeasible_DSE_check    bool advanced
-#> 12                less_infeasible_DSE_choose_row    bool advanced
-#> 15                                 log_dev_level integer advanced
-#> 7           lp_presolve_requires_basis_postsolve    bool advanced
-#> 37                max_dual_simplex_cleanup_level integer advanced
-#> 38         max_dual_simplex_phase1_cleanup_level integer advanced
-#> 8                           mps_parser_type_free    bool advanced
-#> 10               no_unnecessary_rebuild_refactor    bool advanced
-#> 66                      presolve_pivot_threshold  double advanced
-#> 41               presolve_substitution_maxfillin integer advanced
-#> 64  primal_simplex_bound_perturbation_multiplier  double advanced
-#> 61     rebuild_refactor_solution_error_tolerance  double advanced
-#> 4                                  run_crossover    bool advanced
-#> 35                      simplex_dualise_strategy integer advanced
-#> 9                simplex_initial_condition_check    bool advanced
-#> 60           simplex_initial_condition_tolerance  double advanced
-#> 36                      simplex_permute_strategy integer advanced
-#> 39                        simplex_price_strategy integer advanced
-#> 40            simplex_unscaled_solution_strategy integer advanced
-#> 69                     start_crossover_tolerance  double advanced
-#> 6               use_implied_bounds_from_presolve    bool advanced
-#> 13                    use_original_HFactor_logic    bool advanced
-#> 56                    dual_feasibility_tolerance  double     file
-#> 19                          highs_analysis_level integer     file
-#> 18                             highs_debug_level integer     file
-#> 52                                infinite_bound  double     file
-#> 51                                 infinite_cost  double     file
-#> 29                           ipm_iteration_limit integer     file
-#> 57                      ipm_optimality_tolerance  double     file
-#> 54                            large_matrix_value  double     file
-#> 77                                      log_file  string     file
-#> 58                               objective_bound  double     file
-#> 59                              objective_target  double     file
-#> 55                  primal_feasibility_tolerance  double     file
-#> 16                                   random_seed integer     file
-#> 22                        simplex_crash_strategy integer     file
-#> 23             simplex_dual_edge_weight_strategy integer     file
-#> 25                       simplex_iteration_limit integer     file
-#> 28                       simplex_max_concurrency integer     file
-#> 27                       simplex_min_concurrency integer     file
-#> 24           simplex_primal_edge_weight_strategy integer     file
-#> 21                        simplex_scale_strategy integer     file
-#> 20                              simplex_strategy integer     file
-#> 26                          simplex_update_limit integer     file
-#> 53                            small_matrix_value  double     file
-#> 76                                 solution_file  string     file
-#> 17                                       threads integer     file
-#> 30                          write_solution_style integer     file
-#> 1                         write_solution_to_file    bool     file
-#> 3                                 log_to_console    bool  logging
-#> 2                                    output_flag    bool  logging
-#> 14                           mip_detect_symmetry    bool      mip
-#> 70                     mip_feasibility_tolerance  double      mip
-#> 71                          mip_heuristic_effort  double      mip
-#> 45                              mip_lp_age_limit integer      mip
-#> 44                                mip_max_leaves integer      mip
-#> 42                                 mip_max_nodes integer      mip
-#> 43                           mip_max_stall_nodes integer      mip
-#> 46                            mip_pool_age_limit integer      mip
-#> 47                           mip_pool_soft_limit integer      mip
-#> 48                        mip_pscost_minreliable integer      mip
-#> 49                              mip_report_level integer      mip
-#> 74                                      parallel  string run-time
-#> 72                                      presolve  string run-time
-#> 75                                       ranging  string run-time
-#> 73                                        solver  string run-time
-#> 50                                    time_limit  double run-time
+d <- highs_available_solver_options()
+d[["option"]] <- sprintf("`%s`", d[["option"]])
+knitr::kable(d, row.names = FALSE)
 ```
 
+| option                                          | type    | category |
+| :---------------------------------------------- | :------ | :------- |
+| `allow_unbounded_or_infeasible`                 | bool    | advanced |
+| `allowed_cost_scale_factor`                     | integer | advanced |
+| `allowed_matrix_scale_factor`                   | integer | advanced |
+| `cost_scale_factor`                             | integer | advanced |
+| `dual_simplex_cost_perturbation_multiplier`     | double  | advanced |
+| `dual_simplex_pivot_growth_tolerance`           | double  | advanced |
+| `dual_steepest_edge_weight_log_error_threshold` | double  | advanced |
+| `factor_pivot_threshold`                        | double  | advanced |
+| `factor_pivot_tolerance`                        | double  | advanced |
+| `keep_n_rows`                                   | integer | advanced |
+| `less_infeasible_DSE_check`                     | bool    | advanced |
+| `less_infeasible_DSE_choose_row`                | bool    | advanced |
+| `log_dev_level`                                 | integer | advanced |
+| `lp_presolve_requires_basis_postsolve`          | bool    | advanced |
+| `max_dual_simplex_cleanup_level`                | integer | advanced |
+| `max_dual_simplex_phase1_cleanup_level`         | integer | advanced |
+| `mps_parser_type_free`                          | bool    | advanced |
+| `no_unnecessary_rebuild_refactor`               | bool    | advanced |
+| `presolve_pivot_threshold`                      | double  | advanced |
+| `presolve_substitution_maxfillin`               | integer | advanced |
+| `primal_simplex_bound_perturbation_multiplier`  | double  | advanced |
+| `rebuild_refactor_solution_error_tolerance`     | double  | advanced |
+| `run_crossover`                                 | bool    | advanced |
+| `simplex_dualise_strategy`                      | integer | advanced |
+| `simplex_initial_condition_check`               | bool    | advanced |
+| `simplex_initial_condition_tolerance`           | double  | advanced |
+| `simplex_permute_strategy`                      | integer | advanced |
+| `simplex_price_strategy`                        | integer | advanced |
+| `simplex_unscaled_solution_strategy`            | integer | advanced |
+| `start_crossover_tolerance`                     | double  | advanced |
+| `use_implied_bounds_from_presolve`              | bool    | advanced |
+| `use_original_HFactor_logic`                    | bool    | advanced |
+| `dual_feasibility_tolerance`                    | double  | file     |
+| `highs_analysis_level`                          | integer | file     |
+| `highs_debug_level`                             | integer | file     |
+| `infinite_bound`                                | double  | file     |
+| `infinite_cost`                                 | double  | file     |
+| `ipm_iteration_limit`                           | integer | file     |
+| `ipm_optimality_tolerance`                      | double  | file     |
+| `large_matrix_value`                            | double  | file     |
+| `log_file`                                      | string  | file     |
+| `objective_bound`                               | double  | file     |
+| `objective_target`                              | double  | file     |
+| `primal_feasibility_tolerance`                  | double  | file     |
+| `random_seed`                                   | integer | file     |
+| `simplex_crash_strategy`                        | integer | file     |
+| `simplex_dual_edge_weight_strategy`             | integer | file     |
+| `simplex_iteration_limit`                       | integer | file     |
+| `simplex_max_concurrency`                       | integer | file     |
+| `simplex_min_concurrency`                       | integer | file     |
+| `simplex_primal_edge_weight_strategy`           | integer | file     |
+| `simplex_scale_strategy`                        | integer | file     |
+| `simplex_strategy`                              | integer | file     |
+| `simplex_update_limit`                          | integer | file     |
+| `small_matrix_value`                            | double  | file     |
+| `solution_file`                                 | string  | file     |
+| `threads`                                       | integer | file     |
+| `write_solution_style`                          | integer | file     |
+| `write_solution_to_file`                        | bool    | file     |
+| `log_to_console`                                | bool    | logging  |
+| `output_flag`                                   | bool    | logging  |
+| `mip_detect_symmetry`                           | bool    | mip      |
+| `mip_feasibility_tolerance`                     | double  | mip      |
+| `mip_heuristic_effort`                          | double  | mip      |
+| `mip_lp_age_limit`                              | integer | mip      |
+| `mip_max_leaves`                                | integer | mip      |
+| `mip_max_nodes`                                 | integer | mip      |
+| `mip_max_stall_nodes`                           | integer | mip      |
+| `mip_pool_age_limit`                            | integer | mip      |
+| `mip_pool_soft_limit`                           | integer | mip      |
+| `mip_pscost_minreliable`                        | integer | mip      |
+| `mip_report_level`                              | integer | mip      |
+| `parallel`                                      | string  | run-time |
+| `presolve`                                      | string  | run-time |
+| `ranging`                                       | string  | run-time |
+| `solver`                                        | string  | run-time |
+| `time_limit`                                    | double  | run-time |
+
 for additional information see the [HiGHS homepage](https://highs.dev/).
+
+## Status codes
+
+HiGHS currently has the following status codes defined in `HConst.h"`.
+
+| enumerator               | status | message                            |
+| ------------------------ | -----: | ---------------------------------- |
+| `kNotset`                |      0 | `"Not Set"`                        |
+| `kLoadError`             |      1 | `"Load error"`                     |
+| `kModelError`            |      2 | `"Model error"`                    |
+| `kPresolveError`         |      3 | `"Presolve error"`                 |
+| `kSolveError`            |      4 | `"Solve error"`                    |
+| `kPostsolveError`        |      5 | `"Postsolve error"`                |
+| `kModelEmpty`            |      6 | `"Empty"`                          |
+| `kOptimal`               |      7 | `"Optimal"`                        |
+| `kInfeasible`            |      8 | `"Infeasible"`                     |
+| `kUnboundedOrInfeasible` |      9 | `"Primal infeasible or unbounded"` |
+| `kUnbounded`             |     10 | `"Unbounded"`                      |
+| `kObjectiveBound`        |     11 | `"Bound on objective reached"`     |
+| `kObjectiveTarget`       |     12 | `"Target for objective reached"`   |
+| `kTimeLimit`             |     13 | `"Time limit reached"`             |
+| `kIterationLimit`        |     14 | `"Iteration limit reached"`        |
+| `kUnknown`               |     15 | `"Unknown"`                        |
+| `kMin`                   |      0 | `"Not Set"`                        |
+| `kMax`                   |     15 | `"Unknown"`                        |

@@ -31,15 +31,30 @@ csc_to_matrix <- function(start, index, value, nrow = max(index + 1L), ncol = le
 #' @param lhs a numeric vector giving the left hand-side of the linear constraints.
 #' @param rhs a numeric vector giving the right hand-side of the linear constraints.
 #' @param types a integer vector or character vector giving the variable types.
-#'      \code{"C"} or \code{"1"} for continuous,
-#'      \code{"I"} or \code{"2"} for integer,
-#'      \code{"SC"} or \code{"3"} for semi continuous,
-#'      \code{"SI"} or \code{"4"} for semi integer and
-#'      \code{"II"} or \code{"5"} for implicit integer.
-#' @param maximum a logical
-#' @param offset a numeric value giving the offset.
-#' @param control a list giving additional options for the solver
+#'      \code{'C'} or \code{'1'} for continuous,
+#'      \code{'I'} or \code{'2'} for integer,
+#'      \code{'SC'} or \code{'3'} for semi continuous,
+#'      \code{'SI'} or \code{'4'} for semi integer and
+#'      \code{'II'} or \code{'5'} for implicit integer.
+#' @param maximum a logical if \code{TRUE} the solver searches for a maximum,
+#'                if \code{FALSE} the solver searches for a minimum.
+#' @param offset a numeric value giving the offset (default is \code{0}).
+#' @param control a list giving additional options for the solver,
+#'                see \link{highs_available_solver_options} or the \code{README} file
+#'                for a list of all available options.
 #' @param dry_run a logical if true only the model is returned.
+#'
+#' @return A \code{list} containing the result provided by the solver,
+#'  containing the following named objects:
+#' \item{\code{primal_solution}}{a numeric vector giving the primal solution.}
+#' \item{\code{objective_value}}{a numeric giving the objective value.}
+#' \item{\code{status}}{an integer giving the status code}
+#' \item{\code{status_message}}{a character string giving the status message (explaination of the \code{status_code}).}
+#' \item{\code{solver_msg}}{a list giving the original (not canonicalized) solver message.}
+#' \item{\code{info}}{a list giving additional information provided by the solver.}
+#'
+#' Additional information on can be found in the \code{README} file.
+#'
 #' @examples
 #' library("highs")
 #' # Minimize:
