@@ -105,8 +105,8 @@ solver_status <- function(hi) {
     .Call(`_highs_solver_status`, hi)
 }
 
-solver_infinity <- function(hi) {
-    .Call(`_highs_solver_infinity`, hi)
+solver_infinity <- function() {
+    .Call(`_highs_solver_infinity`)
 }
 
 solver_info <- function(hi) {
