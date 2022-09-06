@@ -1,19 +1,5 @@
 #!/bin/sh
 
-# RHIGHS_LIB_DIR=/home/f/bin/highs/highs-gcc-static-2
-# RHIGHS_LIB_DIR=/home/f/bin/highs/highs-clang-static-2
-
-# export VERBOSE=1
-# echo ""
-# echo "CXX: `R CMD config CXX`"
-# echo "clang++: " `whereis clang++`
-# echo ""
-# echo "/Library/Developer/CommandLineTools/usr/bin/clang++:"
-# echo "`/Library/Developer/CommandLineTools/usr/bin/clang++ --version`"
-# echo " /usr/bin/clang++:"
-# echo "`/usr/bin/clang++ --version`"
-
-
 if test -z "${RHIGHS_LIB_DIR}"; then
     R_HIGHS_PKG_HOME=`pwd`
     bash inst/build_highs.sh
