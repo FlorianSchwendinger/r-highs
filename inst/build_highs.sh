@@ -17,15 +17,24 @@ if test -z "${CMAKE_EXE}"; then
 fi
 
 
-R_MACHINE=`R -s -e 'cat(unname(Sys.info()["machine"]))'`
+: ${R_HOME=`R RHOME`}
+if test -z "${R_HOME}"; then
+    echo "'R_HOME' could not be found!"
+    exit 1
+fi
+
+: ${R_CC=`"${R_HOME}/bin/R" CMD config CC`}
+# R_CC=`"${R_HOME}/bin/R" CMD config CC`
+R_MACHINE=`"${R_HOME}/bin/Rscript" -e 'cat(Sys.info()["machine"])'`
+
 
 echo ""
 echo "arch: $(arch)"
-echo "R_MACHINE: ${R_MACHINE}"
+echo "R_MACHINE: '${R_MACHINE}'"
+echo "R_CC: '${R_CC}'"
 echo ""
 
 
-: ${R_CC=`R CMD config CC`}
 if test "$(uname -s)" = "Darwin"; then
     if test "${R_MACHINE}" = "arm64"; then
         echo "Detected 'darwin' with 'M1'"
