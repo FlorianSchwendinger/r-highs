@@ -319,13 +319,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // solver_infinity
-double_t solver_infinity(SEXP hi);
-RcppExport SEXP _highs_solver_infinity(SEXP hiSEXP) {
+double_t solver_infinity();
+RcppExport SEXP _highs_solver_infinity() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
-    rcpp_result_gen = Rcpp::wrap(solver_infinity(hi));
+    rcpp_result_gen = Rcpp::wrap(solver_infinity());
     return rcpp_result_gen;
 END_RCPP
 }
