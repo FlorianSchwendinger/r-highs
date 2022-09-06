@@ -1,7 +1,7 @@
 Package: highs
 Type: Package
 Title: 'HiGHS' Optimization Solver
-Version: 0.1-2
+Version: 0.1-3
 Authors@R: c(person("Florian", "Schwendinger", email = "florianschwendinger@gmx.at", role = c("aut", "cre")),
              person("Dirk", "Schumacher", role = "aut"),
              person("Julian", "Hall", role = "cph"),
@@ -11,6 +11,7 @@ Authors@R: c(person("Florian", "Schwendinger", email = "florianschwendinger@gmx.
 Description: R interface to 'HiGHS', an optimization solver for solving mixed integer 
         optimization problems with quadratic or linear objective and linear constraints.
 License: GPL (>= 2)
+# Depends: R (>= 4.2.0)
 Imports: Rcpp (>= 1.0.7), checkmate
 SystemRequirements: Bash, PkgConfig, ZLIB (>=1.2.3), CMAKE (>=3.15), C++11
 Suggests: tinytest

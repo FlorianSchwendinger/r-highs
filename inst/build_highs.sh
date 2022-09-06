@@ -24,41 +24,7 @@ if test -z "${R_HOME}"; then
 fi
 
 : ${R_CC=`"${R_HOME}/bin/R" CMD config CC`}
-# R_CC=`"${R_HOME}/bin/R" CMD config CC`
 R_MACHINE=`"${R_HOME}/bin/Rscript" -e 'cat(Sys.info()["machine"])'`
-
-
-echo ""
-echo "arch: $(arch)"
-echo "R_MACHINE: '${R_MACHINE}'"
-echo "R_CC: '${R_CC}'"
-echo ""
-
-
-if test "$(uname -s)" = "Darwin"; then
-    if test "${R_MACHINE}" = "arm64"; then
-        echo "Detected 'darwin' with 'M1'"
-        USE_DARWIN_M1="TRUE"
-        cp -f inst/patches/CMakeLists_darwin-M1-static.txt inst/HiGHS/CMakeLists.txt
-    else
-        echo "Detected 'darwin' without 'M1'"
-        cp -f inst/patches/CMakeLists_darwin-static.txt inst/HiGHS/CMakeLists.txt
-    fi
-else
-    echo "Detected non 'Darwin'"
-    # Detect the compiler with which R was built.
-    if [[ "${R_CC}" == 'gcc'* ]]; then
-        echo "  use GCC"
-        R_CC="gcc"
-        R_CXX="g++"
-        cp -f inst/patches/CMakeLists_gcc-static.txt inst/HiGHS/CMakeLists.txt
-    else
-        echo "  use Clang"
-        R_CC="clang"
-        R_CXX="clang++"
-        cp -f inst/patches/CMakeLists_clang-static.txt inst/HiGHS/CMakeLists.txt
-    fi
-fi
 
 
 R_HIGHS_PKG_HOME=`pwd`
@@ -70,12 +36,34 @@ mkdir -p ${R_HIGHS_BUILD_DIR}
 mkdir -p ${R_HIGHS_LIB_DIR}
 cd ${R_HIGHS_BUILD_DIR}
 
-if test -z "${USE_DARWIN_M1}"; then
-    echo "CMAKE USE DEFAULT CMAKE"
-    ${CMAKE_EXE} -DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} ..
-else
-    echo "CMAKE USE DARWIN M1"
-    ${CMAKE_EXE} -DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" ..
+
+export CC=`"${R_HOME}/bin/R" CMD config CC`
+export CXX=`"${R_HOME}/bin/R" CMD config CXX`
+export CXX11=`"${R_HOME}/bin/R" CMD config CXX11`
+export CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
+export CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
+export CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
+export LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
+
+
+echo ""
+echo "arch: '$(arch)'"
+echo "R_MACHINE: '${R_MACHINE}'"
+echo "R_CC: '${R_CC}'"
+echo "CC: '${CC}'"
+echo "CXX: '${CXX}'"
+echo "CXX11: '${CXX11}'"
+echo ""
+ 
+
+if test "$(uname -s)" = "Darwin"; then
+    if test "${R_MACHINE}" = "arm64"; then
+        echo "Detected 'darwin' with 'M1'"
+        OSX_ARM64_OPTS='-DCMAKE_OSX_ARCHITECTURES="arm64"'
+    fi
 fi
+
+
+${CMAKE_EXE} .. -DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DFAST_BUILD:bool=ON -DSHARED:bool=OFF -DBUILD_TESTING:bool=OFF ${OSX_ARM64_OPTS}
 
 ${MAKE} install
