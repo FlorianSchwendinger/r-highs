@@ -498,7 +498,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_highs_solver_write_basis", (DL_FUNC) &_highs_solver_write_basis, 2},
     {"_highs_solver_status_message", (DL_FUNC) &_highs_solver_status_message, 1},
     {"_highs_solver_status", (DL_FUNC) &_highs_solver_status, 1},
-    {"_highs_solver_infinity", (DL_FUNC) &_highs_solver_infinity, 1},
+    {"_highs_solver_infinity", (DL_FUNC) &_highs_solver_infinity, 0},
     {"_highs_reset_global_scheduler", (DL_FUNC) &_highs_reset_global_scheduler, 1},
     {"_highs_solver_info", (DL_FUNC) &_highs_solver_info, 1},
     {"_highs_solver_solution", (DL_FUNC) &_highs_solver_solution, 1},
