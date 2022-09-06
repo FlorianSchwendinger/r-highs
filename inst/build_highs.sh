@@ -27,6 +27,9 @@ fi
 R_MACHINE=`"${R_HOME}/bin/Rscript" -e 'cat(Sys.info()["machine"])'`
 
 
+cp -f inst/patches/CMakeLists.txt inst/HiGHS/CMakeLists.txt
+
+
 R_HIGHS_PKG_HOME=`pwd`
 HIGHS_SRC_DIR=${R_HIGHS_PKG_HOME}/inst/HiGHS
 R_HIGHS_BUILD_DIR=${HIGHS_SRC_DIR}/build
@@ -47,6 +50,7 @@ export LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
 
 
 echo ""
+echo "CMAKE VERSION: '`${CMAKE_EXE} --version | head -n 1`'"
 echo "arch: '$(arch)'"
 echo "R_MACHINE: '${R_MACHINE}'"
 echo "R_CC: '${R_CC}'"
@@ -54,16 +58,18 @@ echo "CC: '${CC}'"
 echo "CXX: '${CXX}'"
 echo "CXX11: '${CXX11}'"
 echo ""
- 
 
+
+# In R-oldrelease HiGHS tries to build with 'NMake Makefiles' instead of 'Unix Makefiles'
+# the additional flag '-G "Unix Makefiles"' forces the use of 'Unix Makefiles'.
+# But than it fails since prior to 4.2.0 R-win tries to compile and test for 'i386' and 'x64'
+# and fails for 'i386'.
 if test "$(uname -s)" = "Darwin"; then
-    if test "${R_MACHINE}" = "arm64"; then
-        echo "Detected 'darwin' with 'M1'"
-        OSX_ARM64_OPTS='-DCMAKE_OSX_ARCHITECTURES="arm64"'
-    fi
+    # Only FAST_BUILD works on MacOS.
+    ${CMAKE_EXE} .. -DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DFAST_BUILD:bool=ON -DSHARED:bool=OFF -DBUILD_TESTING:bool=OFF
+else
+    # FAST_BUILD fails on Windows, for the other platforms both seams to work.
+    ${CMAKE_EXE} .. -DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DFAST_BUILD:bool=OFF -DSHARED:bool=OFF -DBUILD_TESTING:bool=OFF
 fi
-
-
-${CMAKE_EXE} .. -DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DFAST_BUILD:bool=ON -DSHARED:bool=OFF -DBUILD_TESTING:bool=OFF ${OSX_ARM64_OPTS}
 
 ${MAKE} install
