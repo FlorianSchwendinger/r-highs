@@ -109,6 +109,10 @@ solver_infinity <- function() {
     .Call(`_highs_solver_infinity`)
 }
 
+reset_global_scheduler <- function(blocking) {
+    .Call(`_highs_reset_global_scheduler`, blocking)
+}
+
 solver_info <- function(hi) {
     .Call(`_highs_solver_info`, hi)
 }

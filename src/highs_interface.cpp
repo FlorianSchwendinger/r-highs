@@ -290,6 +290,14 @@ double_t  solver_infinity() {
 
 
 // [[Rcpp::export]]
+SEXP reset_global_scheduler(bool blocking) {
+    Highs highs;
+    highs.resetGlobalScheduler(blocking);
+    return R_NilValue;
+}
+
+
+// [[Rcpp::export]]
 Rcpp::List solver_info(SEXP hi) {
     Rcpp::XPtr<Highs>highs(hi);
     const HighsInfo& info = highs->getInfo();
