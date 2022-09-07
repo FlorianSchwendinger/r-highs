@@ -1,0 +1,3 @@
+[submodule "inst/HiGHS"]
+	path = inst/HiGHS
+	url = git@gitlab.com:schwe/highs-patched.git
