@@ -125,7 +125,6 @@ enable_cxx_compiler_flag_if_supported("-Wno-format-truncation")
 enable_cxx_compiler_flag_if_supported("-Wno-unused-variable")
 enable_cxx_compiler_flag_if_supported("-Wno-switch")
 enable_cxx_compiler_flag_if_supported("-Wno-return-type")
-enable_cxx_compiler_flag_if_supported("-Wno-bitwise-instead-of-logical")
 enable_cxx_compiler_flag_if_supported("-pedantic")
 endif()
 
