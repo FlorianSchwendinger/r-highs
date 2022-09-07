@@ -11,3 +11,4 @@
 ^inst/HiGHS/.github
 ^inst/HiGHS/.git
 ^inst/HiGHS/CITATION.cff
+^inst/update_highs_sources.md
