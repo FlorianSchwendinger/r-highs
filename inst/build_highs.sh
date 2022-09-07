@@ -23,8 +23,9 @@ if test -z "${R_HOME}"; then
     exit 1
 fi
 
-: ${R_CC=`"${R_HOME}/bin/R" CMD config CC`}
-R_MACHINE=`"${R_HOME}/bin/Rscript" -e 'cat(Sys.info()["machine"])'`
+# : ${R_CC=`"${R_HOME}/bin/R" CMD config CC`}
+# R_MACHINE=`"${R_HOME}/bin/Rscript" -e 'cat(Sys.info()["machine"])'`
+# OS_TYPE=`"${R_HOME}/bin/Rscript" -e 'cat(.Platform[[1]])'`
 
 
 cp -f inst/patches/CMakeLists.txt inst/HiGHS/CMakeLists.txt
@@ -52,24 +53,26 @@ export LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
 echo ""
 echo "CMAKE VERSION: '`${CMAKE_EXE} --version | head -n 1`'"
 echo "arch: '$(arch)'"
-echo "R_MACHINE: '${R_MACHINE}'"
-echo "R_CC: '${R_CC}'"
+# echo "OS_TYPE: '${OS_TYPE}'"
 echo "CC: '${CC}'"
 echo "CXX: '${CXX}'"
 echo "CXX11: '${CXX11}'"
 echo ""
 
 
+CMAKE_OPTS="-DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DSHARED:bool=OFF -DBUILD_TESTING:bool=OFF"
+
 # In R-oldrelease HiGHS tries to build with 'NMake Makefiles' instead of 'Unix Makefiles'
 # the additional flag '-G "Unix Makefiles"' forces the use of 'Unix Makefiles'.
 # But than it fails since prior to 4.2.0 R-win tries to compile and test for 'i386' and 'x64'
 # and fails for 'i386'.
+# if test "${OS_TYPE}" = "unix"; then
 if test "$(uname -s)" = "Darwin"; then
-    # Only FAST_BUILD works on MacOS.
-    ${CMAKE_EXE} .. -DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DFAST_BUILD:bool=ON -DSHARED:bool=OFF -DBUILD_TESTING:bool=OFF
+    # Use FastBuild only on Darwin otherwise I run in warings hell.
+    ${CMAKE_EXE} .. ${CMAKE_OPTS} -DFAST_BUILD:bool=ON
 else
     # FAST_BUILD fails on Windows, for the other platforms both seams to work.
-    ${CMAKE_EXE} .. -DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DFAST_BUILD:bool=OFF -DSHARED:bool=OFF -DBUILD_TESTING:bool=OFF
+    ${CMAKE_EXE} .. ${CMAKE_OPTS} -DFAST_BUILD:bool=OFF
 fi
 
 ${MAKE} install
