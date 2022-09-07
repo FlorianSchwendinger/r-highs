@@ -27,4 +27,16 @@ The upstream repo to which I apply the patches required by CRAN is located at
   which triggers a waring which CRAN requires to fix.
 
 - ZLIB not available on CRAN Windows machine
-  On one of the CRAN Windows machines CMAKE can not detect ZLIB which
+  On one of the CRAN Windows machines CMAKE can not detect ZLIB which causes an error.
+  Since the read capabilities are not used, `find_package(ZLIB 1.2.3)` is removed from
+  `CMakeLists.txt` this causes an error since `strdup` is than no longer found,
+  which can be resolved by adding an the following else statement to `extern/filereaderlp/reader.cpp`.
+  ```
+    #include "HConfig.h"  // for ZLIB_FOUND
+    #ifdef ZLIB_FOUND
+    #include "zstr.hpp"
+    #else
+    #define _POSIX_C_SOURCE 200809L
+    #include <string.h>
+    #endif
+   ```
