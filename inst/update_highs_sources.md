@@ -40,3 +40,19 @@ The upstream repo to which I apply the patches required by CRAN is located at
     #include <string.h>
     #endif
    ```
+
+- Headers not terminated with a newline
+  ```
+  Found the following sources/headers not terminated with a newline:
+    src/highslib/include/highs/parallel/HighsBinarySemaphore.h
+    src/highslib/include/highs/parallel/HighsCacheAlign.h
+    src/highslib/include/highs/parallel/HighsCombinable.h
+    src/highslib/include/highs/parallel/HighsMutex.h
+    src/highslib/include/highs/parallel/HighsParallel.h
+    src/highslib/include/highs/parallel/HighsSchedulerConstants.h
+    src/highslib/include/highs/parallel/HighsSpinMutex.h
+    src/highslib/include/highs/presolve/ICrash.h
+    src/highslib/include/highs/presolve/ICrashUtil.h
+  Some compilers warn on such files.
+  ```
+

@@ -122,10 +122,10 @@ enable_cxx_compiler_flag_if_supported("-Wall")
 enable_cxx_compiler_flag_if_supported("-Wextra")
 enable_cxx_compiler_flag_if_supported("-Wno-unused-parameter")
 enable_cxx_compiler_flag_if_supported("-Wno-format-truncation")
-enable_cxx_compiler_flag_if_supported("-Wno-sign-compare")
 enable_cxx_compiler_flag_if_supported("-Wno-unused-variable")
 enable_cxx_compiler_flag_if_supported("-Wno-switch")
 enable_cxx_compiler_flag_if_supported("-Wno-return-type")
+enable_cxx_compiler_flag_if_supported("-Wno-bitwise-instead-of-logical")
 enable_cxx_compiler_flag_if_supported("-pedantic")
 endif()
 
@@ -217,7 +217,7 @@ message(STATUS "Compilation date: " ${TODAY})
 if (NOT FAST_BUILD)
 
 # For the moment keep above coverage part in case we are testing at CI.
-option(CI "CI extended tests" ON)
+option(CI "CI extended tests" OFF)
 
 # Coverage part
 # 'make coverage' to start the coverage process
