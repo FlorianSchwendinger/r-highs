@@ -1,40 +1,41 @@
 ---
-output: github_document
+title: "**R** HIGHS Interface"
+author: "Florian Schwendinger</br>"
+date: "Updated: `r Sys.Date()`"
+output:
+  github_document:
+    number_sections: true
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/highs)](https://CRAN.R-project.org/package=highs)
+[![Licence](https://img.shields.io/cran/l/highs)](https://www.gnu.org/licenses/gpl-2.0.en.html)
+<!-- badges: end -->
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
-)
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
-# **R** HIGHS Interface
-
-This repository contains an **R** interface to the **HiGHS** solver.
-The [HiGHS](https://github.com/ERGO-Code/HiGHS) solver,
+This repository contains an **R** interface to the [**HiGHS**](https://github.com/ERGO-Code/HiGHS) solver.
+The [**HiGHS**](https://github.com/ERGO-Code/HiGHS) solver,
 is a **high**-performance open-source **solver** for
 solving linear programming (LP), mixed-integer programming
 (MIP) and quadratic programming (QP) optimization problems.
 
 
-## Installation
-The package can be installed from **CRAN** 
+# Installation
+The package can be installed from [**CRAN**](https://CRAN.R-project.org/package=highs)
 ```{r, eval = FALSE}
 install.packages("highs")
 ```
-or [gitlab](https://gitlab.com/roigrp/solver/highs).
+or [**GitLab**](https://gitlab.com/roigrp/solver/highs).
 ```{r, eval = FALSE}
 remotes::install_gitlab("roigrp/solver/highs")
 ```
 
-## Using a preinstalled HiGHS library
+### Using a preinstalled HiGHS library
 It is possible to use a precompile HiGHS library by providing
-the system variable `RHIGHS_LIB_DIR`.
+the system variable `R_HIGHS_LIB_DIR`.
 For example I used 
 ```sh
 mkdir build
@@ -44,13 +45,15 @@ make install
 ```
 to install the **HiGHS** library to `/Z/bin/highslib`
 
-```{r}
+```{r, eval = FALSE}
 Sys.setenv(R_HIGHS_LIB_DIR = "/Z/bin/highslib")
 install.packages("highs")
+# or 
+# remotes::install_gitlab("roigrp/solver/highs")
 ```
 
 
-## Basic usage
+# Basic usage
 ```{r}
 library("highs")
 
@@ -58,7 +61,7 @@ args(highs_solve)
 ```
 
 
-### LP
+## LP
 ```{r}
 # Minimize
 #  x_0 +  x_1 + 3
@@ -93,7 +96,7 @@ str(s)
 ```
 
 
-## Options
+# Options
 The function `highs_available_solver_options` lists the available solver options
 ```{r}
 d <- highs_available_solver_options()
@@ -104,7 +107,7 @@ knitr::kable(d, row.names = FALSE)
 for additional information see the [HiGHS homepage](https://highs.dev/).	
 
 
-## Status codes
+# Status codes
 HiGHS currently has the following status codes defined in `HConst.h"`.
 
 | enumerator               | status | message                            |
@@ -127,4 +130,5 @@ HiGHS currently has the following status codes defined in `HConst.h"`.
 | `kUnknown`               |     15 | `"Unknown"`                        |
 | `kMin`                   |      0 | `"Not Set"`                        |
 | `kMax`                   |     15 | `"Unknown"`                        |
+
 

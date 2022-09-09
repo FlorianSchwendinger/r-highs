@@ -1,29 +1,59 @@
+**R** HIGHS Interface
+================
+Florian Schwendinger</br>
+Updated: 2022-09-09
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- badges: start -->
 
-# **R** HIGHS Interface
+[![CRAN
+status](https://www.r-pkg.org/badges/version/highs)](https://CRAN.R-project.org/package=highs)
+[![Licence](https://img.shields.io/cran/l/highs)](https://www.gnu.org/licenses/gpl-2.0.en.html)
+<!-- badges: end -->
 
-This repository contains an **R** interface to the **HiGHS** solver. The
-[HiGHS](https://github.com/ERGO-Code/HiGHS) solver, is a
+This repository contains an **R** interface to the
+[**HiGHS**](https://github.com/ERGO-Code/HiGHS) solver. The
+[**HiGHS**](https://github.com/ERGO-Code/HiGHS) solver, is a
 **high**-performance open-source **solver** for solving linear
 programming (LP), mixed-integer programming (MIP) and quadratic
 programming (QP) optimization problems.
 
-## Installation
+# 1 Installation
 
-The package can be installed from **CRAN**
+The package can be installed from
+[**CRAN**](https://CRAN.R-project.org/package=highs)
 
 ``` r
 install.packages("highs")
 ```
 
-or [gitlab](https://gitlab.com/roigrp/solver/highs).
+or [**GitLab**](https://gitlab.com/roigrp/solver/highs).
 
 ``` r
 remotes::install_gitlab("roigrp/solver/highs")
 ```
 
-## Basic usage
+### 1.0.1 Using a preinstalled HiGHS library
+
+It is possible to use a precompile HiGHS library by providing the system
+variable `R_HIGHS_LIB_DIR`. For example I used
+
+``` sh
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=/Z/bin/highslib -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DSHARED:bool=OFF -DBUILD_TESTING:bool=OFF
+make install
+```
+
+to install the **HiGHS** library to `/Z/bin/highslib`
+
+``` r
+Sys.setenv(R_HIGHS_LIB_DIR = "/Z/bin/highslib")
+install.packages("highs")
+# or 
+# remotes::install_gitlab("roigrp/solver/highs")
+```
+
+# 2 Basic usage
 
 ``` r
 library("highs")
@@ -34,7 +64,7 @@ args(highs_solve)
 #> NULL
 ```
 
-### LP
+## 2.1 LP
 
 ``` r
 # Minimize
@@ -83,7 +113,7 @@ str(s)
 #>   ..$ sum_dual_infeasibilities  : num 0
 ```
 
-## QP
+## 2.2 QP
 
 ``` r
 # Minimize
@@ -131,7 +161,7 @@ str(s)
 #>   ..$ sum_dual_infeasibilities  : num 0
 ```
 
-## Options
+# 3 Options
 
 The function `highs_available_solver_options` lists the available solver
 options
@@ -143,7 +173,7 @@ knitr::kable(d, row.names = FALSE)
 ```
 
 | option                                          | type    | category |
-| :---------------------------------------------- | :------ | :------- |
+|:------------------------------------------------|:--------|:---------|
 | `allow_unbounded_or_infeasible`                 | bool    | advanced |
 | `allowed_cost_scale_factor`                     | integer | advanced |
 | `allowed_matrix_scale_factor`                   | integer | advanced |
@@ -242,12 +272,12 @@ knitr::kable(d, row.names = FALSE)
 
 for additional information see the [HiGHS homepage](https://highs.dev/).
 
-## Status codes
+# 4 Status codes
 
 HiGHS currently has the following status codes defined in `HConst.h"`.
 
 | enumerator               | status | message                            |
-| ------------------------ | -----: | ---------------------------------- |
+|--------------------------|-------:|------------------------------------|
 | `kNotset`                |      0 | `"Not Set"`                        |
 | `kLoadError`             |      1 | `"Load error"`                     |
 | `kModelError`            |      2 | `"Model error"`                    |

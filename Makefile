@@ -3,6 +3,8 @@ Rclang ?= R412-clang
 
 readme:
 	$(R) -e 'rmarkdown::render("README.Rmd", clean = FALSE)'
+	# pandoc README.md -s --highlight-style=pygments -o README.html
+	# pandoc README.md -o README.html
 
 compile_attributes:
 	$(R) -e 'Rcpp::compileAttributes(".")'
