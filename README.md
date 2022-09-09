@@ -11,6 +11,14 @@ programming (QP) optimization problems.
 
 ## Installation
 
+The package can be installed from **CRAN**
+
+``` r
+install.packages("highs")
+```
+
+or [gitlab](https://gitlab.com/roigrp/solver/highs).
+
 ``` r
 remotes::install_gitlab("roigrp/solver/highs")
 ```

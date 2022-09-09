@@ -23,8 +23,30 @@ solving linear programming (LP), mixed-integer programming
 
 
 ## Installation
+The package can be installed from **CRAN** 
+```{r, eval = FALSE}
+install.packages("highs")
+```
+or [gitlab](https://gitlab.com/roigrp/solver/highs).
 ```{r, eval = FALSE}
 remotes::install_gitlab("roigrp/solver/highs")
+```
+
+## Using a preinstalled HiGHS library
+It is possible to use a precompile HiGHS library by providing
+the system variable `RHIGHS_LIB_DIR`.
+For example I used 
+```sh
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=/Z/bin/highslib -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DSHARED:bool=OFF -DBUILD_TESTING:bool=OFF
+make install
+```
+to install the **HiGHS** library to `/Z/bin/highslib`
+
+```{r}
+Sys.setenv(R_HIGHS_LIB_DIR = "/Z/bin/highslib")
+install.packages("highs")
 ```
 
 
