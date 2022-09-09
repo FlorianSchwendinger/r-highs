@@ -317,7 +317,7 @@ if(CMAKE_BUILD_TYPE STREQUAL RELEASE)
 endif()
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
-configure_file(${HIGHS_SOURCE_DIR}/src/HConfig.h.in ${HIGHS_BINARY_DIR}/HConfig.h)
+configure_file(${HIGHS_SOURCE_DIR}/src/HConfig.h.in ${HIGHS_BINARY_DIR}/HConfig.h @ONLY NEWLINE_STYLE UNIX)
 include_directories(
     ${HIGHS_BINARY_DIR}
     ${HIGHS_SOURCE_DIR}/app
@@ -380,7 +380,7 @@ if(CMAKE_BUILD_TYPE STREQUAL RELEASE)
 endif()
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
-configure_file(${HIGHS_SOURCE_DIR}/src/HConfig.h.in ${HIGHS_BINARY_DIR}/HConfig.h)
+configure_file(${HIGHS_SOURCE_DIR}/src/HConfig.h.in ${HIGHS_BINARY_DIR}/HConfig.h @ONLY NEWLINE_STYLE UNIX)
 
 set(CMAKE_PLATFORM_USES_PATH_WHEN_NO_SONAME FALSE)
 

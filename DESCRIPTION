@@ -2,7 +2,7 @@ Package: highs
 Type: Package
 Title: 'HiGHS' Optimization Solver
 Version: 0.1-3
-Authors@R: c(person("Florian", "Schwendinger", email = "florianschwendinger@gmx.at", role = c("aut", "cre")),
+Authors@R: c(person("Florian", "Schwendinger", email = "FlorianSchwendinger@gmx.at", role = c("aut", "cre")),
              person("Dirk", "Schumacher", role = "aut"),
              person("Julian", "Hall", role = "cph"),
              person("Ivet", "Galabova", role = "cph"),
@@ -13,6 +13,8 @@ Description: R interface to 'HiGHS', an optimization solver for solving mixed in
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.7), checkmate
 SystemRequirements: Bash, PkgConfig, CMAKE (>=3.15), C++11
+URL: https://gitlab.com/roigrp/solver/highs
+BugReports: https://gitlab.com/roigrp/solver/highs/-/issues
 Suggests: tinytest
 LinkingTo: Rcpp
 RoxygenNote: 7.2.0
