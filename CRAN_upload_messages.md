@@ -6,7 +6,7 @@ Which I guess is a false positive since Rtools 4.2 states "32-bit builds are no 
 From the tests I can do on r-hub and winbuilder, it appears all the issues are fixed.
 Note the compilation on "r-oldrel-windows-ix86+x86_64" will fail,
 this seams to be related to differences in Rtools 4.0 and Rtools 4.2.
-Since this issue will resolve it self when r-release becomes r-oldrel
-I addressed that by adding "Rtools (>= 4.2) | Unix" to the SystemRequirements.
+The winbuilder message says
+'The C++ compiler "D:/Compiler/rtools40/mingw64/bin/g++.exe" is not able to compile a simple test program.'
+https://win-builder.r-project.org/biGPzYmI2SiN/00install.out
 
-Changed e-mail address.

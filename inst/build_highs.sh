@@ -60,19 +60,24 @@ echo "CXX11: '${CXX11}'"
 echo ""
 
 
-CMAKE_OPTS="-DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DSHARED:bool=OFF -DBUILD_TESTING:bool=OFF"
+# The flag CMAKE_CXX_COMPILER_WORKS signals cmake that we know
+# that the compiler works therefore cmake has not to test.
+# Documentation on this flag is very hard to find.
+# https://www.linuxfixes.com/2021/10/solved-cmake-c-compiler-is-not-able-to.html?m=0
+# https://github.com/Kitware/CMake/blob/master/Modules/CMakeTestCXXCompiler.cmake
 
 # In R-oldrelease HiGHS tries to build with 'NMake Makefiles' instead of 'Unix Makefiles'
 # the additional flag '-G "Unix Makefiles"' forces the use of 'Unix Makefiles'.
 # But than it fails since prior to 4.2.0 R-win tries to compile and test for 'i386' and 'x64'
 # and fails for 'i386'.
 # if test "${OS_TYPE}" = "unix"; then
+CMAKE_OPTS="-DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DSHARED:bool=OFF -DBUILD_TESTING:bool=OFF"
 if test "$(uname -s)" = "Darwin"; then
     # Use FastBuild only on Darwin otherwise I run in warings hell.
     ${CMAKE_EXE} .. ${CMAKE_OPTS} -DFAST_BUILD:bool=ON
 else
     # FAST_BUILD fails on Windows, for the other platforms both seams to work.
-    ${CMAKE_EXE} .. ${CMAKE_OPTS} -DFAST_BUILD:bool=OFF
+    ${CMAKE_EXE} .. ${CMAKE_OPTS} -DFAST_BUILD:bool=OFF -G "Unix Makefiles"
 fi
 
 ${MAKE} install

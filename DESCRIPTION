@@ -2,7 +2,8 @@ Package: highs
 Type: Package
 Title: 'HiGHS' Optimization Solver
 Version: 0.1-3
-Authors@R: c(person("Florian", "Schwendinger", email = "florian.schwendinger@quintik-tech.com", role = c("aut", "cre")),
+Authors@R: c(person("Florian", "Schwendinger", email = "FlorianSchwendinger@gmx.at", role = c("aut", "cre")),
+             person("Florian", "Schwendinger", email = "florian.schwendinger@quintik-tech.com", role = c("aut")),   
              person("Dirk", "Schumacher", role = "aut"),
              person("Julian", "Hall", role = "cph"),
              person("Ivet", "Galabova", role = "cph"),
@@ -16,5 +17,6 @@ SystemRequirements: Bash, PkgConfig, CMAKE (>=3.15), C++11
 URL: https://gitlab.com/roigrp/solver/highs
 BugReports: https://gitlab.com/roigrp/solver/highs/-/issues
 Suggests: tinytest
+Biarch: FALSE
 LinkingTo: Rcpp
 RoxygenNote: 7.2.0

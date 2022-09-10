@@ -58,6 +58,18 @@ check_fedora: build
 check_win: build
 	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'windows-x86_64-devel')"
 
+check_old_win: build
+	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'windows-x86_64-devel')"
+
+devcheck_win_devel: build
+	$(R) -e "devtools::check_win_devel(email = 'FlorianSchwendinger@gmx.at')"
+
+devcheck_win_release: build
+	$(R) -e "devtools::check_win_release(email = 'FlorianSchwendinger@gmx.at')"
+
+devcheck_win_oldrelease: build
+	$(R) -e "devtools::check_win_oldrelease(email = 'FlorianSchwendinger@gmx.at')"
+
 check_mac_m1: build
 	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'macos-m1-bigsur-release')"
 

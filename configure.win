@@ -1,6 +1,8 @@
 #!/bin/sh
 
-if test -z "${RHIGHS_LIB_DIR}"; then
+echo "Use 'configure.win'"
+
+if test -z "${R_HIGHS_LIB_DIR}"; then
     R_HIGHS_PKG_HOME=`pwd`
     bash inst/build_highs.sh
     cd ${R_HIGHS_PKG_HOME}
@@ -9,7 +11,7 @@ if test -z "${RHIGHS_LIB_DIR}"; then
 fi
 
 
-sed -e "s|@RHIGHS_LIB_DIR@|$R_HIGHS_LIB_DIR|g" src/Makevars.in > src/Makevars
+sed -e "s|@RHIGHS_LIB_DIR@|$R_HIGHS_LIB_DIR|g" src/Makevars.in > src/Makevars.win
 
 
 if [ -z "$(ls ${R_HIGHS_LIB_DIR} | grep 'include')" ]; then

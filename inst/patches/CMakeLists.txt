@@ -3,6 +3,8 @@
 # finding external libraries and turning them into imported targets.
 
 cmake_minimum_required(VERSION 3.15)
+# set(CMAKE_CXX_COMPILER_FORCED TRUE)
+# set(CMAKE_CXX_COMPILER_WORKS TRUE)
 
 # set preference for clang compiler and intel compiler over gcc and other compilers
 include(Platform/${CMAKE_SYSTEM_NAME}-Determine-C OPTIONAL)
