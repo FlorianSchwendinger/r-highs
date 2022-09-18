@@ -53,6 +53,7 @@ export LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
 echo ""
 echo "CMAKE VERSION: '`${CMAKE_EXE} --version | head -n 1`'"
 echo "arch: '$(arch)'"
+echo "R_ARCH: '$R_ARCH'"
 # echo "OS_TYPE: '${OS_TYPE}'"
 echo "CC: '${CC}'"
 echo "CXX: '${CXX}'"
