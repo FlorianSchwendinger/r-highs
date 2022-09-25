@@ -28,9 +28,6 @@ fi
 # OS_TYPE=`"${R_HOME}/bin/Rscript" -e 'cat(.Platform[[1]])'`
 
 
-cp -f inst/patches/CMakeLists.txt inst/HiGHS/CMakeLists.txt
-
-
 R_HIGHS_PKG_HOME=`pwd`
 HIGHS_SRC_DIR=${R_HIGHS_PKG_HOME}/inst/HiGHS
 R_HIGHS_BUILD_DIR=${HIGHS_SRC_DIR}/build
