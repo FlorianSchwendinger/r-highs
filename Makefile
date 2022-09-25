@@ -75,3 +75,6 @@ check_mac_m1: build
 
 check_mac_old: build
 	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'macos-highsierra-release-cran')"
+
+check_linux_san: build
+	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'linux-x86_64-rocker-gcc-san')"
