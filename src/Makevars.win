@@ -1,4 +1,0 @@
-CXX_STD=CXX11
-
-PKG_LIBS= -Lsrc/highslib/lib -Lsrc/highslib/lib64 -lhighs
-PKG_CPPFLAGS=-Isrc/highslib/include -Isrc/highslib/include/highs
