@@ -28,7 +28,8 @@ highs_solve(
 
 \item{upper}{a numeric vector giving the upper bounds of the variables.}
 
-\item{A}{a numeric matrix giving the quadratic part of the objective.}
+\item{A}{a numeric matrix giving the linear part of the constraints. Rows are
+constraints, and columns are decision variables.}
 
 \item{lhs}{a numeric vector giving the left hand-side of the linear constraints.}
 
