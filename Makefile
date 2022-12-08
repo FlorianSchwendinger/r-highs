@@ -50,7 +50,7 @@ clean:
 	rm -rf highs.Rcheck
 
 check_all: build
-	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = c('macos-highsierra-release-cran', 'macos-m1-bigsur-release', 'windows-x86_64-devel', 'fedora-clang-devel'))"
+	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = c('macos-highsierra-release-cran', 'debian-clang-devel', 'windows-x86_64-devel', 'fedora-clang-devel'))"
 
 check_fedora: build
 	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'fedora-clang-devel')"

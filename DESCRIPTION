@@ -1,8 +1,8 @@
 Package: highs
 Type: Package
 Title: 'HiGHS' Optimization Solver
-Version: 0.1-4
-Authors@R: c(person("Florian", "Schwendinger", email = "florianschwendinger@gmx.at", role = c("aut", "cre")),
+Version: 0.1-5
+Authors@R: c(person("Florian", "Schwendinger", email = "FlorianSchwendinger@gmx.at", role = c("aut", "cre")),
              person("Dirk", "Schumacher", role = "aut"),
              person("Julian", "Hall", role = "cph"),
              person("Ivet", "Galabova", role = "cph"),
