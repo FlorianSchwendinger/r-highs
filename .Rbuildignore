@@ -13,3 +13,5 @@
 ^inst/HiGHS/CITATION.cff
 ^inst/update_highs_sources.md
 ^CRAN_upload_messages.md
+^.*\.Rproj$
+^\.Rproj\.user$
