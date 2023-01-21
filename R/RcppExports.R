@@ -33,8 +33,8 @@ model_set_upper <- function(mpt, upper) {
     .Call(`_highs_model_set_upper`, mpt, upper)
 }
 
-model_set_constraint_matrix <- function(mpt, format, start, index, value) {
-    .Call(`_highs_model_set_constraint_matrix`, mpt, format, start, index, value)
+model_set_constraint_matrix_ <- function(mpt, format, start, index, value) {
+    .Call(`_highs_model_set_constraint_matrix_`, mpt, format, start, index, value)
 }
 
 model_set_lhs <- function(mpt, lower) {
@@ -45,8 +45,8 @@ model_set_rhs <- function(mpt, upper) {
     .Call(`_highs_model_set_rhs`, mpt, upper)
 }
 
-model_set_hessian <- function(mpt, format, dim, start, index, value) {
-    .Call(`_highs_model_set_hessian`, mpt, format, dim, start, index, value)
+model_set_hessian_ <- function(mpt, format, dim, start, index, value) {
+    .Call(`_highs_model_set_hessian_`, mpt, format, dim, start, index, value)
 }
 
 model_set_vartype <- function(mpt, type) {
@@ -67,6 +67,46 @@ model_get_vartype <- function(mpt) {
 
 new_solver <- function(mpt) {
     .Call(`_highs_new_solver`, mpt)
+}
+
+highs_pass_model <- function(hi, num_col, num_row, num_nz, a_format, sense, offset, col_cost, col_lower, col_upper, row_lower, row_upper, a_start, a_index, a_value, integrality) {
+    .Call(`_highs_highs_pass_model`, hi, num_col, num_row, num_nz, a_format, sense, offset, col_cost, col_lower, col_upper, row_lower, row_upper, a_start, a_index, a_value, integrality)
+}
+
+solver_pass_hessian <- function() {
+    .Call(`_highs_solver_pass_hessian`)
+}
+
+solver_pass_constraints <- function() {
+    .Call(`_highs_solver_pass_constraints`)
+}
+
+solver_set_sense <- function(hi, maximum) {
+    .Call(`_highs_solver_set_sense`, hi, maximum)
+}
+
+solver_set_offset <- function(hi, ext_offset) {
+    .Call(`_highs_solver_set_offset`, hi, ext_offset)
+}
+
+solver_set_integrality <- function(hi, index, type) {
+    .Call(`_highs_solver_set_integrality`, hi, index, type)
+}
+
+solver_set_objective <- function(hi, index, obj) {
+    .Call(`_highs_solver_set_objective`, hi, index, obj)
+}
+
+solver_set_variable_bounds <- function(hi, index, lower, upper) {
+    .Call(`_highs_solver_set_variable_bounds`, hi, index, lower, upper)
+}
+
+solver_set_constraint_bounds <- function(hi, index, lower, upper) {
+    .Call(`_highs_solver_set_constraint_bounds`, hi, index, lower, upper)
+}
+
+solver_set_coeff <- function(hi, row, col, val) {
+    .Call(`_highs_solver_set_coeff`, hi, row, col, val)
 }
 
 solver_set_option <- function(hi, key, value) {
@@ -137,12 +177,12 @@ solver_get_str_option <- function(hi, key) {
     .Call(`_highs_solver_get_str_option`, hi, key)
 }
 
-solver_change_bounds <- function(hi, idx, lower, upper) {
-    .Call(`_highs_solver_change_bounds`, hi, idx, lower, upper)
+solver_change_variable_bounds <- function(hi, idx, lower, upper) {
+    .Call(`_highs_solver_change_variable_bounds`, hi, idx, lower, upper)
 }
 
-solver_change_lrhs <- function(hi, idx, lhs, rhs) {
-    .Call(`_highs_solver_change_lrhs`, hi, idx, lhs, rhs)
+solver_change_constraint_bounds <- function(hi, idx, lhs, rhs) {
+    .Call(`_highs_solver_change_constraint_bounds`, hi, idx, lhs, rhs)
 }
 
 solver_add_rows <- function(hi, lhs, rhs, start, index, value) {
