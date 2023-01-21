@@ -10,6 +10,18 @@ static void R_message_handler(HighsLogType type, const char* message, void* log_
 }
 
 
+std::vector<HighsVarType> to_vartype(std::vector<int32_t> type) {
+    std::vector<HighsVarType> htype;
+    std::vector<HighsVarType> variable_types = {
+        HighsVarType::kContinuous, HighsVarType::kInteger, HighsVarType::kSemiContinuous,
+        HighsVarType::kSemiInteger, HighsVarType::kImplicitInteger};
+    for (std::size_t i = 0; i < type.size(); ++i) {
+        htype.push_back(variable_types[type[i]]);
+    }
+    return htype;
+}
+
+
 // [[Rcpp::export]]
 SEXP new_model() {
     Rcpp::XPtr<HighsModel> highs_model(new HighsModel(), true);
@@ -70,10 +82,10 @@ SEXP model_set_upper(SEXP mpt, std::vector<double> upper) {
 }
 
 // [[Rcpp::export]]
-SEXP model_set_constraint_matrix(SEXP mpt, std::string format,
-                                 std::vector<int32_t> start,
-                                 std::vector<int32_t> index,
-                                 std::vector<double> value) {
+SEXP model_set_constraint_matrix_(SEXP mpt, std::string format,
+                                  std::vector<int32_t> start,
+                                  std::vector<int32_t> index,
+                                  std::vector<double> value) {
     Rcpp::XPtr<HighsModel>model(mpt);
     if (format == "colwise") {
         model->lp_.a_matrix_.format_ = MatrixFormat::kColwise;
@@ -105,10 +117,10 @@ SEXP model_set_rhs(SEXP mpt, std::vector<double> upper) {
 }
 
 // [[Rcpp::export]]
-SEXP model_set_hessian(SEXP mpt, std::string format, int32_t dim,
-                       std::vector<int32_t> start,
-                       std::vector<int32_t> index,
-                       std::vector<double> value) {
+SEXP model_set_hessian_(SEXP mpt, std::string format, int32_t dim,
+                        std::vector<int32_t> start,
+                        std::vector<int32_t> index,
+                        std::vector<double> value) {
     Rcpp::XPtr<HighsModel>model(mpt);
     model->hessian_.dim_ = dim;
     if (format == "triangular") {
@@ -163,15 +175,152 @@ Rcpp::IntegerVector model_get_vartype(SEXP mpt) {
 
 // [[Rcpp::export]]
 SEXP new_solver(SEXP mpt) {
-    Rcpp::XPtr<HighsModel>model(mpt);
     Rcpp::XPtr<Highs> highs(new Highs(), true);
     highs->setLogCallback(R_message_handler);
+    if (Rf_isNull(mpt)) {
+        return highs;
+    }
+    Rcpp::XPtr<HighsModel>model(mpt);
     HighsStatus return_status = highs->passModel(*model.get());
     if (return_status != HighsStatus::kOk) {
         return R_NilValue;
     }
     return highs;
 }
+
+
+// [[Rcpp::export]]
+SEXP highs_pass_model(SEXP hi,
+                   const int32_t num_col, const int32_t num_row,
+                   const int32_t num_nz, const int32_t a_format,
+                   const int32_t sense, const double_t offset,
+                   NumericVector col_cost, NumericVector col_lower,
+                   NumericVector col_upper, NumericVector row_lower,
+                   NumericVector row_upper, IntegerVector a_start,
+                   IntegerVector a_index, NumericVector a_value,
+                   IntegerVector integrality) {
+    Rcpp::XPtr<Highs>highs(hi);
+    highs->passModel(num_col,
+                     num_row,
+                     num_nz,
+                     a_format,
+                     sense,
+                     offset,
+                     &(col_cost[0]),
+                     &(col_lower[0]),
+                     &(col_upper[0]),
+                     &(row_lower[0]),
+                     &(row_upper[0]),
+                     &(a_start[0]),
+                     &(a_index[0]),
+                     &(a_value[0]),
+                     &(integrality[0]));
+    return R_NilValue;
+}
+
+
+// [[Rcpp::export]]
+SEXP solver_pass_hessian() {
+    return R_NilValue;
+}
+
+
+// [[Rcpp::export]]
+SEXP solver_pass_constraints () {
+    return R_NilValue;
+}
+
+
+// [[Rcpp::export]]
+int32_t solver_set_sense(SEXP hi, bool maximum) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsStatus status;
+    if (maximum) {
+        status = highs->changeObjectiveSense(ObjSense::kMaximize);
+    } else {
+        status = highs->changeObjectiveSense(ObjSense::kMinimize);
+    }
+    return static_cast<int32_t>(status);
+}
+
+// [[Rcpp::export]]
+int32_t solver_set_offset(SEXP hi, const double ext_offset) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsStatus status = highs->changeObjectiveOffset(ext_offset);
+    return static_cast<int32_t>(status);
+}
+
+// [[Rcpp::export]]
+int32_t solver_set_integrality(SEXP hi, std::vector<int32_t> index, std::vector<int32_t> type) {
+    Rcpp::XPtr<Highs>highs(hi);
+    const int32_t num_set_entries = index.size();
+    const HighsInt* set = &(index[0]);
+    const HighsVarType* integrality = &(to_vartype(type)[0]);
+    HighsStatus status = highs->changeColsIntegrality(num_set_entries, set, integrality);
+    return static_cast<int32_t>(status);
+}
+
+// [[Rcpp::export]]
+int32_t solver_set_objective(SEXP hi, std::vector<int32_t> index, std::vector<double_t> obj) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsStatus status = highs->changeColsCost(index.size(), &(index[0]), &(obj[0]));
+    return static_cast<int32_t>(status);
+}
+
+
+// [[Rcpp::export]]
+int32_t solver_set_variable_bounds(SEXP hi, std::vector<int32_t> index, std::vector<double_t> lower, std::vector<double_t> upper) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsStatus status = highs->changeColsBounds(index.size(), &(index[0]), &(lower[0]), &(upper[0]));
+    return static_cast<int32_t>(status);
+}
+
+
+// [[Rcpp::export]]
+int32_t solver_set_constraint_bounds(SEXP hi, std::vector<int32_t> index, std::vector<double_t> lower, std::vector<double_t> upper) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsStatus status = highs->changeRowsBounds(index.size(), &(index[0]), &(lower[0]), &(upper[0]));
+    return static_cast<int32_t>(status);
+}
+
+
+// [[Rcpp::export]]
+SEXP solver_set_coeff(SEXP hi, std::vector<int32_t> row, std::vector<int32_t> col, std::vector<double_t> val) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsStatus status;
+    for (std::size_t i = 0; i < row.size(); ++i) {
+        status = highs->changeCoeff(row[i], col[i], val[i]);
+        if (status != HighsStatus::kOk) {
+            Rcpp::stop("error setting coefficient");
+        }
+    }
+    return R_NilValue;
+}
+
+/*
+model_set_lower
+model_set_upper
+model_set_constraint_matrix_
+model_set_lhs
+model_set_rhs
+model_set_hessian_
+model_set_vartype
+*/
+//
+// changeObjectiveSenseInterface
+// 
+// addRowsInterface
+// addColsInterface
+// changeColsIntegrality
+// changeColsCost
+// changeColsBounds
+// changeRowsBounds
+// changeCoeff
+// addCols
+// addRows
+// setSolution
+// getHotStart
+// setHotStart
 
 // [[Rcpp::export]]
 int32_t solver_set_option(SEXP hi, std::string key, SEXP value) {
@@ -374,7 +523,7 @@ std::string solver_get_str_option(SEXP hi, std::string key) {
 
 
 // [[Rcpp::export]]
-int32_t solver_change_bounds(SEXP hi, IntegerVector idx, NumericVector lower, NumericVector upper) {
+int32_t solver_change_variable_bounds(SEXP hi, IntegerVector idx, NumericVector lower, NumericVector upper) {
     Rcpp::XPtr<Highs>highs(hi);
     HighsStatus return_status = highs->changeColsBounds(idx.size(), &(idx[0]), &(lower[0]), &(upper[0]));
     return static_cast<int32_t>(return_status);
@@ -382,7 +531,7 @@ int32_t solver_change_bounds(SEXP hi, IntegerVector idx, NumericVector lower, Nu
 
 
 // [[Rcpp::export]]
-int32_t solver_change_lrhs(SEXP hi, IntegerVector idx, NumericVector lhs, NumericVector rhs) {
+int32_t solver_change_constraint_bounds(SEXP hi, IntegerVector idx, NumericVector lhs, NumericVector rhs) {
     Rcpp::XPtr<Highs>highs(hi);
     HighsStatus return_status = highs->changeRowsBounds(idx.size(), &(idx[0]), &(lhs[0]), &(rhs[0]));
     return static_cast<int32_t>(return_status);

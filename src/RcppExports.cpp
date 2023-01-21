@@ -104,9 +104,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// model_set_constraint_matrix
-SEXP model_set_constraint_matrix(SEXP mpt, std::string format, std::vector<int32_t> start, std::vector<int32_t> index, std::vector<double> value);
-RcppExport SEXP _highs_model_set_constraint_matrix(SEXP mptSEXP, SEXP formatSEXP, SEXP startSEXP, SEXP indexSEXP, SEXP valueSEXP) {
+// model_set_constraint_matrix_
+SEXP model_set_constraint_matrix_(SEXP mpt, std::string format, std::vector<int32_t> start, std::vector<int32_t> index, std::vector<double> value);
+RcppExport SEXP _highs_model_set_constraint_matrix_(SEXP mptSEXP, SEXP formatSEXP, SEXP startSEXP, SEXP indexSEXP, SEXP valueSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -115,7 +115,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::vector<int32_t> >::type start(startSEXP);
     Rcpp::traits::input_parameter< std::vector<int32_t> >::type index(indexSEXP);
     Rcpp::traits::input_parameter< std::vector<double> >::type value(valueSEXP);
-    rcpp_result_gen = Rcpp::wrap(model_set_constraint_matrix(mpt, format, start, index, value));
+    rcpp_result_gen = Rcpp::wrap(model_set_constraint_matrix_(mpt, format, start, index, value));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -143,9 +143,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// model_set_hessian
-SEXP model_set_hessian(SEXP mpt, std::string format, int32_t dim, std::vector<int32_t> start, std::vector<int32_t> index, std::vector<double> value);
-RcppExport SEXP _highs_model_set_hessian(SEXP mptSEXP, SEXP formatSEXP, SEXP dimSEXP, SEXP startSEXP, SEXP indexSEXP, SEXP valueSEXP) {
+// model_set_hessian_
+SEXP model_set_hessian_(SEXP mpt, std::string format, int32_t dim, std::vector<int32_t> start, std::vector<int32_t> index, std::vector<double> value);
+RcppExport SEXP _highs_model_set_hessian_(SEXP mptSEXP, SEXP formatSEXP, SEXP dimSEXP, SEXP startSEXP, SEXP indexSEXP, SEXP valueSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -155,7 +155,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::vector<int32_t> >::type start(startSEXP);
     Rcpp::traits::input_parameter< std::vector<int32_t> >::type index(indexSEXP);
     Rcpp::traits::input_parameter< std::vector<double> >::type value(valueSEXP);
-    rcpp_result_gen = Rcpp::wrap(model_set_hessian(mpt, format, dim, start, index, value));
+    rcpp_result_gen = Rcpp::wrap(model_set_hessian_(mpt, format, dim, start, index, value));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -212,6 +212,144 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type mpt(mptSEXP);
     rcpp_result_gen = Rcpp::wrap(new_solver(mpt));
+    return rcpp_result_gen;
+END_RCPP
+}
+// highs_pass_model
+SEXP highs_pass_model(SEXP hi, const int32_t num_col, const int32_t num_row, const int32_t num_nz, const int32_t a_format, const int32_t sense, const double_t offset, NumericVector col_cost, NumericVector col_lower, NumericVector col_upper, NumericVector row_lower, NumericVector row_upper, IntegerVector a_start, IntegerVector a_index, NumericVector a_value, IntegerVector integrality);
+RcppExport SEXP _highs_highs_pass_model(SEXP hiSEXP, SEXP num_colSEXP, SEXP num_rowSEXP, SEXP num_nzSEXP, SEXP a_formatSEXP, SEXP senseSEXP, SEXP offsetSEXP, SEXP col_costSEXP, SEXP col_lowerSEXP, SEXP col_upperSEXP, SEXP row_lowerSEXP, SEXP row_upperSEXP, SEXP a_startSEXP, SEXP a_indexSEXP, SEXP a_valueSEXP, SEXP integralitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    Rcpp::traits::input_parameter< const int32_t >::type num_col(num_colSEXP);
+    Rcpp::traits::input_parameter< const int32_t >::type num_row(num_rowSEXP);
+    Rcpp::traits::input_parameter< const int32_t >::type num_nz(num_nzSEXP);
+    Rcpp::traits::input_parameter< const int32_t >::type a_format(a_formatSEXP);
+    Rcpp::traits::input_parameter< const int32_t >::type sense(senseSEXP);
+    Rcpp::traits::input_parameter< const double_t >::type offset(offsetSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type col_cost(col_costSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type col_lower(col_lowerSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type col_upper(col_upperSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type row_lower(row_lowerSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type row_upper(row_upperSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type a_start(a_startSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type a_index(a_indexSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type a_value(a_valueSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type integrality(integralitySEXP);
+    rcpp_result_gen = Rcpp::wrap(highs_pass_model(hi, num_col, num_row, num_nz, a_format, sense, offset, col_cost, col_lower, col_upper, row_lower, row_upper, a_start, a_index, a_value, integrality));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_pass_hessian
+SEXP solver_pass_hessian();
+RcppExport SEXP _highs_solver_pass_hessian() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(solver_pass_hessian());
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_pass_constraints
+SEXP solver_pass_constraints();
+RcppExport SEXP _highs_solver_pass_constraints() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(solver_pass_constraints());
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_set_sense
+int32_t solver_set_sense(SEXP hi, bool maximum);
+RcppExport SEXP _highs_solver_set_sense(SEXP hiSEXP, SEXP maximumSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    Rcpp::traits::input_parameter< bool >::type maximum(maximumSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_set_sense(hi, maximum));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_set_offset
+int32_t solver_set_offset(SEXP hi, const double ext_offset);
+RcppExport SEXP _highs_solver_set_offset(SEXP hiSEXP, SEXP ext_offsetSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    Rcpp::traits::input_parameter< const double >::type ext_offset(ext_offsetSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_set_offset(hi, ext_offset));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_set_integrality
+int32_t solver_set_integrality(SEXP hi, std::vector<int32_t> index, std::vector<int32_t> type);
+RcppExport SEXP _highs_solver_set_integrality(SEXP hiSEXP, SEXP indexSEXP, SEXP typeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    Rcpp::traits::input_parameter< std::vector<int32_t> >::type index(indexSEXP);
+    Rcpp::traits::input_parameter< std::vector<int32_t> >::type type(typeSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_set_integrality(hi, index, type));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_set_objective
+int32_t solver_set_objective(SEXP hi, std::vector<int32_t> index, std::vector<double_t> obj);
+RcppExport SEXP _highs_solver_set_objective(SEXP hiSEXP, SEXP indexSEXP, SEXP objSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    Rcpp::traits::input_parameter< std::vector<int32_t> >::type index(indexSEXP);
+    Rcpp::traits::input_parameter< std::vector<double_t> >::type obj(objSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_set_objective(hi, index, obj));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_set_variable_bounds
+int32_t solver_set_variable_bounds(SEXP hi, std::vector<int32_t> index, std::vector<double_t> lower, std::vector<double_t> upper);
+RcppExport SEXP _highs_solver_set_variable_bounds(SEXP hiSEXP, SEXP indexSEXP, SEXP lowerSEXP, SEXP upperSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    Rcpp::traits::input_parameter< std::vector<int32_t> >::type index(indexSEXP);
+    Rcpp::traits::input_parameter< std::vector<double_t> >::type lower(lowerSEXP);
+    Rcpp::traits::input_parameter< std::vector<double_t> >::type upper(upperSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_set_variable_bounds(hi, index, lower, upper));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_set_constraint_bounds
+int32_t solver_set_constraint_bounds(SEXP hi, std::vector<int32_t> index, std::vector<double_t> lower, std::vector<double_t> upper);
+RcppExport SEXP _highs_solver_set_constraint_bounds(SEXP hiSEXP, SEXP indexSEXP, SEXP lowerSEXP, SEXP upperSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    Rcpp::traits::input_parameter< std::vector<int32_t> >::type index(indexSEXP);
+    Rcpp::traits::input_parameter< std::vector<double_t> >::type lower(lowerSEXP);
+    Rcpp::traits::input_parameter< std::vector<double_t> >::type upper(upperSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_set_constraint_bounds(hi, index, lower, upper));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_set_coeff
+SEXP solver_set_coeff(SEXP hi, std::vector<int32_t> row, std::vector<int32_t> col, std::vector<double_t> val);
+RcppExport SEXP _highs_solver_set_coeff(SEXP hiSEXP, SEXP rowSEXP, SEXP colSEXP, SEXP valSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    Rcpp::traits::input_parameter< std::vector<int32_t> >::type row(rowSEXP);
+    Rcpp::traits::input_parameter< std::vector<int32_t> >::type col(colSEXP);
+    Rcpp::traits::input_parameter< std::vector<double_t> >::type val(valSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_set_coeff(hi, row, col, val));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -409,9 +547,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// solver_change_bounds
-int32_t solver_change_bounds(SEXP hi, IntegerVector idx, NumericVector lower, NumericVector upper);
-RcppExport SEXP _highs_solver_change_bounds(SEXP hiSEXP, SEXP idxSEXP, SEXP lowerSEXP, SEXP upperSEXP) {
+// solver_change_variable_bounds
+int32_t solver_change_variable_bounds(SEXP hi, IntegerVector idx, NumericVector lower, NumericVector upper);
+RcppExport SEXP _highs_solver_change_variable_bounds(SEXP hiSEXP, SEXP idxSEXP, SEXP lowerSEXP, SEXP upperSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -419,13 +557,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type idx(idxSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type lower(lowerSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type upper(upperSEXP);
-    rcpp_result_gen = Rcpp::wrap(solver_change_bounds(hi, idx, lower, upper));
+    rcpp_result_gen = Rcpp::wrap(solver_change_variable_bounds(hi, idx, lower, upper));
     return rcpp_result_gen;
 END_RCPP
 }
-// solver_change_lrhs
-int32_t solver_change_lrhs(SEXP hi, IntegerVector idx, NumericVector lhs, NumericVector rhs);
-RcppExport SEXP _highs_solver_change_lrhs(SEXP hiSEXP, SEXP idxSEXP, SEXP lhsSEXP, SEXP rhsSEXP) {
+// solver_change_constraint_bounds
+int32_t solver_change_constraint_bounds(SEXP hi, IntegerVector idx, NumericVector lhs, NumericVector rhs);
+RcppExport SEXP _highs_solver_change_constraint_bounds(SEXP hiSEXP, SEXP idxSEXP, SEXP lhsSEXP, SEXP rhsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -433,7 +571,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type idx(idxSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type lhs(lhsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type rhs(rhsSEXP);
-    rcpp_result_gen = Rcpp::wrap(solver_change_lrhs(hi, idx, lhs, rhs));
+    rcpp_result_gen = Rcpp::wrap(solver_change_constraint_bounds(hi, idx, lhs, rhs));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -480,15 +618,25 @@ static const R_CallMethodDef CallEntries[] = {
     {"_highs_model_set_objective", (DL_FUNC) &_highs_model_set_objective, 2},
     {"_highs_model_set_lower", (DL_FUNC) &_highs_model_set_lower, 2},
     {"_highs_model_set_upper", (DL_FUNC) &_highs_model_set_upper, 2},
-    {"_highs_model_set_constraint_matrix", (DL_FUNC) &_highs_model_set_constraint_matrix, 5},
+    {"_highs_model_set_constraint_matrix_", (DL_FUNC) &_highs_model_set_constraint_matrix_, 5},
     {"_highs_model_set_lhs", (DL_FUNC) &_highs_model_set_lhs, 2},
     {"_highs_model_set_rhs", (DL_FUNC) &_highs_model_set_rhs, 2},
-    {"_highs_model_set_hessian", (DL_FUNC) &_highs_model_set_hessian, 6},
+    {"_highs_model_set_hessian_", (DL_FUNC) &_highs_model_set_hessian_, 6},
     {"_highs_model_set_vartype", (DL_FUNC) &_highs_model_set_vartype, 2},
     {"_highs_model_get_nvars", (DL_FUNC) &_highs_model_get_nvars, 1},
     {"_highs_model_get_ncons", (DL_FUNC) &_highs_model_get_ncons, 1},
     {"_highs_model_get_vartype", (DL_FUNC) &_highs_model_get_vartype, 1},
     {"_highs_new_solver", (DL_FUNC) &_highs_new_solver, 1},
+    {"_highs_highs_pass_model", (DL_FUNC) &_highs_highs_pass_model, 16},
+    {"_highs_solver_pass_hessian", (DL_FUNC) &_highs_solver_pass_hessian, 0},
+    {"_highs_solver_pass_constraints", (DL_FUNC) &_highs_solver_pass_constraints, 0},
+    {"_highs_solver_set_sense", (DL_FUNC) &_highs_solver_set_sense, 2},
+    {"_highs_solver_set_offset", (DL_FUNC) &_highs_solver_set_offset, 2},
+    {"_highs_solver_set_integrality", (DL_FUNC) &_highs_solver_set_integrality, 3},
+    {"_highs_solver_set_objective", (DL_FUNC) &_highs_solver_set_objective, 3},
+    {"_highs_solver_set_variable_bounds", (DL_FUNC) &_highs_solver_set_variable_bounds, 4},
+    {"_highs_solver_set_constraint_bounds", (DL_FUNC) &_highs_solver_set_constraint_bounds, 4},
+    {"_highs_solver_set_coeff", (DL_FUNC) &_highs_solver_set_coeff, 4},
     {"_highs_solver_set_option", (DL_FUNC) &_highs_solver_set_option, 3},
     {"_highs_solver_clear", (DL_FUNC) &_highs_solver_clear, 1},
     {"_highs_solver_clear_model", (DL_FUNC) &_highs_solver_clear_model, 1},
@@ -506,8 +654,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_highs_solver_get_int_option", (DL_FUNC) &_highs_solver_get_int_option, 2},
     {"_highs_solver_get_dbl_option", (DL_FUNC) &_highs_solver_get_dbl_option, 2},
     {"_highs_solver_get_str_option", (DL_FUNC) &_highs_solver_get_str_option, 2},
-    {"_highs_solver_change_bounds", (DL_FUNC) &_highs_solver_change_bounds, 4},
-    {"_highs_solver_change_lrhs", (DL_FUNC) &_highs_solver_change_lrhs, 4},
+    {"_highs_solver_change_variable_bounds", (DL_FUNC) &_highs_solver_change_variable_bounds, 4},
+    {"_highs_solver_change_constraint_bounds", (DL_FUNC) &_highs_solver_change_constraint_bounds, 4},
     {"_highs_solver_add_rows", (DL_FUNC) &_highs_solver_add_rows, 6},
     {"_highs_solver_add_cols", (DL_FUNC) &_highs_solver_add_cols, 7},
     {NULL, NULL, 0}

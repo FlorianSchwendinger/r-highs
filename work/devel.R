@@ -8,6 +8,7 @@ ls("package:highs")
 #
 # Linear Problem
 #
+attach(getNamespace("highs"))
 
 ## Setup Model
 model <- new_model()

@@ -52,6 +52,72 @@ csc_to_matrix <- function(start, index, value, nrow = max(index + 1L), ncol = le
 }
 
 
+model_set_hessian <- function(model, x) {
+    if (is_dgc(x)) {
+        model_set_hessian_(model, "square", dim = x@Dim[1L], start = x@p, index = x@i, value = x@x)
+    } else if (is_csc(x)) {
+        model_set_hessian_(model, "square", dim = x@dimension[1L], start = x@ia - 1L, index = x@ja - 1L, value = x@ra)
+    } else if (is_dgr(x)) {
+        stop("dgRMatrix is not supported for the hessian")
+    } else if (is_csr(x)) {
+        stop("matrix.csr is not supported for the hessian")
+    } else if (is_stm(x)) {
+        ind <- order(x$j, x$i)
+        start <- c(0L, cumsum(tabulate(x$j[ind], x$ncol)))
+        model_set_hessian_(model, "square", dim = x[["nrow"]], start = start, index = x$i[ind] - 1L, value = x$v[ind])
+    } else if (is_dmat(x)) {
+        ind <- which(x != 0, arr.ind = TRUE)
+        start <- c(0L, cumsum(tabulate(ind[, 2L], NCOL(x))))
+        model_set_hessian_(model, "square", dim = NROW(x), start = start, index = ind[, 1] - 1L, value = x[ind])
+    } else {
+        stop(sprintf("unkown class %s", deparse(class(x))))
+    }
+}
+
+
+model_set_constraint_matrix <- function(model, x) {
+    if (is_dgc(x)) {
+        model_set_constraint_matrix_(model, "colwise", start = x@p, index = x@i, value = x@x)
+    } else if (is_csc(x)) {
+        model_set_constraint_matrix_(model, "colwise", start = x@ia - 1L, index = x@ja - 1L, value = x@ra)
+    } else if (is_dgr(x)) {
+        model_set_constraint_matrix_(model, "rowwise", start = x@p, index = x@j, value = x@x)
+    } else if (is_csr(x)) {
+        model_set_constraint_matrix_(model, "rowwise", start = x@ia - 1L, index = x@ja - 1L, value = x@ra)
+    } else if (is_stm(x)) {
+        ind <- order(x$j, x$i)
+        start <- c(0L, cumsum(tabulate(x$j[ind], x$ncol)))
+        model_set_constraint_matrix_(model, "colwise", start = start, index = x$i[ind] - 1L, value = x$v[ind])
+    } else if (is_dmat(x)) {
+        ind <- which(x != 0, arr.ind = TRUE)
+        start <- c(0L, cumsum(tabulate(ind[, 2L], NCOL(x))))
+        model_set_constraint_matrix_(model, "colwise", start = start, index = ind[, 1] - 1L, value = x[ind])
+    } else {
+        stop(sprintf("unkown class %s", deparse(class(x))))
+    }
+}
+
+
+number_or_rows <- function(x) {
+    if (is_dgc(x) || is_dgr(x)) {
+        x@Dim[1L]
+    } else if (is_csc(x) || is_csr(x)) {
+        x@dimension[1L]
+    } else if (is_stm(x)) {
+        x[["nrow"]]
+    } else if (is_dmat(x)) {
+        NROW(x)
+     } else {
+        stop(sprintf("unkown class %s", deparse(class(x))))
+    }
+}
+
+
+allowed_matrix_classes <- function() {
+    c("matrix", "simple_triplet_matrix", "dgCMatrix", "matrix.csc", "dgRMatrix", "matrix.csr")
+}
+
+
 #' Solve an Optimization Problems
 #'
 #' Solve linear and quadratic mixed integer optimization problems.
@@ -121,6 +187,8 @@ csc_to_matrix <- function(start, index, value, nrow = max(index + 1L), ncol = le
 highs_solve <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types, maximum = FALSE,
                         offset = 0, control = list(), dry_run = FALSE) {
     assert_numeric(L, any.missing = FALSE)
+    checkmate::assert_multi_class(A, allowed_matrix_classes(), null.ok = TRUE)
+    checkmate::assert_multi_class(Q, allowed_matrix_classes(), null.ok = TRUE)
     default_control <- list(log_to_console = FALSE, threads = 1L, parallel = "off")
     control <- modifyList(default_control, control)
     checkmate::assert_integerish(control$threads, len = 1L, any.missing = FALSE)
@@ -133,8 +201,7 @@ highs_solve <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types, maximum =
         ncons <- 0L
     } else {
         stopifnot(is.vector(L), !(missing(lhs) & missing(rhs)))
-        cscA <- as_csc(A)
-        ncons <- cscA[["nrow"]]
+        ncons <- number_or_rows(A)
     }
     model <- new_model()
     INF <- highs_infinity()
@@ -143,9 +210,7 @@ highs_solve <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types, maximum =
     model_set_sense(model, maximum)
     model_set_objective(model, L)
     if (!is.null(Q)) {
-        cscQ <- as_csc(Q)
-        model_set_hessian(model, format = "square", dim = nvars,
-            start = cscQ[["col_ptr"]], index = cscQ[["row_id"]], value = cscQ[["value"]])
+        model_set_hessian(model, Q)
     }
     if (missing(types) || length(types) == 0L) {
         types <- rep.int(0L, nvars)
@@ -174,8 +239,7 @@ highs_solve <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types, maximum =
     model_set_lower(model, lower)
     model_set_upper(model, upper)
     if (ncons > 0L) {
-        model_set_constraint_matrix(model, "colwise",
-            start = cscA[["col_ptr"]], index = cscA[["row_id"]], value = cscA[["value"]])
+        model_set_constraint_matrix(model, A)
         if (missing(lhs) || length(lhs) == 0L) {
             lhs <- rep.int(-INF, ncons)
         }
