@@ -297,6 +297,14 @@ SEXP solver_set_coeff(SEXP hi, std::vector<int32_t> row, std::vector<int32_t> co
     return R_NilValue;
 }
 
+
+// [[Rcpp::export]]
+int32_t solver_add_vars(SEXP hi, std::vector<double_t> lower, std::vector<double_t> upper) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsStatus status = highs->addVars(lower.size(), &(lower[0]), &(upper[0]));
+    return static_cast<int32_t>(status);
+}
+
 /*
 model_set_lower
 model_set_upper
