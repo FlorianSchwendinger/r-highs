@@ -109,6 +109,10 @@ solver_set_coeff <- function(hi, row, col, val) {
     .Call(`_highs_solver_set_coeff`, hi, row, col, val)
 }
 
+solver_add_vars <- function(hi, lower, upper) {
+    .Call(`_highs_solver_add_vars`, hi, lower, upper)
+}
+
 solver_set_option <- function(hi, key, value) {
     .Call(`_highs_solver_set_option`, hi, key, value)
 }

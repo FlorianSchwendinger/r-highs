@@ -1,7 +1,52 @@
+q("no")
+R
+
 library("highs")
 
 ls(getNamespace("highs"))
 attach(getNamespace("highs"))
+
+
+HighsSolver <- R6::R6Class("HighsSolver",
+    public = list(
+        solver = NULL,
+        initialize = function() {
+            self$solver <- new_solver(NULL)
+        },
+        objective = function(Q = NULL, L) {
+            assert_numeric(L, any.missing = FALSE)
+            model_set_ncol(self$model, length(L))
+            model_set_objective(model, L)
+        },
+        constraints = function(A, lhs, rhs) {
+            model_set_nrow(model, ncons)
+
+        },
+        types = function() {
+
+        },
+        bounds = function(lower, upper) {
+
+        },
+        maximum = function(sense = FALSE) {
+            model_set_sense(self$model, sense)
+        }
+    )
+)
+
+
+# solver <- HighsSolver$new()
+solver <- new_solver(NULL)
+se
+solver_set_objective(solver, c(0L, 1L), c(1.0, 1))
+
+
+A <- rbind(c(0, 1), c(1, 2), c(3, 2))
+s <- highs_solve(L = c(1.0, 1), lower = c(0, 1), upper = c(4, Inf),
+                 A = A, lhs = c(-Inf, 5, 6), rhs = c(7, 15, Inf),
+                 offset = 3)
+
+
 
 
 HighsModel <- R6::R6Class("highs_model",
@@ -32,11 +77,6 @@ HighsModel <- R6::R6Class("highs_model",
         }
     )
 )
-
-
-m <- HighsModel$new()
-
-
 
 
 

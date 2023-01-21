@@ -353,6 +353,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// solver_add_vars
+int32_t solver_add_vars(SEXP hi, std::vector<double_t> lower, std::vector<double_t> upper);
+RcppExport SEXP _highs_solver_add_vars(SEXP hiSEXP, SEXP lowerSEXP, SEXP upperSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    Rcpp::traits::input_parameter< std::vector<double_t> >::type lower(lowerSEXP);
+    Rcpp::traits::input_parameter< std::vector<double_t> >::type upper(upperSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_add_vars(hi, lower, upper));
+    return rcpp_result_gen;
+END_RCPP
+}
 // solver_set_option
 int32_t solver_set_option(SEXP hi, std::string key, SEXP value);
 RcppExport SEXP _highs_solver_set_option(SEXP hiSEXP, SEXP keySEXP, SEXP valueSEXP) {
@@ -637,6 +650,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_highs_solver_set_variable_bounds", (DL_FUNC) &_highs_solver_set_variable_bounds, 4},
     {"_highs_solver_set_constraint_bounds", (DL_FUNC) &_highs_solver_set_constraint_bounds, 4},
     {"_highs_solver_set_coeff", (DL_FUNC) &_highs_solver_set_coeff, 4},
+    {"_highs_solver_add_vars", (DL_FUNC) &_highs_solver_add_vars, 3},
     {"_highs_solver_set_option", (DL_FUNC) &_highs_solver_set_option, 3},
     {"_highs_solver_clear", (DL_FUNC) &_highs_solver_clear, 1},
     {"_highs_solver_clear_model", (DL_FUNC) &_highs_solver_clear_model, 1},
