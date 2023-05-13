@@ -1,6 +1,5 @@
 
 #include "highs_interface.h"
-#include <typeinfo>
 
 
 using namespace Rcpp;
