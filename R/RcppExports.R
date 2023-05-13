@@ -81,6 +81,10 @@ solver_pass_constraints <- function() {
     .Call(`_highs_solver_pass_constraints`)
 }
 
+solver_get_sense <- function(hi) {
+    .Call(`_highs_solver_get_sense`, hi)
+}
+
 solver_set_sense <- function(hi, maximum) {
     .Call(`_highs_solver_set_sense`, hi, maximum)
 }
@@ -131,6 +135,18 @@ solver_clear_solver <- function(hi) {
 
 solver_run <- function(hi) {
     .Call(`_highs_solver_run`, hi)
+}
+
+solver_get_model <- function(hi) {
+    .Call(`_highs_solver_get_model`, hi)
+}
+
+solver_get_num_col <- function(hi) {
+    .Call(`_highs_solver_get_num_col`, hi)
+}
+
+solver_get_num_row <- function(hi) {
+    .Call(`_highs_solver_get_num_row`, hi)
 }
 
 solver_write_model <- function(hi, filename) {
@@ -195,5 +211,21 @@ solver_add_rows <- function(hi, lhs, rhs, start, index, value) {
 
 solver_add_cols <- function(hi, costs, lower, upper, start, index, value) {
     .Call(`_highs_solver_add_cols`, hi, costs, lower, upper, start, index, value)
+}
+
+solver_get_lp_costs <- function(hi) {
+    .Call(`_highs_solver_get_lp_costs`, hi)
+}
+
+solver_get_variable_bounds <- function(hi) {
+    .Call(`_highs_solver_get_variable_bounds`, hi)
+}
+
+solver_get_constraint_bounds <- function(hi) {
+    .Call(`_highs_solver_get_constraint_bounds`, hi)
+}
+
+solver_get_constraint_matrix <- function(hi) {
+    .Call(`_highs_solver_get_constraint_matrix`, hi)
 }
 

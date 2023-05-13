@@ -19,7 +19,7 @@ model_set_offset(model, 3)
 model_set_objective(model, c(1, 1))
 model_set_lower(model, c(0.0, 1.0))
 model_set_upper(model, c(4.0, 1.0e30))
-model_set_constraint_matrix(model, "colwise",
+model_set_constraint_matrix_(model, "colwise",
     as.integer(c(0, 2, 5)),
     as.integer(c(1, 2, 0, 1, 2)),
     c(1.0, 3.0, 1.0, 2.0, 2.0)
@@ -38,6 +38,11 @@ solver <- new_solver(model)
 solver_run(solver)
 solver_status(solver)
 str(solver_info(solver))
+solver_solution(solver)
+
+
+solver_set_integrality(solver, 1L, 0L)
+solver_run(solver)
 solver_solution(solver)
 
 

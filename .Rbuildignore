@@ -4,8 +4,10 @@
 ^README.html
 ^README.Rmd
 ^Makefile
+^Manual.pdf
 ^highs*.tar.gz
 ^inst/HiGHS/build
+^inst/HiGHS/src/interfaces
 ^inst/HiGHS/.clang-format
 ^inst/HiGHS/.coin-or
 ^inst/HiGHS/.github

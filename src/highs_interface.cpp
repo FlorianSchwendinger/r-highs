@@ -1,8 +1,21 @@
 
 #include "highs_interface.h"
+#include <typeinfo>
 
 
 using namespace Rcpp;
+
+
+/*
+class HighsR: public Highs {
+    public:
+
+    void set_ncol(int32_t ncol) {
+        model_.lp_.num_col_ = ncol;
+    }
+
+};
+*/
 
 
 static void R_message_handler(HighsLogType type, const char* message, void* log_callback_data) {
@@ -163,15 +176,44 @@ int32_t model_get_ncons(SEXP mpt) {
     return static_cast<int32_t>(model->lp_.num_row_);
 }
 
+
 // [[Rcpp::export]]
 Rcpp::IntegerVector model_get_vartype(SEXP mpt) {
     Rcpp::XPtr<HighsModel>model(mpt);
-    IntegerVector type(model->lp_.integrality_.size());
+    int32_t m;
+    const HighsVarType* integrality = &(model->lp_.integrality_[0]);
+    bool integrality_is_null = integrality == NULL;
+    if (integrality_is_null) {
+        m = 0;
+    } else {
+        m = model->lp_.integrality_.size();
+        m = (m > 0) ? m : 0;
+    }
+    IntegerVector type(m);
     for (R_xlen_t i = 0; i < type.size(); ++i) {
         type[i] = static_cast<int32_t>(model->lp_.integrality_[i]);
     }
     return type;
 }
+
+
+RCPP_MODULE(RcppHighs) {
+    class_<Highs>("Highs")
+
+    .constructor()
+
+    
+    .method("getObjectiveValue", &Highs::getObjectiveValue)
+    .method("getNumCol", &Highs::getNumCol)
+    .method("getNumRow", &Highs::getNumRow)
+    .method("getNumNz", &Highs::getNumNz)
+    .method("getHessianNumNz", &Highs::getHessianNumNz)
+    // .method("getObjectiveSense", &Highs::getObjectiveSense)
+    // .method("getObjectiveOffset", &Highs::getObjectiveOffset)
+
+    ;
+}
+
 
 // [[Rcpp::export]]
 SEXP new_solver(SEXP mpt) {
@@ -230,6 +272,14 @@ SEXP solver_pass_constraints () {
     return R_NilValue;
 }
 
+
+// [[Rcpp::export]]
+int32_t solver_get_sense(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    ObjSense sense;
+    HighsStatus status = highs->getObjectiveSense(sense);
+    return sense == ObjSense::kMaximize;
+}
 
 // [[Rcpp::export]]
 int32_t solver_set_sense(SEXP hi, bool maximum) {
@@ -384,6 +434,30 @@ int32_t solver_run(SEXP hi) {
     HighsStatus return_status = highs->run();
     return static_cast<int32_t>(return_status);
 }
+
+
+// [[Rcpp::export]]
+SEXP solver_get_model(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsModel mpt = highs->getModel();
+    Rcpp::XPtr<HighsModel> highs_model(&mpt, true);
+    return highs_model;
+}
+
+
+// [[Rcpp::export]]
+int32_t solver_get_num_col(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    return highs->getNumCol();
+}
+
+
+// [[Rcpp::export]]
+int32_t solver_get_num_row(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    return highs->getNumRow();
+}
+
 
 
 //
@@ -581,3 +655,61 @@ int32_t solver_add_cols(SEXP hi, NumericVector costs,
     return static_cast<int32_t>(return_status);
 }
 
+
+// [[Rcpp::export]]
+Rcpp::NumericVector solver_get_lp_costs(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    int32_t nvar = highs->getNumCol();
+    NumericVector costs(nvar);
+    HighsModel model = highs->getModel();
+    for (int32_t i = 0; i < nvar; i++) {
+        costs[i] = model.lp_.col_cost_[i];
+    }
+    return costs;
+}
+
+
+// [[Rcpp::export]]
+Rcpp::NumericVector solver_get_variable_bounds(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    int32_t nvar = highs->getNumCol();
+    NumericVector vbounds(2 * nvar);
+    HighsModel model = highs->getModel();
+    for (int32_t i = 0; i < nvar; i++) {
+        vbounds[i] = model.lp_.col_lower_[i];
+        vbounds[nvar + i] = model.lp_.col_upper_[i];
+    }
+    return vbounds;
+}
+
+
+// [[Rcpp::export]]
+Rcpp::NumericVector solver_get_constraint_bounds(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    int32_t nvar = highs->getNumCol();
+    NumericVector lhs_rhs(2 * nvar);
+    HighsModel model = highs->getModel();
+    for (int32_t i = 0; i < nvar; i++) {
+        lhs_rhs[i] = model.lp_.row_lower_[i];
+        lhs_rhs[nvar + i] = model.lp_.row_upper_[i];
+    }
+    return lhs_rhs;
+}
+
+
+// [[Rcpp::export]]
+Rcpp::List solver_get_constraint_matrix(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsModel model = highs->getModel();
+    HighsSparseMatrix A = model.lp_.a_matrix_;
+    List z = List::create(
+        Named("format") = static_cast<int32_t>(A.format_),
+        Named("nrow") = A.num_row_,
+        Named("ncol") = A.num_col_,
+        Named("start") = A.start_,
+        Named("p_end") = A.p_end_,
+        Named("index") = A.index_,
+        Named("value") = A.value_
+    );
+    return z;
+}

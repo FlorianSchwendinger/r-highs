@@ -50,16 +50,16 @@ clean:
 	rm -rf highs.Rcheck
 
 check_all: build
-	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = c('macos-highsierra-release-cran', 'debian-clang-devel', 'windows-x86_64-devel', 'fedora-clang-devel'))"
+	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platforms = c('macos-highsierra-release-cran', 'debian-clang-devel', 'windows-x86_64-devel', 'fedora-clang-devel'))"
 
 check_fedora: build
-	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'fedora-clang-devel')"
+	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platforms = 'fedora-clang-devel')"
 
 check_win: build
-	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'windows-x86_64-devel')"
+	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platforms = 'windows-x86_64-devel')"
 
 check_old_win: build
-	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'windows-x86_64-devel')"
+	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platforms = 'windows-x86_64-devel')"
 
 devcheck_win_devel: build
 	$(R) -e "devtools::check_win_devel(email = 'FlorianSchwendinger@gmx.at')"
@@ -70,11 +70,11 @@ devcheck_win_release: build
 devcheck_win_oldrelease: build
 	$(R) -e "devtools::check_win_oldrelease(email = 'FlorianSchwendinger@gmx.at')"
 
-check_mac_m1: build
-	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'macos-m1-bigsur-release')"
-
-check_mac_old: build
-	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'macos-highsierra-release-cran')"
+check_mac: build
+	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platforms = 'macos-highsierra-release-cran')"
 
 check_linux_san: build
-	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platform = 'linux-x86_64-rocker-gcc-san')"
+	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platforms = 'linux-x86_64-rocker-gcc-san')"
+
+check_debian:
+	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platforms = 'debian-clang-devel')"

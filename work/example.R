@@ -37,5 +37,3 @@ stm <- as.simple_triplet_matrix(A)
 s4 <- highs_solve(L = c(1.0, 1), lower = c(0, 1), upper = c(4, Inf),
                   A = stm, lhs = c(-Inf, 5, 6), rhs = c(7, 15, Inf),
                   offset = 3)
-
-
