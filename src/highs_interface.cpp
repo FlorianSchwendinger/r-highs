@@ -177,26 +177,6 @@ int32_t model_get_ncons(SEXP mpt) {
 }
 
 
-// [[Rcpp::export]]
-Rcpp::IntegerVector model_get_vartype(SEXP mpt) {
-    Rcpp::XPtr<HighsModel>model(mpt);
-    int32_t m;
-    const HighsVarType* integrality = &(model->lp_.integrality_[0]);
-    bool integrality_is_null = integrality == NULL;
-    if (integrality_is_null) {
-        m = 0;
-    } else {
-        m = model->lp_.integrality_.size();
-        m = (m > 0) ? m : 0;
-    }
-    IntegerVector type(m);
-    for (R_xlen_t i = 0; i < type.size(); ++i) {
-        type[i] = static_cast<int32_t>(model->lp_.integrality_[i]);
-    }
-    return type;
-}
-
-
 RCPP_MODULE(RcppHighs) {
     class_<Highs>("Highs")
 
@@ -712,4 +692,17 @@ Rcpp::List solver_get_constraint_matrix(SEXP hi) {
         Named("value") = A.value_
     );
     return z;
+}
+
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector solver_get_vartype(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    const HighsLp& lp = highs->getLp();
+    int32_t m = lp.integrality_.size();
+    IntegerVector type(m);
+    for (int32_t i = 0; i < type.size(); ++i) {
+        type[i] = static_cast<int32_t>(lp.integrality_[i]);
+    }
+    return type;
 }

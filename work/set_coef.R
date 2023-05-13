@@ -90,8 +90,8 @@ rhs <- c(60, 40, 80)
 model <- highs_model(L = L, lower = 0, A = A, rhs = rhs, maximum = TRUE)
 solver <- highs_solver(model)
 
-model <- highs:::solver_get_model(solver$solver)
-highs:::model_get_vartype(model)
+highs:::solver_get_vartype(solver$solver)
+
 
 
 # highs:::solver_set_sense(solver$solver, FALSE)
@@ -105,9 +105,6 @@ vbnd <- highs:::solver_get_variable_bounds(solver$solver)
 
 matrix(highs:::solver_get_constraint_bounds(solver$solver), ncol = 2)
 
-
-
-kColwise = 1, kRowwise, kRowwisePartitioned
 
 
 str(solver$options())

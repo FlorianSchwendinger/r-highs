@@ -372,9 +372,7 @@ print.highs_control <- function(x, ...) {
 
 
 solver_get_types <- function(solver) {
-    model <- solver_get_model(solver)
-    if (is.null(model)) return(NULL)
-    vtypes <- model_get_vartype(model)
+    vtypes <- solver_get_vartype(solver)
     if (length(vtypes) == 0L) {
         rep("C", solver_get_num_col(solver))
     } else {

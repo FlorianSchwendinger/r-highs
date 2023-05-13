@@ -61,10 +61,6 @@ model_get_ncons <- function(mpt) {
     .Call(`_highs_model_get_ncons`, mpt)
 }
 
-model_get_vartype <- function(mpt) {
-    .Call(`_highs_model_get_vartype`, mpt)
-}
-
 new_solver <- function(mpt) {
     .Call(`_highs_new_solver`, mpt)
 }
@@ -227,5 +223,9 @@ solver_get_constraint_bounds <- function(hi) {
 
 solver_get_constraint_matrix <- function(hi) {
     .Call(`_highs_solver_get_constraint_matrix`, hi)
+}
+
+solver_get_vartype <- function(hi) {
+    .Call(`_highs_solver_get_vartype`, hi)
 }
 

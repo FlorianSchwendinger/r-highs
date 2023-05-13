@@ -193,17 +193,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// model_get_vartype
-Rcpp::IntegerVector model_get_vartype(SEXP mpt);
-RcppExport SEXP _highs_model_get_vartype(SEXP mptSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type mpt(mptSEXP);
-    rcpp_result_gen = Rcpp::wrap(model_get_vartype(mpt));
-    return rcpp_result_gen;
-END_RCPP
-}
 // new_solver
 SEXP new_solver(SEXP mpt);
 RcppExport SEXP _highs_new_solver(SEXP mptSEXP) {
@@ -709,6 +698,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// solver_get_vartype
+Rcpp::IntegerVector solver_get_vartype(SEXP hi);
+RcppExport SEXP _highs_solver_get_vartype(SEXP hiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_get_vartype(hi));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP _rcpp_module_boot_RcppHighs();
 
@@ -728,7 +728,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_highs_model_set_vartype", (DL_FUNC) &_highs_model_set_vartype, 2},
     {"_highs_model_get_nvars", (DL_FUNC) &_highs_model_get_nvars, 1},
     {"_highs_model_get_ncons", (DL_FUNC) &_highs_model_get_ncons, 1},
-    {"_highs_model_get_vartype", (DL_FUNC) &_highs_model_get_vartype, 1},
     {"_highs_new_solver", (DL_FUNC) &_highs_new_solver, 1},
     {"_highs_highs_pass_model", (DL_FUNC) &_highs_highs_pass_model, 16},
     {"_highs_solver_pass_hessian", (DL_FUNC) &_highs_solver_pass_hessian, 0},
@@ -770,6 +769,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_highs_solver_get_variable_bounds", (DL_FUNC) &_highs_solver_get_variable_bounds, 1},
     {"_highs_solver_get_constraint_bounds", (DL_FUNC) &_highs_solver_get_constraint_bounds, 1},
     {"_highs_solver_get_constraint_matrix", (DL_FUNC) &_highs_solver_get_constraint_matrix, 1},
+    {"_highs_solver_get_vartype", (DL_FUNC) &_highs_solver_get_vartype, 1},
     {"_rcpp_module_boot_RcppHighs", (DL_FUNC) &_rcpp_module_boot_RcppHighs, 0},
     {NULL, NULL, 0}
 };
