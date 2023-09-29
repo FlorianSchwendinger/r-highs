@@ -311,7 +311,10 @@ highs_model <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types,
 #' @export
 highs_solve <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types,
                         maximum = FALSE, offset = 0, control = highs_control()) {
-    checkmate::assert_class(control, classes = "highs_control")
+    checkmate::assert_list(control)
+    if (!inherits(control, "highs_control")) {
+        control <- do.call(highs_control, control)
+    }
     model <- highs_model(Q = Q, L = L, lower = lower, upper = upper,
                          A = A, lhs = lhs, rhs = rhs, types = types,
                          maximum = maximum, offset = offset)
