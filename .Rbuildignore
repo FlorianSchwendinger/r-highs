@@ -7,11 +7,12 @@
 ^Manual.pdf
 ^highs*.tar.gz
 ^inst/HiGHS/build
-^inst/HiGHS/src/interfaces
 ^inst/HiGHS/.clang-format
 ^inst/HiGHS/.coin-or
 ^inst/HiGHS/.github
 ^inst/HiGHS/.git
+^inst/HiGHS/.bazelrc
+^inst/HiGHS/.envrc
 ^inst/HiGHS/CITATION.cff
 ^inst/update_highs_sources.md
 ^CRAN_upload_messages.md
