@@ -1,4 +1,5 @@
 .vscode
+.github
 ^work
 ^README.knit.md
 ^README.html
@@ -18,3 +19,8 @@
 ^CRAN_upload_messages.md
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^inst/patch_highs.sh
+^inst/run_checks.R
+^inst/update_highs_sources.md
+^inst/patch_highs.R
+^inst/r_hub.R
