@@ -1,2 +1,2 @@
 PKG_LIBS= -L@RHIGHS_LIB_DIR@/lib -L@RHIGHS_LIB_DIR@/lib64 -lhighs
-PKG_CPPFLAGS=-I@RHIGHS_LIB_DIR@/include -I@RHIGHS_LIB_DIR@/include/highs -Wall -pedantic
+PKG_CPPFLAGS=-I@RHIGHS_LIB_DIR@/include -I@RHIGHS_LIB_DIR@/include/highs
