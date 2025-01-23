@@ -669,7 +669,7 @@ Rcpp::NumericVector solver_get_variable_bounds(SEXP hi) {
 // [[Rcpp::export]]
 Rcpp::NumericVector solver_get_constraint_bounds(SEXP hi) {
     Rcpp::XPtr<Highs>highs(hi);
-    int32_t nvar = highs->getNumCol();
+    int32_t nvar = highs->getNumRow();
     NumericVector lhs_rhs(2 * nvar);
     HighsModel model = highs->getModel();
     for (int32_t i = 0; i < nvar; i++) {
@@ -677,6 +677,59 @@ Rcpp::NumericVector solver_get_constraint_bounds(SEXP hi) {
         lhs_rhs[nvar + i] = model.lp_.row_upper_[i];
     }
     return lhs_rhs;
+}
+
+
+// [[Rcpp::export]]
+std::vector<double> solver_get_col_cost(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsModel model = highs->getModel();
+    return model.lp_.col_cost_;
+}
+
+
+// [[Rcpp::export]]
+std::vector<double> solver_get_col_lower(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsModel model = highs->getModel();
+    return model.lp_.col_lower_;
+}
+
+
+// [[Rcpp::export]]
+std::vector<double> solver_get_col_upper(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsModel model = highs->getModel();
+    return model.lp_.col_upper_;
+}
+
+
+// [[Rcpp::export]]
+std::vector<double> solver_get_row_lower(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsModel model = highs->getModel();
+    return model.lp_.row_lower_;
+}
+
+
+// [[Rcpp::export]]
+std::vector<double> solver_get_row_upper(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsModel model = highs->getModel();
+    return model.lp_.row_upper_;
+}
+
+
+// [[Rcpp::export]]
+IntegerVector solver_get_integrality(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsModel model = highs->getModel();
+    int len = model.lp_.integrality_.size();
+    IntegerVector vec(len);
+    for (int32_t i = 0; i < len; i++) {
+        vec[i] = static_cast<int>(model.lp_.integrality_[i]);
+    }
+    return vec;
 }
 
 

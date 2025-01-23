@@ -221,6 +221,30 @@ solver_get_constraint_bounds <- function(hi) {
     .Call(`_highs_solver_get_constraint_bounds`, hi)
 }
 
+solver_get_col_cost <- function(hi) {
+    .Call(`_highs_solver_get_col_cost`, hi)
+}
+
+solver_get_col_lower <- function(hi) {
+    .Call(`_highs_solver_get_col_lower`, hi)
+}
+
+solver_get_col_upper <- function(hi) {
+    .Call(`_highs_solver_get_col_upper`, hi)
+}
+
+solver_get_row_lower <- function(hi) {
+    .Call(`_highs_solver_get_row_lower`, hi)
+}
+
+solver_get_row_upper <- function(hi) {
+    .Call(`_highs_solver_get_row_upper`, hi)
+}
+
+solver_get_integrality <- function(hi) {
+    .Call(`_highs_solver_get_integrality`, hi)
+}
+
 solver_get_constraint_matrix <- function(hi) {
     .Call(`_highs_solver_get_constraint_matrix`, hi)
 }

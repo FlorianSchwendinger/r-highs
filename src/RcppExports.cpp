@@ -687,6 +687,72 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// solver_get_col_cost
+std::vector<double> solver_get_col_cost(SEXP hi);
+RcppExport SEXP _highs_solver_get_col_cost(SEXP hiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_get_col_cost(hi));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_get_col_lower
+std::vector<double> solver_get_col_lower(SEXP hi);
+RcppExport SEXP _highs_solver_get_col_lower(SEXP hiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_get_col_lower(hi));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_get_col_upper
+std::vector<double> solver_get_col_upper(SEXP hi);
+RcppExport SEXP _highs_solver_get_col_upper(SEXP hiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_get_col_upper(hi));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_get_row_lower
+std::vector<double> solver_get_row_lower(SEXP hi);
+RcppExport SEXP _highs_solver_get_row_lower(SEXP hiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_get_row_lower(hi));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_get_row_upper
+std::vector<double> solver_get_row_upper(SEXP hi);
+RcppExport SEXP _highs_solver_get_row_upper(SEXP hiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_get_row_upper(hi));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_get_integrality
+IntegerVector solver_get_integrality(SEXP hi);
+RcppExport SEXP _highs_solver_get_integrality(SEXP hiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_get_integrality(hi));
+    return rcpp_result_gen;
+END_RCPP
+}
 // solver_get_constraint_matrix
 Rcpp::List solver_get_constraint_matrix(SEXP hi);
 RcppExport SEXP _highs_solver_get_constraint_matrix(SEXP hiSEXP) {
@@ -768,6 +834,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_highs_solver_get_lp_costs", (DL_FUNC) &_highs_solver_get_lp_costs, 1},
     {"_highs_solver_get_variable_bounds", (DL_FUNC) &_highs_solver_get_variable_bounds, 1},
     {"_highs_solver_get_constraint_bounds", (DL_FUNC) &_highs_solver_get_constraint_bounds, 1},
+    {"_highs_solver_get_col_cost", (DL_FUNC) &_highs_solver_get_col_cost, 1},
+    {"_highs_solver_get_col_lower", (DL_FUNC) &_highs_solver_get_col_lower, 1},
+    {"_highs_solver_get_col_upper", (DL_FUNC) &_highs_solver_get_col_upper, 1},
+    {"_highs_solver_get_row_lower", (DL_FUNC) &_highs_solver_get_row_lower, 1},
+    {"_highs_solver_get_row_upper", (DL_FUNC) &_highs_solver_get_row_upper, 1},
+    {"_highs_solver_get_integrality", (DL_FUNC) &_highs_solver_get_integrality, 1},
     {"_highs_solver_get_constraint_matrix", (DL_FUNC) &_highs_solver_get_constraint_matrix, 1},
     {"_highs_solver_get_vartype", (DL_FUNC) &_highs_solver_get_vartype, 1},
     {"_rcpp_module_boot_RcppHighs", (DL_FUNC) &_rcpp_module_boot_RcppHighs, 0},
