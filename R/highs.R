@@ -275,7 +275,7 @@ highs_write_model <- function(model, file) {
     checkmate::assert_string(file)
     checkmate::assert_class(model, classes = "highs_model")
     checkmate::assert_directory_exists(dirname(file), access = "w")
-    solver <- highs:::new_solver(model)
+    solver <- highs::new_solver(model)
     solver_write_model(solver, file)
 }
 
