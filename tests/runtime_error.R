@@ -9,7 +9,7 @@ library("highs")
 file <- system.file("op/distmatch_1.rds", package = "highs")
 op <- readRDS(file)
 str(op)
-do.call(highs_solve, op)
+sol <- do.call(highs_solve, op)
 
 
 # -----------------------------------------------------------------------------
@@ -21,4 +21,4 @@ do.call(highs_solve, op)
 file <- system.file("op/matchit_1.rds", package = "highs")
 op <- readRDS(file)
 str(op)
-do.call(highs_solve, op)
+sol <- do.call(highs_solve, op)

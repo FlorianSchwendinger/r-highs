@@ -16,9 +16,8 @@ class HighsR: public Highs {
 };
 */
 
-
 static void R_message_handler(HighsLogType type, const char* message, void* log_callback_data) {
-  Rcpp::Rcout << message << std::endl;
+    Rcpp::Rcout << message << std::endl;
 }
 
 
@@ -198,6 +197,7 @@ RCPP_MODULE(RcppHighs) {
 SEXP new_solver(SEXP mpt) {
     Rcpp::XPtr<Highs> highs(new Highs(), true);
     highs->setLogCallback(R_message_handler);
+
     if (Rf_isNull(mpt)) {
         return highs;
     }

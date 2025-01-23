@@ -1,5 +1,9 @@
 #!/bin/bash
 
+
+#
+# Set Variables
+#
 if test -z "${MAKE}"; then MAKE=`which make` 2> /dev/null; fi
 if test -z "${MAKE}"; then MAKE=`which /Applications/Xcode.app/Contents/Developer/usr/bin/make` 2> /dev/null; fi
 
@@ -31,10 +35,27 @@ HIGHS_SRC_DIR=${R_HIGHS_PKG_HOME}/inst/HiGHS
 R_HIGHS_BUILD_DIR=${HIGHS_SRC_DIR}/build
 R_HIGHS_LIB_DIR=${R_HIGHS_PKG_HOME}/src/highslib
 
+
+#
+# Patch HiGHS Code
+#
+# 1. Don't build the HiGHS app since it is not needed and "cxxopts.hpp" will raise a C++17 extension warning.
+echo "" > ${HIGHS_SRC_DIR}/app/CMakeLists.txt
+# 2. Remove deprecation message
+sed -i "s|.*deprecationMessage.*setLogCallback.*||" inst/HiGHS/src/lp_data/HighsDeprecated.cpp
+
+
+#
+# Setup Build Directory
+#
 mkdir -p ${R_HIGHS_BUILD_DIR}
 mkdir -p ${R_HIGHS_LIB_DIR}
 cd ${R_HIGHS_BUILD_DIR}
 
+
+#
+# Derive Build Options
+#
 export CC=`"${R_HOME}/bin/R" CMD config CC`
 export CXX=`"${R_HOME}/bin/R" CMD config CXX11`
 export CXX11=`"${R_HOME}/bin/R" CMD config CXX11`
@@ -43,18 +64,10 @@ export CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
 export CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 export LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
 
-# export CC="${CCACHE} ${CC}"
-# export CXX="${CCACHE} ${CXX}"
-# export CXX11="${CCACHE} ${CXX11}"
-# export CXXFLAGS="${CCACHE} ${CXXFLAGS}"
-# export CFLAGS="${CCACHE} ${CFLAGS}"
-# export CPPFLAGS="${CCACHE} ${CPPFLAGS}"
-# export LDFLAGS="${CCACHE} ${LDFLAGS}"
 
 echo ""
 echo "CMAKE VERSION: '`${CMAKE_EXE} --version | head -n 1`'"
 echo "arch: '$(arch)'"
-echo "R_ARCH: '$R_ARCH'"
 echo "CC: '${CC}'"
 echo "CXX: '${CXX}'"
 echo "CXX11: '${CXX11}'"
@@ -77,7 +90,7 @@ echo ""
 # But than it fails since prior to 4.2.0 R-win tries to compile and test for 'i386' and 'x64'
 # and fails for 'i386'.
 # if test "${OS_TYPE}" = "unix"; then
-DEFAULT_CMAKE_OPTS="-DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DBUILD_SHARED_LIBS:bool=OFF -DBUILD_TESTING:bool=OFF -DZLIB:bool=OFF -DBUILD_EXAMPLES:bool=OFF -DFAST_BUILD:bool=ON -DCMAKE_VERBOSE_MAKEFILE:bool=ON"
+DEFAULT_CMAKE_OPTS="-DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DBUILD_SHARED_LIBS:bool=OFF -DBUILD_TESTING:bool=OFF -DZLIB:bool=OFF -DBUILD_EXAMPLES:bool=OFF -DFAST_BUILD:bool=ON -DCMAKE_VERBOSE_MAKEFILE:bool=OFF"
 COMPILER_LAUNCHER="-DCMAKE_C_COMPILER_LAUNCHER=${CCACHE} -DCMAKE_CXX_COMPILER_LAUNCHER=${CCACHE}"
 if test -z "${CCACHE}"; then
     CMAKE_OPTS=${DEFAULT_CMAKE_OPTS}
@@ -90,9 +103,13 @@ echo "Cmake Options"
 echo ${CMAKE_OPTS}
 echo ""
 
+
+#
+# Build and Install HiGHS
+#
 # Currently there would be no distinction necessary
 if test "$(uname -s)" = "Darwin"; then
-    ${CMAKE_EXE} .. ${CMAKE_OPTS}
+    ${CMAKE_EXE} .. ${CMAKE_OPTS} -DCMAKE_HOST_APPLE:bool=ON
 else
     ${CMAKE_EXE} .. ${CMAKE_OPTS} -G "Unix Makefiles"
 fi
