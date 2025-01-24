@@ -30,6 +30,30 @@ if test -z "${R_HOME}"; then
 fi
 
 
+export CC=`"${R_HOME}/bin/R" CMD config CC`
+export CXX=`"${R_HOME}/bin/R" CMD config CXX11`
+export CXX11=`"${R_HOME}/bin/R" CMD config CXX11`
+export CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
+export CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
+export CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
+export LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
+export CXX_STD=`"${R_HOME}/bin/R" CMD config CXX_STD`
+
+echo ""
+echo "CMAKE VERSION: '`${CMAKE_EXE} --version | head -n 1`'"
+echo "arch: '$(arch)'"
+echo "CC: '${CC}'"
+echo "CXX: '${CXX}'"
+echo "CXX11: '${CXX}'"
+echo "CXXFLAGS: '${CXXFLAGS}'"
+echo "CFLAGS: '${CFLAGS}'"
+echo "CPPFLAGS: '${CPPFLAGS}'"
+echo "LDFLAGS: '${LDFLAGS}'"
+echo "R_HIGHS_BUILD_DIR: '${R_HIGHS_BUILD_DIR}'"
+echo "R_HIGHS_LIB_DIR: '${R_HIGHS_LIB_DIR}'"
+echo ""
+
+
 R_HIGHS_PKG_HOME=`pwd`
 HIGHS_SRC_DIR=${R_HIGHS_PKG_HOME}/inst/HiGHS
 R_HIGHS_BUILD_DIR=${HIGHS_SRC_DIR}/build
@@ -43,6 +67,9 @@ R_HIGHS_LIB_DIR=${R_HIGHS_PKG_HOME}/src/highslib
 echo "" > ${HIGHS_SRC_DIR}/app/CMakeLists.txt
 # 2. Remove deprecation message
 sed -i "s|.*deprecationMessage.*setLogCallback.*||" inst/HiGHS/src/lp_data/HighsDeprecated.cpp
+# 3. Remove C++11 standard
+# sed -i "s|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD 17|" inst/HiGHS/CMakeLists.txt
+# sed -i "s|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD 17|" inst/HiGHS/cmake/cpp-highs.cmake
 
 
 #
@@ -56,28 +83,6 @@ cd ${R_HIGHS_BUILD_DIR}
 #
 # Derive Build Options
 #
-export CC=`"${R_HOME}/bin/R" CMD config CC`
-export CXX=`"${R_HOME}/bin/R" CMD config CXX11`
-export CXX11=`"${R_HOME}/bin/R" CMD config CXX11`
-export CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
-export CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
-export CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
-export LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
-
-
-echo ""
-echo "CMAKE VERSION: '`${CMAKE_EXE} --version | head -n 1`'"
-echo "arch: '$(arch)'"
-echo "CC: '${CC}'"
-echo "CXX: '${CXX}'"
-echo "CXX11: '${CXX11}'"
-echo "CXXFLAGS: '${CXXFLAGS}'"
-echo "CFLAGS: '${CFLAGS}'"
-echo "CPPFLAGS: '${CPPFLAGS}'"
-echo "LDFLAGS: '${LDFLAGS}'"
-echo "R_HIGHS_BUILD_DIR: '${R_HIGHS_BUILD_DIR}'"
-echo "R_HIGHS_LIB_DIR: '${R_HIGHS_LIB_DIR}'"
-echo ""
 
 # The flag CMAKE_CXX_COMPILER_WORKS signals cmake that we know
 # that the compiler works therefore cmake has not to test.
