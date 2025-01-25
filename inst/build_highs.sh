@@ -68,8 +68,9 @@ echo "" > ${HIGHS_SRC_DIR}/app/CMakeLists.txt
 # 2. Remove deprecation message
 sed -i "s|.*deprecationMessage.*setLogCallback.*||" inst/HiGHS/src/lp_data/HighsDeprecated.cpp
 # 3. Remove C++11 standard
-# sed -i "s|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD 17|" inst/HiGHS/CMakeLists.txt
-# sed -i "s|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD 17|" inst/HiGHS/cmake/cpp-highs.cmake
+sed -i "s|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD 17|" inst/HiGHS/CMakeLists.txt
+sed -i "s|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD 17|" inst/HiGHS/cmake/cpp-highs.cmake
+sed -i "s|c++11|c++17|" inst/HiGHS/CMakeLists.txt
 
 
 #
@@ -95,7 +96,16 @@ cd ${R_HIGHS_BUILD_DIR}
 # But than it fails since prior to 4.2.0 R-win tries to compile and test for 'i386' and 'x64'
 # and fails for 'i386'.
 # if test "${OS_TYPE}" = "unix"; then
-DEFAULT_CMAKE_OPTS="-DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DBUILD_SHARED_LIBS:bool=OFF -DBUILD_TESTING:bool=OFF -DZLIB:bool=OFF -DBUILD_EXAMPLES:bool=OFF -DFAST_BUILD:bool=ON -DCMAKE_VERBOSE_MAKEFILE:bool=OFF"
+DEFAULT_CMAKE_OPTS="
+    -DCMAKE_INSTALL_PREFIX=${R_HIGHS_LIB_DIR} \
+    -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON \
+    -DBUILD_SHARED_LIBS:bool=OFF \
+    -DBUILD_TESTING:bool=OFF \
+    -DZLIB:bool=OFF \
+    -DBUILD_EXAMPLES:bool=OFF \
+    -DFAST_BUILD:bool=ON \
+    -DCMAKE_VERBOSE_MAKEFILE:bool=OFF \
+"
 COMPILER_LAUNCHER="-DCMAKE_C_COMPILER_LAUNCHER=${CCACHE} -DCMAKE_CXX_COMPILER_LAUNCHER=${CCACHE}"
 if test -z "${CCACHE}"; then
     CMAKE_OPTS=${DEFAULT_CMAKE_OPTS}
