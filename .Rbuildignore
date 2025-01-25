@@ -9,6 +9,7 @@
 ^README.html
 ^README.Rmd
 ^Makefile
+^Taskfile.yml
 ^Manual.pdf
 ^highs*.tar.gz
 ^inst/HiGHS/build

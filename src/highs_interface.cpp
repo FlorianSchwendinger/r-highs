@@ -762,3 +762,45 @@ Rcpp::IntegerVector solver_get_vartype(SEXP hi) {
     }
     return type;
 }
+
+
+// [[Rcpp::export]]
+Rcpp::List solver_get_solution(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsSolution solution = highs->getSolution();
+    List z = List::create(
+        Named("value_valid") = solution.value_valid,
+        Named("dual_valid") = solution.dual_valid,
+        Named("col_value") = solution.col_value,
+        Named("col_dual") = solution.col_dual,
+        Named("row_value") = solution.row_value,
+        Named("row_dual") = solution.row_dual
+    );
+    return z;
+}
+
+
+// [[Rcpp::export]]
+int32_t solver_set_solution_obj(SEXP hi,
+                                bool value_valid,
+                                bool dual_valid,
+                                std::vector<double> col_value,
+                                std::vector<double> col_dual,
+                                std::vector<double> row_value,
+                                std::vector<double> row_dual) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsSolution solution = {value_valid, dual_valid, col_value, col_dual, row_value, row_dual};
+    HighsStatus return_status = highs->setSolution(solution);
+    return static_cast<int32_t>(return_status);
+}
+
+
+// [[Rcpp::export]]
+int32_t solver_set_solution_vec(SEXP hi, IntegerVector idx, NumericVector val) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsStatus return_status = highs->setSolution(idx.size(), &(idx[0]), &(val[0]));
+    return static_cast<int32_t>(return_status);
+}
+
+// solver_set_hotstart
+// HighsStatus return_status = highs->setHotStart(hotstart);

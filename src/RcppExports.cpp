@@ -775,6 +775,47 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// solver_get_solution
+Rcpp::List solver_get_solution(SEXP hi);
+RcppExport SEXP _highs_solver_get_solution(SEXP hiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_get_solution(hi));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_set_solution_obj
+int32_t solver_set_solution_obj(SEXP hi, bool value_valid, bool dual_valid, std::vector<double> col_value, std::vector<double> col_dual, std::vector<double> row_value, std::vector<double> row_dual);
+RcppExport SEXP _highs_solver_set_solution_obj(SEXP hiSEXP, SEXP value_validSEXP, SEXP dual_validSEXP, SEXP col_valueSEXP, SEXP col_dualSEXP, SEXP row_valueSEXP, SEXP row_dualSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    Rcpp::traits::input_parameter< bool >::type value_valid(value_validSEXP);
+    Rcpp::traits::input_parameter< bool >::type dual_valid(dual_validSEXP);
+    Rcpp::traits::input_parameter< std::vector<double> >::type col_value(col_valueSEXP);
+    Rcpp::traits::input_parameter< std::vector<double> >::type col_dual(col_dualSEXP);
+    Rcpp::traits::input_parameter< std::vector<double> >::type row_value(row_valueSEXP);
+    Rcpp::traits::input_parameter< std::vector<double> >::type row_dual(row_dualSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_set_solution_obj(hi, value_valid, dual_valid, col_value, col_dual, row_value, row_dual));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_set_solution_vec
+int32_t solver_set_solution_vec(SEXP hi, IntegerVector idx, NumericVector val);
+RcppExport SEXP _highs_solver_set_solution_vec(SEXP hiSEXP, SEXP idxSEXP, SEXP valSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type idx(idxSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type val(valSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_set_solution_vec(hi, idx, val));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP _rcpp_module_boot_RcppHighs();
 
@@ -842,6 +883,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_highs_solver_get_integrality", (DL_FUNC) &_highs_solver_get_integrality, 1},
     {"_highs_solver_get_constraint_matrix", (DL_FUNC) &_highs_solver_get_constraint_matrix, 1},
     {"_highs_solver_get_vartype", (DL_FUNC) &_highs_solver_get_vartype, 1},
+    {"_highs_solver_get_solution", (DL_FUNC) &_highs_solver_get_solution, 1},
+    {"_highs_solver_set_solution_obj", (DL_FUNC) &_highs_solver_set_solution_obj, 7},
+    {"_highs_solver_set_solution_vec", (DL_FUNC) &_highs_solver_set_solution_vec, 3},
     {"_rcpp_module_boot_RcppHighs", (DL_FUNC) &_rcpp_module_boot_RcppHighs, 0},
     {NULL, NULL, 0}
 };

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "Use 'configure'"
-# export R_HIGHS_LIB_DIR=/home/f/lib/highslib
+export R_HIGHS_LIB_DIR=/home/f/lib/highslib
 
 if test -z "${R_HIGHS_LIB_DIR}"; then
     R_HIGHS_PKG_HOME=`pwd`
@@ -11,7 +11,7 @@ if test -z "${R_HIGHS_LIB_DIR}"; then
     R_HIGHS_LIB_DIR=${R_HIGHS_PKG_HOME}/src/highslib
     
     # development
-    # rm -rf /home/f/lib/
+    # rm -rf /home/f/lib/highslib
     # cp -rf ${R_HIGHS_LIB_DIR} /home/f/lib/
 fi
 

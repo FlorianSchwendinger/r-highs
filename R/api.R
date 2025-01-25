@@ -2,52 +2,225 @@
 #' Create new Highs Model
 #'
 #' @description
-#' Create a new hi
+#' Create a new highs model object.
+#' @return an object of class \code{"highs_model"}.
+#' @export 
+hi_new_model <- function() {
+    model <- new_model()
+    class(model) <- c("highs_model", class(model))
+    model
+}
+
+
+#' Sets the number of columns in the model
+#' 
+#' This function sets the number of columns in the given model.
 #'
-#
-hapi_new_model <- function() {
+#' @param model an object of class \code{"highs_model"}.
+#' @param ncol an integer giving the number of columns (variables) to set in the model
+#' @return \code{NULL}
+#' 
+#' @examples
+#' model <- hi_new_model()
+#' hi_model_set_ncol(model, 10) # Sets the model to have 10 columns
+#' @export
+hi_model_set_ncol <- function(model, ncol) {
+    checkmate::assert_class(model, classes = "highs_model")
+    checkmate::assert_integer(ncol, lower = 0, any.missing = FALSE, len = 1)
+    model_set_ncol(model, ncol)
+}
 
+
+#' Set the number of rows in the model
+#'
+#' This function sets the number of rows in the given model.
+#'
+#' @param model an object of class \code{"highs_model"}.
+#' @param nrow an integer giving the number of rows (variables) to set in the model
+#' @return \code{NULL}
+#' 
+#' @examples
+#' model <- hi_new_model()
+#' hi_model_set_nrow(model, 5) # Sets the model to have 5 rows
+#' @export
+hi_model_set_nrow <- function(model, nrow) {
+    checkmate::assert_class(model, classes = "highs_model")
+    checkmate::assert_integer(nrow, lower = 0, any.missing = FALSE, len = 1)
+    model_set_nrow(model, nrow)
+}
+
+
+#' Set the sense of the optimization model
+#'
+#' This function sets the sense of the optimization model to either maximization or minimization.
+#'
+#' @param model an object of class \code{"highs_model"}.
+#' @param maximum a boolean value indicating whether the model should be set to maximization (`TRUE`) or minimization (`FALSE`).
+#' @return \code{NULL}
+#'
+#' @examples
+#' model <- hi_new_model() # Assuming a function to create a highs_model
+#' model <- hi_model_set_sense(model, TRUE) # Set the model to maximization
+#' model <- hi_model_set_sense(model, FALSE) # Set the model to minimization
+#'
+#' @export
+hi_model_set_sense <- function(model, maximum) {
+    checkmate::assert_class(model, classes = "highs_model")
+    checkmate::assert_boolean(maximum, len = 1)
+    model_set_sense(model, maximum)
 }
 
 
 
-
-new_model <- function() {
-    .Call(`_highs_new_model`)
+#' Set Offset for Highs Model
+#'
+#' This function sets the offset for a given Highs model.
+#'
+#' @param model an object of class \code{"highs_model"}.
+#' @param offset a numeric value of length 1. The offset value to be set for the model.
+#'
+#' @return \code{NULL}
+#'
+#' @examples
+#' \dontrun{
+#' model <- hi_new_model()
+#' hi_model_set_offset(model, 10)
+#' }
+#'
+#' @export
+hi_model_set_offset <- function(model, offset) {
+    checkmate::assert_class(model, classes = "highs_model")
+    checkmate::assert_numeric(offset, len = 1)
+    model_set_offset(model, offset)
 }
 
-model_set_ncol <- function(mpt, ncol) {
-    .Call(`_highs_model_set_ncol`, mpt, ncol)
+
+
+#' Set Objective for Highs Model
+#'
+#' This function sets the objective for a given Highs model.
+#'
+#' @param model an object of class \code{"highs_model"}.
+#' @param objective a numeric vector giving the objective values to be set for the model.
+#'
+#' @return \code{NULL}
+#'
+#' @examples
+#' \dontrun{
+#' model <- hi_new_model()
+#' objective <- c(1, 2, 3)
+#' hi_model_set_objective(model, objective)
+#' }
+#'
+#' @export
+hi_model_set_objective <- function(model, objective) {
+    checkmate::assert_class(model, classes = "highs_model")
+    checkmate::assert_numeric(objective, any.missing = FALSE)
+    model_set_objective(model, objective)
 }
 
-model_set_nrow <- function(mpt, nrow) {
-    .Call(`_highs_model_set_nrow`, mpt, nrow)
+
+#' Set Lower Bounds for Highs Model
+#'
+#' This function sets the lower bounds for a given Highs model.
+#'
+#' @param model an object of class \code{"highs_model"}.
+#' @param lower a numeric vector giving the lower bounds.
+#'
+#' @return \code{NULL}
+#'
+#' @examples
+#' \dontrun{
+#' model <- hi_new_model()
+#' lower_bounds <- c(0, 1, 2)
+#' hi_model_set_lower(model, lower_bounds)
+#' }
+#'
+#' @export
+hi_model_set_lower <- function(model, lower) {
+    checkmate::assert_class(model, classes = "highs_model")
+    checkmate::assert_numeric(lower, any.missing = FALSE)
+    model_set_lower(model, lower)
 }
 
-model_set_sense <- function(mpt, maximum) {
-    .Call(`_highs_model_set_sense`, mpt, maximum)
+
+#' Set Upper Bounds for a Highs Model
+#'
+#' This function sets the upper bounds for a given Highs model.
+#'
+#' @param model an object of class \code{"highs_model"}.
+#' @param upper a numeric vector giving the upper bounds.
+#'
+#' @return \code{NULL}
+#'
+#' @examples
+#' \dontrun{
+#' model <- hi_new_model()
+#' upper_bounds <- c(10, 20, 30)
+#' hi_model_set_upper(model, upper_bounds)
+#' }
+#'
+#' @export
+hi_model_set_upper <- function(model, upper) {
+    checkmate::assert_class(model, classes = "highs_model")
+    checkmate::assert_numeric(upper, any.missing = FALSE)
+    model_set_upper(model, upper)
 }
 
-model_set_offset <- function(mpt, offset) {
-    .Call(`_highs_model_set_offset`, mpt, offset)
+
+#' Set Constraint Matrix for Highs Model
+#'
+#' This function sets the constraint matrix for a given Highs model.
+#'
+#' @param model an object of class \code{"highs_model"}.
+#' @param format a character string specifying the format of the constraint matrix. 
+#'               Must be one of "colwise", "rowwise", or "rowwise_partitioned".
+#' @param start an integer vector giving the start positions of the constraints.
+#' @param index an integer vector giving the indices of the constraints.
+#' @param value a numeric vector giving the values of the constraints.
+#'
+#' @return \code{NULL}
+#'
+#' @examples
+#' \dontrun{
+#' model <- hi_new_model()
+#' format <- "colwise"
+#' start <- c(0, 2, 4)
+#' index <- c(1, 2, 3, 4)
+#' value <- c(1.0, 2.0, 3.0, 4.0)
+#' hi_model_set_constraint_matrix(model, format, start, index, value)
+#' }
+#'
+#' @export
+hi_model_set_constraint_matrix <- function(model, format, start, index, value) {
+    checkmate::assert_class(model, classes = "highs_model")
+    checkmate::assert_choice(format, choices = c("colwise", "rowwise", "rowwise_partitioned"), len = 1)
+    checkmate::assert_integer(start, any.missing = FALSE)
+    checkmate::assert_integer(index, any.missing = FALSE)
+    checkmate::assert_numeric(value, any.missing = FALSE)
+    model_set_constraint_matrix(model, format, start, index, value)
 }
 
-model_set_objective <- function(mpt, objective) {
-    .Call(`_highs_model_set_objective`, mpt, objective)
-}
 
-model_set_lower <- function(mpt, lower) {
-    .Call(`_highs_model_set_lower`, mpt, lower)
+#' Set Left Hand Side for a Highs Model
+#'
+#' This function sets the left hand side for a given Highs model.
+#'
+#' @param model an object of class \code{"highs_model"}.
+#' @param lhs a numeric vector giving the left hand side values.
+#'
+#' @return \code{NULL}
+#'
+#' @examples
+#' model <- hi_new_model()
+#' model <- hi_model_set_lhs(model, c(0, 1, 2))
+#'
+#' @export
+hi_model_set_lhs <- function(model, lhs) {
+    checkmate::assert_class(model, classes = "highs_model")
+    checkmate::assert_numeric(lower, any.missing = FALSE)
+    model_set_lhs(model, lower)
 }
-
-model_set_upper <- function(mpt, upper) {
-    .Call(`_highs_model_set_upper`, mpt, upper)
-}
-
-model_set_constraint_matrix_ <- function(mpt, format, start, index, value) {
-    .Call(`_highs_model_set_constraint_matrix_`, mpt, format, start, index, value)
-}
-
 model_set_lhs <- function(mpt, lower) {
     .Call(`_highs_model_set_lhs`, mpt, lower)
 }

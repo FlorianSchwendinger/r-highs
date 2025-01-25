@@ -253,3 +253,15 @@ solver_get_vartype <- function(hi) {
     .Call(`_highs_solver_get_vartype`, hi)
 }
 
+solver_get_solution <- function(hi) {
+    .Call(`_highs_solver_get_solution`, hi)
+}
+
+solver_set_solution_obj <- function(hi, value_valid, dual_valid, col_value, col_dual, row_value, row_dual) {
+    .Call(`_highs_solver_set_solution_obj`, hi, value_valid, dual_valid, col_value, col_dual, row_value, row_dual)
+}
+
+solver_set_solution_vec <- function(hi, idx, val) {
+    .Call(`_highs_solver_set_solution_vec`, hi, idx, val)
+}
+
