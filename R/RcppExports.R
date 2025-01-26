@@ -153,6 +153,10 @@ solver_write_basis <- function(hi, filename) {
     .Call(`_highs_solver_write_basis`, hi, filename)
 }
 
+solver_write_solution <- function(hi, filename, style) {
+    .Call(`_highs_solver_write_solution`, hi, filename, style)
+}
+
 solver_status_message <- function(hi) {
     .Call(`_highs_solver_status_message`, hi)
 }

@@ -22,7 +22,7 @@ hi_new_model <- function() {
 #' 
 #' @examples
 #' model <- hi_new_model()
-#' hi_model_set_ncol(model, 10) # Sets the model to have 10 columns
+#' hi_model_set_ncol(model, 10L) # Sets the model to have 10 columns
 #' @export
 hi_model_set_ncol <- function(model, ncol) {
     checkmate::assert_class(model, classes = "highs_model")
@@ -41,7 +41,7 @@ hi_model_set_ncol <- function(model, ncol) {
 #' 
 #' @examples
 #' model <- hi_new_model()
-#' hi_model_set_nrow(model, 5) # Sets the model to have 5 rows
+#' hi_model_set_nrow(model, 5L) # Sets the model to have 5 rows
 #' @export
 hi_model_set_nrow <- function(model, nrow) {
     checkmate::assert_class(model, classes = "highs_model")
@@ -59,14 +59,14 @@ hi_model_set_nrow <- function(model, nrow) {
 #' @return \code{NULL}
 #'
 #' @examples
-#' model <- hi_new_model() # Assuming a function to create a highs_model
-#' model <- hi_model_set_sense(model, TRUE) # Set the model to maximization
-#' model <- hi_model_set_sense(model, FALSE) # Set the model to minimization
+#' model <- hi_new_model()
+#' hi_model_set_sense(model, TRUE)   # Set the model to maximization
+#' hi_model_set_sense(model, FALSE)  # Set the model to minimization
 #'
 #' @export
 hi_model_set_sense <- function(model, maximum) {
     checkmate::assert_class(model, classes = "highs_model")
-    checkmate::assert_boolean(maximum, len = 1)
+    checkmate::assert_logical(maximum, len = 1, any.missing = FALSE)
     model_set_sense(model, maximum)
 }
 
@@ -82,10 +82,8 @@ hi_model_set_sense <- function(model, maximum) {
 #' @return \code{NULL}
 #'
 #' @examples
-#' \dontrun{
 #' model <- hi_new_model()
 #' hi_model_set_offset(model, 10)
-#' }
 #'
 #' @export
 hi_model_set_offset <- function(model, offset) {
@@ -106,11 +104,9 @@ hi_model_set_offset <- function(model, offset) {
 #' @return \code{NULL}
 #'
 #' @examples
-#' \dontrun{
 #' model <- hi_new_model()
 #' objective <- c(1, 2, 3)
 #' hi_model_set_objective(model, objective)
-#' }
 #'
 #' @export
 hi_model_set_objective <- function(model, objective) {
@@ -130,11 +126,9 @@ hi_model_set_objective <- function(model, objective) {
 #' @return \code{NULL}
 #'
 #' @examples
-#' \dontrun{
 #' model <- hi_new_model()
 #' lower_bounds <- c(0, 1, 2)
 #' hi_model_set_lower(model, lower_bounds)
-#' }
 #'
 #' @export
 hi_model_set_lower <- function(model, lower) {
@@ -154,11 +148,9 @@ hi_model_set_lower <- function(model, lower) {
 #' @return \code{NULL}
 #'
 #' @examples
-#' \dontrun{
 #' model <- hi_new_model()
 #' upper_bounds <- c(10, 20, 30)
 #' hi_model_set_upper(model, upper_bounds)
-#' }
 #'
 #' @export
 hi_model_set_upper <- function(model, upper) {
@@ -173,32 +165,22 @@ hi_model_set_upper <- function(model, upper) {
 #' This function sets the constraint matrix for a given Highs model.
 #'
 #' @param model an object of class \code{"highs_model"}.
-#' @param format a character string specifying the format of the constraint matrix. 
-#'               Must be one of "colwise", "rowwise", or "rowwise_partitioned".
-#' @param start an integer vector giving the start positions of the constraints.
-#' @param index an integer vector giving the indices of the constraints.
-#' @param value a numeric vector giving the values of the constraints.
+#' @param matrix a matrix giving the Hessian matrix.
+#'  Allowed matrix classes are \code{"matrix"}, \code{"dgCMatrix"}, \code{"matrix.csc"},
+#'  and \code{"simple_triplet_matrix"}.
 #'
 #' @return \code{NULL}
 #'
 #' @examples
-#' \dontrun{
 #' model <- hi_new_model()
-#' format <- "colwise"
-#' start <- c(0, 2, 4)
-#' index <- c(1, 2, 3, 4)
-#' value <- c(1.0, 2.0, 3.0, 4.0)
-#' hi_model_set_constraint_matrix(model, format, start, index, value)
-#' }
-#'
+#' matrix <- matrix(c(1, 0, 0, 1), nrow = 2)
+#' hi_model_set_constraint_matrix(model, matrix)
+#' 
 #' @export
-hi_model_set_constraint_matrix <- function(model, format, start, index, value) {
+hi_model_set_constraint_matrix <- function(model, matrix) {
     checkmate::assert_class(model, classes = "highs_model")
-    checkmate::assert_choice(format, choices = c("colwise", "rowwise", "rowwise_partitioned"), len = 1)
-    checkmate::assert_integer(start, any.missing = FALSE)
-    checkmate::assert_integer(index, any.missing = FALSE)
-    checkmate::assert_numeric(value, any.missing = FALSE)
-    model_set_constraint_matrix(model, format, start, index, value)
+    checkmate::assert_numeric(matrix, any.missing = FALSE)
+    model_set_constraint_matrix(model, matrix)
 }
 
 
@@ -218,24 +200,77 @@ hi_model_set_constraint_matrix <- function(model, format, start, index, value) {
 #' @export
 hi_model_set_lhs <- function(model, lhs) {
     checkmate::assert_class(model, classes = "highs_model")
-    checkmate::assert_numeric(lower, any.missing = FALSE)
-    model_set_lhs(model, lower)
-}
-model_set_lhs <- function(mpt, lower) {
-    .Call(`_highs_model_set_lhs`, mpt, lower)
+    checkmate::assert_numeric(lhs, any.missing = FALSE)
+    model_set_lhs(model, lhs)
 }
 
-model_set_rhs <- function(mpt, upper) {
-    .Call(`_highs_model_set_rhs`, mpt, upper)
+
+#' Set Right Hand Side for a Highs Model
+#'
+#' This function sets the left hand side for a given Highs model.
+#'
+#' @param model an object of class \code{"highs_model"}.
+#' @param rhs a numeric vector giving the left hand side values.
+#'
+#' @return \code{NULL}
+#'
+#' @examples
+#' model <- hi_new_model()
+#' model <- hi_model_set_rhs(model, c(0, 1, 2))
+#'
+#' @export
+hi_model_set_rhs <- function(model, rhs) {
+    checkmate::assert_class(model, classes = "highs_model")
+    checkmate::assert_numeric(rhs, any.missing = FALSE)
+    model_set_rhs(model, rhs)
 }
 
-model_set_hessian_ <- function(mpt, format, dim, start, index, value) {
-    .Call(`_highs_model_set_hessian_`, mpt, format, dim, start, index, value)
+
+#' Set Hessian Matrix for Highs Model
+#'
+#' This function sets the Hessian matrix for a given Highs model.
+#'
+#' @param model an object of class \code{"highs_model"}.
+#' @param matrix a matrix giving the Hessian matrix.
+#'  Allowed matrix classes are \code{"matrix"}, \code{"dgCMatrix"}, \code{"matrix.csc"},
+#'  and \code{"simple_triplet_matrix"}.
+#'
+#' @return \code{NULL}
+#'
+#' @examples
+#' model <- hi_new_model()
+#' hessian_matrix <- matrix(c(1, 0, 0, 1), nrow = 2)
+#' hi_model_set_hessian(model, hessian_matrix)
+#'
+#' @export
+hi_model_set_hessian <- function(model, matrix) {
+    checkmate::assert_class(model, classes = "highs_model")
+    checkmate::assert_numeric(matrix, any.missing = FALSE)
+    model_set_hessian(model, matrix)
 }
 
-model_set_vartype <- function(mpt, type) {
-    .Call(`_highs_model_set_vartype`, mpt, type)
+
+#' Set Variable Types in a Highs Model
+#'
+#' This function sets the variable types in a given Highs model.
+#'
+#' @param model A `highs_model` object. The model in which the variable types are to be set.
+#' @param types An integer vector specifying the types of the variables.
+#'
+#' @return The function does not return a value. It modifies the `model` object in place.
+#'
+#' @examples
+#' model <- hi_new_model()
+#' types <- c(1, 2, 1, 0)
+#' hi_model_set_vartype(model, types)
+#'
+#' @export
+hi_model_set_vartype <- function(model, types) {
+    checkmate::assert_class(model, classes = "highs_model")
+    checkmate::assert_integerish(types, any.missing = FALSE)
+    model_set_vartype(model, as.integer(types))
 }
+
 
 model_get_nvars <- function(mpt) {
     .Call(`_highs_model_get_nvars`, mpt)
@@ -249,17 +284,20 @@ new_solver <- function(mpt) {
     .Call(`_highs_new_solver`, mpt)
 }
 
-highs_pass_model <- function(hi, num_col, num_row, num_nz, a_format, sense, offset, col_cost, col_lower, col_upper, row_lower, row_upper, a_start, a_index, a_value, integrality) {
-    .Call(`_highs_highs_pass_model`, hi, num_col, num_row, num_nz, a_format, sense, offset, col_cost, col_lower, col_upper, row_lower, row_upper, a_start, a_index, a_value, integrality)
-}
+# TODO: Implement this function
+# highs_pass_model <- function(hi, num_col, num_row, num_nz, a_format, sense, offset, col_cost, col_lower, col_upper, row_lower, row_upper, a_start, a_index, a_value, integrality) {
+#     .Call(`_highs_highs_pass_model`, hi, num_col, num_row, num_nz, a_format, sense, offset, col_cost, col_lower, col_upper, row_lower, row_upper, a_start, a_index, a_value, integrality)
+# }
 
-solver_pass_hessian <- function() {
-    .Call(`_highs_solver_pass_hessian`)
-}
+# TODO: Implement this function
+# solver_pass_hessian <- function() {
+#     .Call(`_highs_solver_pass_hessian`)
+# }
 
-solver_pass_constraints <- function() {
-    .Call(`_highs_solver_pass_constraints`)
-}
+# TODO: Implement this function
+# solver_pass_constraints <- function() {
+#     .Call(`_highs_solver_pass_constraints`)
+# }
 
 solver_get_sense <- function(hi) {
     .Call(`_highs_solver_get_sense`, hi)

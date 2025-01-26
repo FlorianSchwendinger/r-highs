@@ -479,6 +479,15 @@ int32_t solver_write_basis(SEXP hi, const std::string filename) {
 }
 
 
+// style int in {-1, 0, 1, 2, 3, 4}
+// [[Rcpp::export]]
+int32_t solver_write_solution(SEXP hi, const std::string filename, const int32_t style) {
+    Rcpp::XPtr<Highs>highs(hi);
+    HighsStatus return_status = highs->writeSolution(filename, style);
+    return static_cast<int32_t>(return_status);
+}
+
+
 // [[Rcpp::export]]
 std::string solver_status_message(SEXP hi) {
     Rcpp::XPtr<Highs>highs(hi);
