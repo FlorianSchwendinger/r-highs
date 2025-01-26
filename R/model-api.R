@@ -1,10 +1,9 @@
-
 #' Create new Highs Model
 #'
 #' @description
 #' Create a new highs model object.
 #' @return an object of class \code{"highs_model"}.
-#' @export 
+#' @export
 hi_new_model <- function() {
     model <- new_model()
     class(model) <- c("highs_model", class(model))
@@ -13,13 +12,13 @@ hi_new_model <- function() {
 
 
 #' Sets the number of columns in the model
-#' 
+#'
 #' This function sets the number of columns in the given model.
 #'
 #' @param model an object of class \code{"highs_model"}.
 #' @param ncol an integer giving the number of columns (variables) to set in the model
 #' @return \code{NULL}
-#' 
+#'
 #' @examples
 #' model <- hi_new_model()
 #' hi_model_set_ncol(model, 10L) # Sets the model to have 10 columns
@@ -38,7 +37,7 @@ hi_model_set_ncol <- function(model, ncol) {
 #' @param model an object of class \code{"highs_model"}.
 #' @param nrow an integer giving the number of rows (variables) to set in the model
 #' @return \code{NULL}
-#' 
+#'
 #' @examples
 #' model <- hi_new_model()
 #' hi_model_set_nrow(model, 5L) # Sets the model to have 5 rows
@@ -60,8 +59,8 @@ hi_model_set_nrow <- function(model, nrow) {
 #'
 #' @examples
 #' model <- hi_new_model()
-#' hi_model_set_sense(model, TRUE)   # Set the model to maximization
-#' hi_model_set_sense(model, FALSE)  # Set the model to minimization
+#' hi_model_set_sense(model, TRUE) # Set the model to maximization
+#' hi_model_set_sense(model, FALSE) # Set the model to minimization
 #'
 #' @export
 hi_model_set_sense <- function(model, maximum) {
@@ -175,7 +174,7 @@ hi_model_set_upper <- function(model, upper) {
 #' model <- hi_new_model()
 #' matrix <- matrix(c(1, 0, 0, 1), nrow = 2)
 #' hi_model_set_constraint_matrix(model, matrix)
-#' 
+#'
 #' @export
 hi_model_set_constraint_matrix <- function(model, matrix) {
     checkmate::assert_class(model, classes = "highs_model")
@@ -254,8 +253,8 @@ hi_model_set_hessian <- function(model, matrix) {
 #'
 #' This function sets the variable types in a given Highs model.
 #'
-#' @param model A `highs_model` object. The model in which the variable types are to be set.
-#' @param types An integer vector specifying the types of the variables.
+#' @param model an object of class \code{"highs_model"}.
+#' @param types an integer vector specifying the types of the variables.
 #'
 #' @return The function does not return a value. It modifies the `model` object in place.
 #'
@@ -272,10 +271,38 @@ hi_model_set_vartype <- function(model, types) {
 }
 
 
-model_get_nvars <- function(mpt) {
-    .Call(`_highs_model_get_nvars`, mpt)
+#' Get Number of Variables in a Highs Model
+#'
+#' This function retrieves the number of variables in a given Highs model.
+#'
+#' @param model A `highs_model` object. The model from which to get the number of variables.
+#'
+#' @return An integer representing the number of variables in the model.
+#'
+#' @examples
+#' model <- hi_new_model()
+#' hi_model_get_nvars(model)
+#'
+#' @export
+hi_model_get_nvars <- function(model) {
+    checkmate::assert_class(model, classes = "highs_model")
+    model_get_nvars(model)
 }
 
-model_get_ncons <- function(mpt) {
-    .Call(`_highs_model_get_ncons`, mpt)
+
+#' Get Number of Constraints in a Model
+#'
+#' This function retrieves the number of constraints in a given `highs_model` object.
+#'
+#' @param model A `highs_model` object. The model from which to get the number of variables.
+#' 
+#' @return An integer representing the number of constraints in the model.
+#' @examples
+#' model <- hi_new_model()
+#' hi_model_get_ncons(model)
+#' 
+#' @export
+hi_model_get_ncons <- function(model) {
+    checkmate::assert_class(model, classes = "highs_model")
+    model_get_ncons(model)
 }
