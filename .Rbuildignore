@@ -28,3 +28,4 @@
 ^inst/patch_highs.R
 ^inst/r_hub.R
 ^install.out$
+^tests$
