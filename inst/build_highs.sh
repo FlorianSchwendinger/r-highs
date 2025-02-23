@@ -30,34 +30,71 @@ if test -z "${R_HOME}"; then
 fi
 
 
+CXX11STD=`"${R_HOME}/bin/R" CMD config CXX11`
+CXX14STD=`"${R_HOME}/bin/R" CMD config CXX14`
+CXX17STD=`"${R_HOME}/bin/R" CMD config CXX17`
+CXX22STD=`"${R_HOME}/bin/R" CMD config CXX20`
+CXX23STD=`"${R_HOME}/bin/R" CMD config CXX23`
+
+
 export CC=`"${R_HOME}/bin/R" CMD config CC`
-export CXX=`"${R_HOME}/bin/R" CMD config CXX11`
+export CXX=`"${R_HOME}/bin/R" CMD config CXX`
 export CXX11=`"${R_HOME}/bin/R" CMD config CXX11`
+export CXX14=`"${R_HOME}/bin/R" CMD config CXX14`
+export CXX17=`"${R_HOME}/bin/R" CMD config CXX17`
+export CXX22=`"${R_HOME}/bin/R" CMD config CXX20`
+export CXX23=`"${R_HOME}/bin/R" CMD config CXX23`
 export CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
 export CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
 export CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 export LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
-export CXX_STD=`"${R_HOME}/bin/R" CMD config CXX_STD`
 
 echo ""
 echo "CMAKE VERSION: '`${CMAKE_EXE} --version | head -n 1`'"
 echo "arch: '$(arch)'"
 echo "CC: '${CC}'"
 echo "CXX: '${CXX}'"
-echo "CXX11: '${CXX}'"
+echo "CXX11: '${CXX11}'"
+echo "CXX14: '${CXX14}'"
+echo "CXX17: '${CXX17}'"
+echo "CXX20: '${CXX20}'"
+echo "CXX23: '${CXX23}'"
 echo "CXXFLAGS: '${CXXFLAGS}'"
 echo "CFLAGS: '${CFLAGS}'"
 echo "CPPFLAGS: '${CPPFLAGS}'"
 echo "LDFLAGS: '${LDFLAGS}'"
-echo "R_HIGHS_BUILD_DIR: '${R_HIGHS_BUILD_DIR}'"
-echo "R_HIGHS_LIB_DIR: '${R_HIGHS_LIB_DIR}'"
 echo ""
+
+
+if test -z "${CXX}"; then
+    echo "No C++ compiler is available"
+    exit 1
+fi
+
+
+# If someone bothers to set the CXX_STD variable, then use it.
+if test -z "${CXX_STD}"; then
+    CPLUSPLUS=`${CXX} -dM -E -x c++ - < /dev/null | grep __cplusplus`
+    CXX_STD_NUM=$(echo $CPLUSPLUS | sed 's/[^0-9]//g' | cut -c 3-4)
+else
+    CXX_STD_NUM=$(echo $CXX_STD | sed 's/[^0-9]//g')
+fi
+
+# If CXX_STD_NUM is can not be determined, fall back to 17 and hope it works.
+if test -z "${CXX_STD_NUM}"; then
+    CXX_STD_NUM="17"
+fi
+echo "CXX_STD_NUM:" ${CXX_STD_NUM}
 
 
 R_HIGHS_PKG_HOME=`pwd`
 HIGHS_SRC_DIR=${R_HIGHS_PKG_HOME}/inst/HiGHS
 R_HIGHS_BUILD_DIR=${HIGHS_SRC_DIR}/build
 R_HIGHS_LIB_DIR=${R_HIGHS_PKG_HOME}/src/highslib
+echo ""
+echo "R_HIGHS_BUILD_DIR: '${R_HIGHS_BUILD_DIR}'"
+echo "R_HIGHS_LIB_DIR: '${R_HIGHS_LIB_DIR}'"
+echo ""
 
 
 #
@@ -68,9 +105,9 @@ echo "" > ${HIGHS_SRC_DIR}/app/CMakeLists.txt
 # 2. Remove deprecation message
 sed -i "s|.*deprecationMessage.*setLogCallback.*||" inst/HiGHS/src/lp_data/HighsDeprecated.cpp
 # 3. Remove C++11 standard
-sed -i "s|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD 17|" inst/HiGHS/CMakeLists.txt
-sed -i "s|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD 17|" inst/HiGHS/cmake/cpp-highs.cmake
-sed -i "s|c++11|c++17|" inst/HiGHS/CMakeLists.txt
+sed -i "s|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD ${CXX_STD_NUM}|" inst/HiGHS/CMakeLists.txt
+sed -i "s|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD ${CXX_STD_NUM}|" inst/HiGHS/cmake/cpp-highs.cmake
+sed -i "s|c++11|c++${CXX_STD_NUM}|" inst/HiGHS/CMakeLists.txt
 
 
 #
