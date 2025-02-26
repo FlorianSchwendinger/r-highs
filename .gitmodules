@@ -1,3 +1,4 @@
 [submodule "inst/HiGHS"]
 	path = inst/HiGHS
-	url = git@gitlab.com:schwe/highs-patched.git
+	url = git@github.com:ERGO-Code/HiGHS.git
+	tag = v1.9.0

@@ -9,6 +9,10 @@ if test -z "${R_HIGHS_LIB_DIR}"; then
     cd ${R_HIGHS_PKG_HOME}
     rm -rf inst/HiGHS
     R_HIGHS_LIB_DIR=${R_HIGHS_PKG_HOME}/src/highslib
+    
+    # development
+    # rm -rf /home/f/lib/
+    # cp -rf ${R_HIGHS_LIB_DIR} /home/f/lib/
 fi
 
 

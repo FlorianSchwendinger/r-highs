@@ -70,6 +70,9 @@ devcheck_win_release: build
 devcheck_win_oldrelease: build
 	$(R) -e "devtools::check_win_oldrelease(email = 'FlorianSchwendinger@gmx.at')"
 
+devcheck_mac_release: build
+	$(R) -e "devtools::check_win_release(email = 'FlorianSchwendinger@gmx.at')"
+
 check_mac: build
 	$(R) -e "rhub::check(dir(pattern = 'highs_.*.tar.gz'), platforms = 'macos-highsierra-release-cran')"
 
