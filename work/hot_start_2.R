@@ -5,7 +5,7 @@ library("highs")
 
 attach(getNamespace("highs"))
 
-solver <- new_solver(NULL)
+solver <- hi_new_solver(NULL)
 solver
 solver_get_num_col(solver)
 

@@ -352,16 +352,8 @@ model_set_vartype
 // 
 // addRowsInterface
 // addColsInterface
-// changeColsIntegrality
-// changeColsCost
-// changeColsBounds
-// changeRowsBounds
-// changeCoeff
-// addCols
-// addRows
 // setSolution
 // getHotStart
-// setHotStart
 
 // [[Rcpp::export]]
 int32_t solver_set_option(SEXP hi, std::string key, SEXP value) {

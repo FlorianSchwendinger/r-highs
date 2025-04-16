@@ -66,6 +66,6 @@ example_model <- function(op_type = c("LP", "MILP", "QP")) {
 #' 
 #' @export 
 example_solver <- function(op_type = c("LP", "MILP", "QP")) {
-    new_solver(example_model(op_type))
+    hi_new_solver(example_model(op_type))
 }
 

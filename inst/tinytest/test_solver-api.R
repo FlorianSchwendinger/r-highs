@@ -13,7 +13,7 @@ create_test_model <- function() {
 # Test new_solver creation
 test_new_solver <- function() {
     model <- create_test_model()
-    solver <- new_solver(model)
+    solver <- hi_new_solver(model)
     
     expect_class(solver, "externalptr")
     expect_true(!is.null(solver))
@@ -22,7 +22,7 @@ test_new_solver <- function() {
 # Test optimization sense functions
 test_solver_sense <- function() {
     model <- create_test_model()
-    solver <- new_solver(model)
+    solver <- hi_new_solver(model)
     
     # Test default sense (should be minimization - FALSE)
     expect_false(solver_get_sense(solver))
@@ -39,7 +39,7 @@ test_solver_sense <- function() {
 # Test objective offset
 test_solver_offset <- function() {
     model <- create_test_model()
-    solver <- new_solver(model)
+    solver <- hi_new_solver(model)
     
     # Test setting offset
     offset_value <- 5.5
@@ -52,7 +52,7 @@ test_solver_offset <- function() {
 # Test integrality settings
 test_solver_integrality <- function() {
     model <- create_test_model()
-    solver <- new_solver(model)
+    solver <- hi_new_solver(model)
     
     # Test setting integrality for first variable
     expect_silent(solver_set_integrality(solver, 0, 1))  # 1 for integer
@@ -62,7 +62,7 @@ test_solver_integrality <- function() {
 # Test objective coefficient setting
 test_solver_objective <- function() {
     model <- create_test_model()
-    solver <- new_solver(model)
+    solver <- hi_new_solver(model)
     
     # Test setting objective coefficients
     expect_silent(solver_set_objective(solver, 0, 2.5))
@@ -72,7 +72,7 @@ test_solver_objective <- function() {
 # Test variable bounds
 test_solver_variable_bounds <- function() {
     model <- create_test_model()
-    solver <- new_solver(model)
+    solver <- hi_new_solver(model)
     
     # Test setting variable bounds
     expect_silent(solver_set_variable_bounds(solver, 0, 1.0, 5.0))
@@ -85,7 +85,7 @@ test_solver_variable_bounds <- function() {
 # Test constraint bounds
 test_solver_constraint_bounds <- function() {
     model <- create_test_model()
-    solver <- new_solver(model)
+    solver <- hi_new_solver(model)
     
     # Test setting constraint bounds
     expect_silent(solver_set_constraint_bounds(solver, 0, -Inf, 10.0))
@@ -95,7 +95,7 @@ test_solver_constraint_bounds <- function() {
 # Test coefficient setting
 test_solver_coefficients <- function() {
     model <- create_test_model()
-    solver <- new_solver(model)
+    solver <- hi_new_solver(model)
     
     # Test setting coefficients
     expect_silent(solver_set_coeff(solver, 0, 0, 2.5))
@@ -105,7 +105,7 @@ test_solver_coefficients <- function() {
 # Test model writing
 test_solver_write_model <- function() {
     model <- create_test_model()
-    solver <- new_solver(model)
+    solver <- hi_new_solver(model)
     
     # Test writing model to file
     temp_file <- tempfile(fileext = ".mps")

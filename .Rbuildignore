@@ -29,3 +29,9 @@
 ^inst/r_hub.R
 ^install.out$
 ^tests$
+^inst/HiGHS/check
+^inst/HiGHS/app
+^inst/HiGHS/docs
+^inst/HiGHS/examples
+^inst/HiGHS/extern/catch.hpp
+^inst/archive

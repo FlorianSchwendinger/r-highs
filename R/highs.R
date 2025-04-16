@@ -275,7 +275,7 @@ highs_write_model <- function(model, file) {
     checkmate::assert_string(file)
     checkmate::assert_class(model, classes = "highs_model")
     checkmate::assert_directory_exists(dirname(file), access = "w")
-    solver <- new_solver(model)
+    solver <- hi_new_solver(model)
     solver_write_model(solver, file)
 }
 
@@ -358,13 +358,13 @@ highs_solve <- function(Q = NULL, L, lower, upper,
                          maximum = maximum, offset = offset)
 
     set_number_of_threads(control$threads)
-    init_msg <- capture.output(solver <- new_solver(model))
+    init_msg <- capture.output(solver <- hi_new_solver(model))
     if (is.null(solver)) {
         stop(paste(tail(init_msg, -3), collapse = "\n"))
     }
     solver_set_options(solver, control)
 
-    run_status <- solver_run(solver)
+    run_status <- hi_solver_run(solver)
     status <- solver_status(solver)
     status_message <- solver_status_message(solver)
 
@@ -393,7 +393,7 @@ highs_control <- function(threads = 1L, time_limit = Inf, log_to_console = FALSE
     checkmate::assert_double(time_limit, len = 1L, any.missing = FALSE)
     checkmate::assert_logical(log_to_console, len = 1L, any.missing = FALSE)
     control <- c(as.list(environment()), list(...))
-    default_control <- list(parallel = "off")
+    default_control <- list(parallel = "off", solver = "ipm")
     control <- modifyList(default_control, control)
     if (is.infinite(control[["time_limit"]])) {
         control[["time_limit"]] <- NULL
@@ -492,7 +492,7 @@ highs_solver <- function(model, control = highs_control()) {
     checkmate::assert_class(model, classes = "highs_model")
     checkmate::assert_class(control, classes = "highs_control")
     set_number_of_threads(control$threads)
-    init_msg <- capture.output(solver <- new_solver(model))
+    init_msg <- capture.output(solver <- hi_new_solver(model))
     if (is.null(solver)) {
         stop(paste(tail(init_msg, -3), collapse = "\n"))
     } else {
@@ -506,7 +506,7 @@ highs_solver <- function(model, control = highs_control()) {
         } else {
             solver_set_options(solver, cntrl)
         }
-        solver_run(solver)
+        hi_solver_run(solver)
     }
     status <- function() {
         solver_status(solver)

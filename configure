@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "Use 'configure'"
-export R_HIGHS_LIB_DIR=/home/f/lib/highslib
+# export R_HIGHS_LIB_DIR=/home/f/lib/highslib
 
 if test -z "${R_HIGHS_LIB_DIR}"; then
     R_HIGHS_PKG_HOME=`pwd`
@@ -23,3 +23,5 @@ if [ -z "$(ls ${R_HIGHS_LIB_DIR} | grep 'include')" ]; then
     echo "'HiGHS' libraries could not be found!"
     exit 1
 fi
+
+

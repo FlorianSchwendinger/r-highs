@@ -34,7 +34,7 @@ model_get_ncons(model)
 model_get_vartype(model)
 
 ## Solve Model
-solver <- new_solver(model)
+solver <- hi_new_solver(model)
 solver_run(solver)
 solver_status(solver)
 str(solver_info(solver))
@@ -50,7 +50,7 @@ solver_solution(solver)
 model_set_vartype(model, c(1L, 1L))
 model_get_vartype(model)
 
-solver <- new_solver(model)
+solver <- hi_new_solver(model)
 solver_run(solver)
 solver_status(solver)
 solver_info(solver)
@@ -82,7 +82,7 @@ model_get_ncons(model)
 model_get_vartype(model)
 
 ## Solve Model
-solver <- new_solver(model)
+solver <- hi_new_solver(model)
 solver_run(solver)
 solver_status(solver)
 solver_info(solver)
@@ -105,7 +105,7 @@ model_set_lhs(model, c(-1.0e30, -1.0e30, -1.0e30))
 model_set_rhs(model, c(2, 2, 2))
 
 ## Solve Model
-solver <- new_solver(model)
+solver <- hi_new_solver(model)
 solver_run(solver)
 solver_status(solver)
 solver_info(solver)

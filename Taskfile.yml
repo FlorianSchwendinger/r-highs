@@ -2,6 +2,7 @@ version: '3'
 
 
 vars:
+  R_DEV: "/opt/R/R460/lib/R/bin/R"
   R_HIGHS_LIB_DIR: "/home/f/lib/highslib"
 
 
@@ -30,10 +31,30 @@ tasks:
       - task build
       - R CMD check highs_*.tar.gz
 
-  check_as_cran:
+  cran_check:
     cmds:
       - task build
       - R CMD check --as-cran highs_*.tar.gz
+
+  dev_compile_attributes:
+    cmds:
+      - "{{.R_DEV}} -e 'Rcpp::compileAttributes(\".\")'"
+
+  dev_build:
+    cmds:
+      - task dev_compile_attributes
+      - task docs
+      - "{{.R_DEV}} CMD build ."
+    
+  dev_inst:
+    cmds:
+      - task dev_build
+      - "{{.R_DEV}} CMD INSTALL highs_*.tar.gz"
+
+  dev_check:
+    cmds:
+      - task dev_build
+      - "{{.R_DEV}} CMD check highs_*.tar.gz"
 
   readme:
     cmds:
@@ -55,7 +76,12 @@ tasks:
     cmds:
       - rm -rf "{{.R_HIGHS_LIB_DIR}}"
 
-  devcheck_win_devel:
+  winbuilder_check_devel:
     cmds:
       - task build
       - R -e "devtools::check_win_devel(email = 'FlorianSchwendinger@gmx.at')"
+
+  highs_build:
+    cmds:
+      - bash inst/build_highs.sh
+
