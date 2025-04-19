@@ -35,3 +35,6 @@
 ^inst/HiGHS/examples
 ^inst/HiGHS/extern/catch.hpp
 ^inst/archive
+^inst/parse_highs_options.R
+^inst/patch_highs.R
+^inst/CRAN_upload_TODOs.md

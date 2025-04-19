@@ -11,7 +11,8 @@
 #' hi_new_solver(model)
 #' @export 
 hi_new_solver <- function(model) {
-    solver <- .Call(`_highs_new_solver`, model)
+    checkmate::assert_class(model, classes = "highs_model")
+    solver <- new_solver(model)
     class(solver) <- c("highs_solver", class(solver))
     solver
 }
@@ -236,26 +237,6 @@ hi_solver_add_vars <- function(solver, lower, upper) {
     checkmate::assert_numeric(lower, any.missing = FALSE)
     checkmate::assert_numeric(upper, any.missing = FALSE)
     solver_add_vars(solver, as.double(lower), as.double(upper))
-}
-
-
-#' Set Solver Option
-#'
-#' This function sets a solver option using a key-value pair.
-#'
-#' @param solver An object of class "highs_solver".
-#' @param kwargs A named list of options to set.
-#'
-#' @return The solver instance with the updated options.
-#'
-#' @examples
-#' solver <- example_solver()
-#' hi_solver_set_options(solver, list(time_limit = 100))
-#'
-#' @export
-hi_solver_set_options <- function(solver, kwargs = list()) {
-    checkmate::assert_class(solver, classes = "highs_solver")
-    solver_set_options(solver, kwargs)
 }
 
 
@@ -555,7 +536,7 @@ hi_solver_solution <- function(solver) {
 #'
 #' @examples
 #' solver <- example_solver()
-#' value <- hi_solver_get_bool_option(solver, "parallel")
+#' value <- hi_solver_get_bool_option(solver, "mip_detect_symmetry")
 #'
 #' @export
 hi_solver_get_bool_option <- function(solver, key) {
@@ -576,7 +557,7 @@ hi_solver_get_bool_option <- function(solver, key) {
 #'
 #' @examples
 #' solver <- example_solver()
-#' value <- hi_solver_get_int_option(solver, "ipm_iteration_count")
+#' value <- hi_solver_get_int_option(solver, "log_dev_level")
 #'
 #' @export
 hi_solver_get_int_option <- function(solver, key) {

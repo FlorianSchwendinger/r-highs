@@ -85,3 +85,7 @@ tasks:
     cmds:
       - bash inst/build_highs.sh
 
+  patch_for_cran:
+    cmds:
+      - R -f 'inst/patch_highs.R'
+

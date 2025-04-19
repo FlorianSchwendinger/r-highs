@@ -19,6 +19,6 @@ This function retrieves the value of an integer solver option.
 }
 \examples{
 solver <- example_solver()
-value <- hi_solver_get_int_option(solver, "ipm_iteration_count")
+value <- hi_solver_get_int_option(solver, "log_dev_level")
 
 }

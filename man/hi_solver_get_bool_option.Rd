@@ -19,6 +19,6 @@ This function retrieves the value of a boolean solver option.
 }
 \examples{
 solver <- example_solver()
-value <- hi_solver_get_bool_option(solver, "parallel")
+value <- hi_solver_get_bool_option(solver, "mip_detect_symmetry")
 
 }

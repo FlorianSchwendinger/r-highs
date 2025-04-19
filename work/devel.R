@@ -239,7 +239,7 @@ available_solver_options <- function() {
     option_names
 }
 
-solver_get_options <- function(solver) {
+hi_solver_get_options <- function(solver) {
     option_names <- available_solver_options()
     getters <- list(bool = solver_get_bool_option, integer = solver_get_int_option,
                     double = solver_get_dbl_option, string = solver_get_str_option)

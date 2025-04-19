@@ -30,17 +30,8 @@ if test -z "${R_HOME}"; then
 fi
 
 
-# Patch code so it fits CRAN regulations.
-${R_HOME}/bin/R --silent --vanilla -f ./inst/patch_highs_code.R
-
-# exit 1
-
-
-# "${R_HOME}/bin/R" -f inst/patch_Makefile.R
-
 # PKG_CPPFLAGS=`Rscript -e 'Rcpp:::CxxFlags()'`
 # PKG_LIBS=`Rscript -e 'Rcpp:::LdFlags()'` 
-
 # CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
 CPPFLAGS=`"${R_HOME}/bin/R" CMD config --cppflags`
@@ -78,45 +69,6 @@ R_HIGHS_PKG_HOME=`pwd`
 HIGHS_SRC_DIR=${R_HIGHS_PKG_HOME}/inst/HiGHS
 R_HIGHS_BUILD_DIR=${HIGHS_SRC_DIR}/build
 R_HIGHS_LIB_DIR=${R_HIGHS_PKG_HOME}/src/highslib
-
-
-#
-# Patch HiGHS Code
-#
-# 1. Don't build the HiGHS app since it is not needed and "cxxopts.hpp" will raise a C++17 extension warning.
-echo "" > ${HIGHS_SRC_DIR}/app/CMakeLists.txt
-echo "" > ${HIGHS_SRC_DIR}/examples/CMakeLists.txt
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/CupdlpWrapper.cpp
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/CupdlpWrapper.h
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_defs.h
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_linalg.h
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_restart.c
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_scaling.h
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_step.c
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_utils.h
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_cs.c
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp.h
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_proj.c
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_restart.h
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_solver.c
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_step.h
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_cs.h
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_linalg.c
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_proj.h
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_scaling.c
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_solver.h
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/cupdlp_utils.c
-echo "" > ${HIGHS_SRC_DIR}/highs/pdlp/cupdlp/glbopts.h
-
-# 2. Remove deprecation message
-sed -i "s|.*deprecationMessage.*setLogCallback.*||" inst/HiGHS/src/lp_data/HighsDeprecated.cpp
-# 3. Remove C++11 standard
-sed -i "s|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD 17|" inst/HiGHS/CMakeLists.txt
-sed -i "s|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD 17|" inst/HiGHS/cmake/cpp-highs.cmake
-sed -i "s|c++11|c++17|" inst/HiGHS/CMakeLists.txt
-
-sed -i "s|add_subdirectory(app)||" inst/HiGHS/CMakeLists.txt
-sed -i "s|add_subdirectory(examples)||" inst/HiGHS/CMakeLists.txt
 
 
 #

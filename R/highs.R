@@ -362,7 +362,7 @@ highs_solve <- function(Q = NULL, L, lower, upper,
     if (is.null(solver)) {
         stop(paste(tail(init_msg, -3), collapse = "\n"))
     }
-    solver_set_options(solver, control)
+    hi_solver_set_options(solver, control)
 
     run_status <- hi_solver_run(solver)
     status <- solver_status(solver)
@@ -498,13 +498,13 @@ highs_solver <- function(model, control = highs_control()) {
     } else {
         rm(init_msg)
     }
-    solver_set_options(solver, control)
+    hi_solver_set_options(solver, control)
     solve <- function(...) {
         cntrl <- list(...)
         if (length(cntrl) == 0L) {
-            solver_get_options(solver)
+            hi_solver_get_options(solver)
         } else {
-            solver_set_options(solver, cntrl)
+            hi_solver_set_options(solver, cntrl)
         }
         hi_solver_run(solver)
     }
