@@ -12,3 +12,6 @@ an object of class \code{"highs_model"}.
 \description{
 Create a new highs model object.
 }
+\examples{
+model <- hi_new_model() 
+}

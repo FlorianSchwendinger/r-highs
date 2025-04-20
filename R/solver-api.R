@@ -8,7 +8,7 @@
 #' 
 #' @examples
 #' model <- example_model()
-#' hi_new_solver(model)
+#' solver <- hi_new_solver(model)
 #' @export 
 hi_new_solver <- function(model) {
     checkmate::assert_class(model, classes = "highs_model")
@@ -16,23 +16,6 @@ hi_new_solver <- function(model) {
     class(solver) <- c("highs_solver", class(solver))
     solver
 }
-
-
-# TODO: Implement this function
-# highs_pass_model <- function(hi, num_col, num_row, num_nz, a_format, sense, offset, col_cost, col_lower, col_upper, row_lower, row_upper, a_start, a_index, a_value, integrality) {
-#     .Call(`_highs_highs_pass_model`, hi, num_col, num_row, num_nz, a_format, sense, offset, col_cost, col_lower, col_upper, row_lower, row_upper, a_start, a_index, a_value, integrality)
-# }
-
-# TODO: Implement this function
-# solver_pass_hessian <- function() {
-#     .Call(`_highs_solver_pass_hessian`)
-# }
-
-# TODO: Implement this function
-# solver_pass_constraints <- function() {
-#     .Call(`_highs_solver_pass_constraints`)
-# }
-
 
 
 #' Get the optimization sense of the solver instance.
@@ -236,6 +219,7 @@ hi_solver_add_vars <- function(solver, lower, upper) {
     checkmate::assert_class(solver, classes = "highs_solver")
     checkmate::assert_numeric(lower, any.missing = FALSE)
     checkmate::assert_numeric(upper, any.missing = FALSE)
+    checkmate::assert_true(length(lower) == length(upper))
     solver_add_vars(solver, as.double(lower), as.double(upper))
 }
 
@@ -316,19 +300,18 @@ hi_solver_run <- function(solver) {
 }
 
 
-#' Get Model from Solver
-#'
-#' This function retrieves the current optimization model from the solver.
-#'
-#' @param solver An object of class "highs_solver".
-#'
-#' @return The current optimization model.
-#'
-#' @examples
-#' solver <- example_solver()
-#' model <- hi_solver_get_model(solver)
-#'
-#' @export
+# Get Model from Solver
+#
+# This function retrieves the current optimization model from the solver.
+#
+# @param solver An object of class "highs_solver".
+#
+# @return The current optimization model.
+#
+# @examples
+# solver <- example_solver()
+# model <- hi_solver_get_model(solver)
+#
 hi_solver_get_model <- function(solver) {
     checkmate::assert_class(solver, classes = "highs_solver")
     solver_get_model(solver)
@@ -384,7 +367,8 @@ hi_solver_get_num_row <- function(solver) {
 #'
 #' @examples
 #' solver <- example_solver()
-#' hi_solver_write_model(solver, "model.mps")
+#' model_file <- tempfile(fileext = ".mps")
+#' hi_solver_write_model(solver, model_file)
 #'
 #' @export
 hi_solver_write_model <- function(solver, filename) {
@@ -404,7 +388,8 @@ hi_solver_write_model <- function(solver, filename) {
 #'
 #' @examples
 #' solver <- example_solver()
-#' hi_solver_write_basis(solver, "basis.txt")
+#' basis_file <- tempfile(fileext = ".txt")
+#' hi_solver_write_basis(solver, basis_file)
 #'
 #' @export
 hi_solver_write_basis <- function(solver, filename) {
@@ -516,12 +501,12 @@ hi_solver_info <- function(solver) {
 #' @examples
 #' solver <- example_solver()
 #' hi_solver_run(solver)
-#' solution <- hi_solver_solution(solver)
+#' solution <- hi_solver_get_solution(solver)
 #'
 #' @export
-hi_solver_solution <- function(solver) {
+hi_solver_get_solution <- function(solver) {
     checkmate::assert_class(solver, classes = "highs_solver")
-    solver_solution(solver)
+    solver_get_solution(solver)
 }
 
 

@@ -1,6 +1,14 @@
 options(warn = 1)
 library('highs')
 
+
+solver <- example_solver()
+model <- hi_solver_get_model(solver)
+
+
+model <- hi_new_model()
+capture.output(solver <- hi_new_solver(model))
+
 solver <- example_solver()
 value <- hi_solver_get_bool_option(solver, "mip_detect_symmetry")
 

@@ -19,6 +19,7 @@ This function writes the current basis information to a file.
 }
 \examples{
 solver <- example_solver()
-hi_solver_write_basis(solver, "basis.txt")
+basis_file <- tempfile(fileext = ".txt")
+hi_solver_write_basis(solver, basis_file)
 
 }

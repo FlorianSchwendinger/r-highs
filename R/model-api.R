@@ -3,6 +3,8 @@
 #' @description
 #' Create a new highs model object.
 #' @return an object of class \code{"highs_model"}.
+#' @examples
+#' model <- hi_new_model() 
 #' @export
 hi_new_model <- function() {
     model <- new_model()

@@ -109,6 +109,54 @@ solver_set_coeff <- function(hi, row, col, val) {
     .Call(`_highs_solver_set_coeff`, hi, row, col, val)
 }
 
+solver_get_objective_sense <- function(hi) {
+    .Call(`_highs_solver_get_objective_sense`, hi)
+}
+
+solver_get_objective_offset <- function(hi) {
+    .Call(`_highs_solver_get_objective_offset`, hi)
+}
+
+solver_get_cols <- function(hi, col_indices) {
+    .Call(`_highs_solver_get_cols`, hi, col_indices)
+}
+
+solver_get_col_integrality <- function(hi, col_index) {
+    .Call(`_highs_solver_get_col_integrality`, hi, col_index)
+}
+
+solver_get_rows <- function(hi, row_indices) {
+    .Call(`_highs_solver_get_rows`, hi, row_indices)
+}
+
+solver_get_coeff <- function(hi, row_index, col_index) {
+    .Call(`_highs_solver_get_coeff`, hi, row_index, col_index)
+}
+
+solver_delete_cols <- function(hi, col_indices) {
+    .Call(`_highs_solver_delete_cols`, hi, col_indices)
+}
+
+solver_delete_rows <- function(hi, row_indices) {
+    .Call(`_highs_solver_delete_rows`, hi, row_indices)
+}
+
+solver_scale_col <- function(hi, col_index, scale) {
+    .Call(`_highs_solver_scale_col`, hi, col_index, scale)
+}
+
+solver_scale_row <- function(hi, row_index, scale) {
+    .Call(`_highs_solver_scale_row`, hi, row_index, scale)
+}
+
+solver_postsolve <- function(hi, solution, basis) {
+    .Call(`_highs_solver_postsolve`, hi, solution, basis)
+}
+
+solver_mip_postsolve <- function(hi, solution) {
+    .Call(`_highs_solver_mip_postsolve`, hi, solution)
+}
+
 solver_add_vars <- function(hi, lower, upper) {
     .Call(`_highs_solver_add_vars`, hi, lower, upper)
 }
@@ -175,10 +223,6 @@ reset_global_scheduler <- function(blocking) {
 
 solver_info <- function(hi) {
     .Call(`_highs_solver_info`, hi)
-}
-
-solver_solution <- function(hi) {
-    .Call(`_highs_solver_solution`, hi)
 }
 
 solver_get_bool_option <- function(hi, key) {

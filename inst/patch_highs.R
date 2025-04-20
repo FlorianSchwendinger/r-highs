@@ -127,3 +127,9 @@ for (i in seq_along(files)) {
   }
 }
 
+
+
+file <- normalizePath("inst/HiGHS/highs/io/HighsIO.cpp")
+src <- paste(readLines(file), collapse = "\n")
+src <- gsub("highsLogUser\\(.*Running HiGHS.*?\\);", "", src)
+writeLines(src, file)

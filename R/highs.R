@@ -270,6 +270,11 @@ highs_model <- function(Q = NULL, L, lower, upper,
 #' @param model an object of class \code{highs_model}.
 #' @param file a character string giving the filename.
 #' 
+#' @examples
+#' model <- example_model()
+#' model_file <- tempfile(fileext = ".mps")
+#' highs_write_model(model, model_file)
+#' 
 #' @export 
 highs_write_model <- function(model, file) {
     checkmate::assert_string(file)
@@ -368,7 +373,7 @@ highs_solve <- function(Q = NULL, L, lower, upper,
     status <- solver_status(solver)
     status_message <- solver_status_message(solver)
 
-    solution <- solver_solution(solver)
+    solution <- solver_get_solution(solver)
     info <- solver_info(solver)
     list(primal_solution = solution[["col_value"]],
          objective_value = info[["objective_function_value"]],
@@ -515,7 +520,7 @@ highs_solver <- function(model, control = highs_control()) {
         solver_status_message(solver)
     }
     solution <- function() {
-        solver_solution(solver)
+        solver_get_solution(solver)
     }
     info <- function() {
         solver_info(solver)
@@ -583,5 +588,21 @@ highs_solver <- function(model, control = highs_control()) {
             solver_set_sense(solve, maximize)
         }
     }
-    structure(environment(), class = "highs_solver")
+    structure(environment(), class = "highs_solver_wrapper")
+}
+
+
+#' @noRd
+#' @export
+print.highs_solver_wrapper <- function(x, ...) {
+    writeLines("High Solver Wrapper")
+    writeLines("  - model")
+    writeLines("  - solver")
+    writeLines("  - control")
+    exclude <- c("model", "solver", "control")
+    for (name in setdiff(ls(x), exclude)) {
+        xargs <- trimws(gsub("function", "", capture.output(str(get(name, envir = x)))))
+        msg <- sprintf("  - %s%s", name, xargs)
+        writeLines(msg)
+    }
 }

@@ -19,6 +19,7 @@ This function writes the current optimization model to a file.
 }
 \examples{
 solver <- example_solver()
-hi_solver_write_model(solver, "model.mps")
+model_file <- tempfile(fileext = ".mps")
+hi_solver_write_model(solver, model_file)
 
 }

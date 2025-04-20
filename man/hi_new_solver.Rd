@@ -17,5 +17,5 @@ This function initializes a new Highs solver instance using the provided model p
 }
 \examples{
 model <- example_model()
-hi_new_solver(model)
+solver <- hi_new_solver(model)
 }

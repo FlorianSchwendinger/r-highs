@@ -14,3 +14,9 @@ highs_write_model(model, file)
 \description{
 Write an highs model to file.
 }
+\examples{
+model <- example_model()
+model_file <- tempfile(fileext = ".mps")
+highs_write_model(model, model_file)
+
+}
