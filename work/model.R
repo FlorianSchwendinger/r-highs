@@ -96,7 +96,7 @@ HighsSolver <- R6::R6Class("HighsSolver",
     public = list(
         solver = NULL,
         initialize = function(model) {
-            capture.output(self$solver <- new_solver(model$model))
+            capture.output(self$solver <- hi_new_solver(model$model))
         },
         options = function(control) {
             if (length(control) > 0L) {
@@ -148,7 +148,7 @@ library(Matrix)
 A <- rbind(c(0, 1), c(1, 2), c(3, 2))
 
 # solver <- HighsSolver$new()
-solver <- new_solver(NULL)
+solver <- hi_new_solver(NULL)
 solver_add_vars(solver, c(0, 1), c(4, 100))
 solver_set_objective(solver, c(0L, 1L), c(1.0, 1))
 csc <- (A)
@@ -223,7 +223,7 @@ s <- highs_solve(L = c(1.0, 1), lower = c(0, 1), upper = c(4, Inf),
         model_set_offset(model, offset)
     }
     if (dry_run) return(model)
-    solver <- new_solver(model)
+    solver <- hi_new_solver(model)
     solver_set_options(solver, control)
     run_status <- solver_run(solver)
     status <- solver_status(solver)

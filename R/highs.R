@@ -174,22 +174,66 @@ allowed_matrix_classes <- function() {
 #' m <- highs_model(Q = Q, L = L, lower = 0, A = A, rhs = 2)
 #' m
 #' @export
-highs_model <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types,
+highs_model <- function(Q = NULL, L, lower, upper,
+                        A = NULL, lhs = NULL, rhs = NULL,
+                        types = rep.int(1L, length(L)),
                         maximum = FALSE, offset = 0) {
     assert_numeric(L, any.missing = FALSE)
-    checkmate::assert_multi_class(A, allowed_matrix_classes(), null.ok = TRUE)
-    checkmate::assert_multi_class(Q, allowed_matrix_classes(), null.ok = TRUE)
-
+    assert_multi_class(Q, allowed_matrix_classes(), null.ok = TRUE)
+    assert_multi_class(A, allowed_matrix_classes(), null.ok = TRUE)
+    
     nvars <- length(L)
-    if (missing(A) || NROW(A) == 0L) {
+
+    INF <- highs_infinity()
+    if (missing(lower) || length(lower) == 0L) {
+        lower <- rep.int(-INF, nvars)
+    } else if (length(lower) == 1L) {
+        lower <- rep.int(lower, nvars)
+    }
+    assert_numeric(lower, any.missing = FALSE, len = nvars)
+    if (missing(upper) || length(upper) == 0L) {
+        upper <- rep.int(INF, nvars)
+    } else if (length(upper) == 1L) {
+        upper <- rep.int(upper, nvars)
+    }
+    assert_numeric(upper, any.missing = FALSE, len = nvars)
+
+    if (NROW(A) == 0L) {
         A <- lhs <- rhs <- NULL
         ncons <- 0L
     } else {
-        stopifnot(is.vector(L), !(missing(lhs) & missing(rhs)))
         ncons <- number_or_rows(A)
     }
+
+    if (ncons > 0L) {
+        if (length(lhs) == 0L) {
+            lhs <- rep.int(-INF, ncons)
+        } else {
+            lhs <- replace(lhs, lhs == -Inf, -INF)
+        }
+        assert_numeric(lhs, any.missing = FALSE, len = ncons)
+        if (length(rhs) == 0L) {
+            rhs <- rep.int(INF, ncons)
+        } else {
+            rhs <- replace(rhs, rhs ==  Inf, INF)
+        }
+        assert_numeric(rhs, any.missing = FALSE, len = ncons)
+    }
+
+    all_types_continuous <- NA
+    if (length(types) == 0L) {
+        types <- rep.int(0L, nvars)
+        all_types_continuous <- TRUE
+    } else {
+        if (is.character(types)) {
+            types <- match(types, highs_variable_types()) - 1L
+        } else {
+            types <- types - 1L
+        }
+        assert_integerish(types, lower = 0, upper = 4L, any.missing = FALSE, len = nvars)
+    }
+    
     model <- new_model()
-    INF <- highs_infinity()
     model_set_ncol(model, nvars)
     model_set_nrow(model, ncons)
     model_set_sense(model, maximum)
@@ -197,26 +241,9 @@ highs_model <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types,
     if (!is.null(Q)) {
         model_set_hessian(model, Q)
     }
-    if (missing(types) || length(types) == 0L) {
-        types <- rep.int(0L, nvars)
-    } else {
-        if (is.character(types)) {
-            types <- match(types, highs_variable_types()) - 1L
-        } else {
-            types <- types - 1L
-        }
-        assert_integerish(types, lower = 0, upper = 4L, any.missing = FALSE)
+   
+    if (!isTRUE(all_types_continuous) || any(types != 0)) {
         model_set_vartype(model, as.integer(types))
-    }
-    if (missing(lower) || length(lower) == 0L) {
-        lower <- rep.int(-INF, nvars)
-    } else if (length(lower) == 1L) {
-        lower <- rep.int(lower, nvars)
-    }
-    if (missing(upper) || length(upper) == 0L) {
-        upper <- rep.int(INF, nvars)
-    } else if (length(upper) == 1L) {
-        upper <- rep.int(upper, nvars)
     }
 
     lower <- replace(lower, lower == -Inf, -INF)
@@ -225,14 +252,6 @@ highs_model <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types,
     model_set_upper(model, upper)
     if (ncons > 0L) {
         model_set_constraint_matrix(model, A)
-        if (missing(lhs) || length(lhs) == 0L) {
-            lhs <- rep.int(-INF, ncons)
-        }
-        if (missing(rhs) || length(rhs) == 0L) {
-            rhs <- rep.int(INF, ncons)
-        }
-        lhs <- replace(lhs, lhs == -Inf, -INF)
-        rhs <- replace(rhs, rhs ==  Inf, INF)
         model_set_lhs(model, lhs)
         model_set_rhs(model, rhs)
     }
@@ -241,6 +260,28 @@ highs_model <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types,
     }
     class(model) <- c("highs_model", class(model))
     return(model)
+}
+
+
+#' Write a Highs Model to a File
+#' 
+#' Write an highs model to file.
+#' 
+#' @param model an object of class \code{highs_model}.
+#' @param file a character string giving the filename.
+#' 
+#' @examples
+#' model <- example_model()
+#' model_file <- tempfile(fileext = ".mps")
+#' highs_write_model(model, model_file)
+#' 
+#' @export 
+highs_write_model <- function(model, file) {
+    checkmate::assert_string(file)
+    checkmate::assert_class(model, classes = "highs_model")
+    checkmate::assert_directory_exists(dirname(file), access = "w")
+    solver <- hi_new_solver(model)
+    solver_write_model(solver, file)
 }
 
 
@@ -309,25 +350,30 @@ highs_model <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types,
 #' s[["objective_value"]]
 #' s[["primal_solution"]]
 #' @export
-highs_solve <- function(Q = NULL, L, lower, upper, A, lhs, rhs, types,
+highs_solve <- function(Q = NULL, L, lower, upper,
+                        A = NULL, lhs = NULL, rhs = NULL,
+                        types = rep.int(1L, length(L)),
                         maximum = FALSE, offset = 0, control = highs_control()) {
-    checkmate::assert_class(control, classes = "highs_control")
+    checkmate::assert_list(control)
+    if (!inherits(control, "highs_control")) {
+        control <- do.call(highs_control, control)
+    }
     model <- highs_model(Q = Q, L = L, lower = lower, upper = upper,
                          A = A, lhs = lhs, rhs = rhs, types = types,
                          maximum = maximum, offset = offset)
 
     set_number_of_threads(control$threads)
-    init_msg <- capture.output(solver <- new_solver(model))
+    init_msg <- capture.output(solver <- hi_new_solver(model))
     if (is.null(solver)) {
         stop(paste(tail(init_msg, -3), collapse = "\n"))
     }
-    solver_set_options(solver, control)
+    hi_solver_set_options(solver, control)
 
-    run_status <- solver_run(solver)
+    run_status <- hi_solver_run(solver)
     status <- solver_status(solver)
     status_message <- solver_status_message(solver)
 
-    solution <- solver_solution(solver)
+    solution <- solver_get_solution(solver)
     info <- solver_info(solver)
     list(primal_solution = solution[["col_value"]],
          objective_value = info[["objective_function_value"]],
@@ -352,7 +398,7 @@ highs_control <- function(threads = 1L, time_limit = Inf, log_to_console = FALSE
     checkmate::assert_double(time_limit, len = 1L, any.missing = FALSE)
     checkmate::assert_logical(log_to_console, len = 1L, any.missing = FALSE)
     control <- c(as.list(environment()), list(...))
-    default_control <- list(parallel = "off")
+    default_control <- list(parallel = "off", solver = "ipm")
     control <- modifyList(default_control, control)
     if (is.infinite(control[["time_limit"]])) {
         control[["time_limit"]] <- NULL
@@ -451,21 +497,21 @@ highs_solver <- function(model, control = highs_control()) {
     checkmate::assert_class(model, classes = "highs_model")
     checkmate::assert_class(control, classes = "highs_control")
     set_number_of_threads(control$threads)
-    init_msg <- capture.output(solver <- new_solver(model))
+    init_msg <- capture.output(solver <- hi_new_solver(model))
     if (is.null(solver)) {
         stop(paste(tail(init_msg, -3), collapse = "\n"))
     } else {
         rm(init_msg)
     }
-    solver_set_options(solver, control)
+    hi_solver_set_options(solver, control)
     solve <- function(...) {
         cntrl <- list(...)
         if (length(cntrl) == 0L) {
-            solver_get_options(solver)
+            hi_solver_get_options(solver)
         } else {
-            solver_set_options(solver, cntrl)
+            hi_solver_set_options(solver, cntrl)
         }
-        solver_run(solver)
+        hi_solver_run(solver)
     }
     status <- function() {
         solver_status(solver)
@@ -474,7 +520,7 @@ highs_solver <- function(model, control = highs_control()) {
         solver_status_message(solver)
     }
     solution <- function() {
-        solver_solution(solver)
+        solver_get_solution(solver)
     }
     info <- function() {
         solver_info(solver)
@@ -542,5 +588,21 @@ highs_solver <- function(model, control = highs_control()) {
             solver_set_sense(solve, maximize)
         }
     }
-    structure(environment(), class = "highs_solver")
+    structure(environment(), class = "highs_solver_wrapper")
+}
+
+
+#' @noRd
+#' @export
+print.highs_solver_wrapper <- function(x, ...) {
+    writeLines("High Solver Wrapper")
+    writeLines("  - model")
+    writeLines("  - solver")
+    writeLines("  - control")
+    exclude <- c("model", "solver", "control")
+    for (name in setdiff(ls(x), exclude)) {
+        xargs <- trimws(gsub("function", "", capture.output(str(get(name, envir = x)))))
+        msg <- sprintf("  - %s%s", name, xargs)
+        writeLines(msg)
+    }
 }
