@@ -53,7 +53,7 @@ highs_solver <- function(model, control = highs_control()) {
     options <- function(...) {
         cntrl <- list(...)
         if (length(cntrl) == 0L) {
-            highs:::solver_get_options(solver)
+            highs:::hi_solver_get_options(solver)
         } else {
             highs:::solver_set_options(solver, cntrl)
         }
