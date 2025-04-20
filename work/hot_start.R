@@ -5,7 +5,7 @@ library("highs")
 
 attach(getNamespace("highs"))
 
-solver <- new_solver(NULL)
+solver <- hi_new_solver(NULL)
 highs_pass_model(
     solver,
     num_col = 2L,

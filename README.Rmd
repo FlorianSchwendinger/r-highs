@@ -53,7 +53,64 @@ install.packages("highs")
 ```
 
 
-# Basic usage
+# Package
+The **highs** package provides an API similar to **Rglpk** and a low level API to the **HiGHS** solver.
+For most users using `highs_solve` as shown below should be the best choice.
+
+The package functions can be grouped into the following categories:
+
+1. The main function **`highs_solve`**.
+2. Object style wrappers for the model and the solver **`highs_model`** and **`highs_solver`**.
+3. Function **`highs_control`** to construct the control object for **`highs_solve`**and **`highs_solver`**.
+4. Low-level API wrapper functions to create and modify models **`hi_new_model`**
+   and other functions starting with **`hi_model_`**.
+5. Low-level API wrapper functions to create and modify solvers **`hi_new_solver`**
+   and other functions starting with **`hi_solver_`**.
+6. Functions to create example models **`example_model`** and solvers **`example_solver`** for the documentation examples.
+7. Function **`highs_available_solver_options`** to get the available solver options.
+8. Function **`highs_write_model`** to write the model to a file.
+
+```{r}
+library("highs")
+```
+
+## Examples
+The the example models and solvers are included to have small examples available for the manual.
+
+```{r}
+writeLines(ls("package:highs", pattern = "^example"))
+```
+
+## Low level model functions
+The low-level model functions allow to create and modify models.
+More details and examples can be found in the manual.
+
+```{r}
+writeLines(ls("package:highs", pattern = "^hi(|_new)_model"))
+```
+
+## Low level solver functions
+The low-level solver functions allow to create and modify solvers.
+More details and examples can be found in the manual.
+
+```{r}
+writeLines(ls("package:highs", pattern = "^hi(|_new)_solver"))
+```
+
+## High level functions
+The high level functions allow to work with models and solvers.
+More details and examples can be found in the manual.
+
+```{r}
+args(highs_model)
+args(highs_solver)
+args(highs_control)
+args(highs_write_model)
+```
+
+## Main function
+The main function `highs_solve`.
+
 ```{r}
 library("highs")
 
