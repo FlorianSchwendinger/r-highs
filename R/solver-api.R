@@ -33,7 +33,7 @@ hi_new_solver <- function(model) {
 #' @export 
 hi_solver_get_sense <- function(solver) {
     checkmate::assert_class(solver, classes = "highs_solver")
-    solver_get_sense(solver)
+    as.logical(solver_get_sense(solver))
 }
 
 #' Set the optimization sense of the solver instance.
