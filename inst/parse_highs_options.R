@@ -48,5 +48,5 @@ setdiff(default_options$variable, dtypes$option)
 rownames(dtypes) <- NULL
 dtypes <- dtypes[, c("option", "type")]
 code <- paste(deparse(dtypes), collapse = "\n")
-ofi <- normalizePath("../../R/constants.R")
+ofi <- normalizePath("../R/constants.R")
 writeLines(sprintf("\nHIGHS_OPTIONS <- %s", code), ofi)

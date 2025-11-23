@@ -26,6 +26,11 @@ tasks:
       - task build
       - R CMD INSTALL highs_*.tar.gz
 
+  inst_cache:
+    cmds:
+      - CC="ccache gcc" CXX="ccache g++" make
+      - R CMD INSTALL highs_*.tar.gz
+
   check:
     cmds:
       - task build
