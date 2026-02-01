@@ -199,7 +199,7 @@ SEXP new_solver(SEXP mpt) {
     highs->setLogCallback(R_message_handler);
 
     if (Rf_isNull(mpt)) {
-        return ::List::create(
+        return Rcpp::List::create(
             Named("status") = 0,
             Named("solver") = highs
         );

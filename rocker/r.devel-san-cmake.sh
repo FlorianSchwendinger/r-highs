@@ -2,7 +2,7 @@
 # Script interactively sent to the terminal.
 #
 # docker.io/rocker/r-devel-san bash
-podman run -it \
+docker run -it \
 	-v ${HOME}/gitlab/roigrp/solvers/highs:/home/docker/highs \
 	localhost/r-devel-san-cmake:latest bash
 

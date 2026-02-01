@@ -475,10 +475,7 @@ highs_solve <- function(
   )
 
   set_number_of_threads(control$threads)
-  init_msg <- capture.output(solver <- hi_new_solver(model))
-  if (is.null(solver)) {
-    stop(paste(tail(init_msg, -3), collapse = "\n"))
-  }
+  solver <- hi_new_solver(model)
   hi_solver_set_options(solver, control)
 
   run_status <- hi_solver_run(solver)
@@ -630,12 +627,7 @@ highs_solver <- function(model, control = highs_control()) {
   checkmate::assert_class(model, classes = "highs_model")
   checkmate::assert_class(control, classes = "highs_control")
   set_number_of_threads(control$threads)
-  init_msg <- capture.output(solver <- hi_new_solver(model))
-  if (is.null(solver)) {
-    stop(paste(tail(init_msg, -3), collapse = "\n"))
-  } else {
-    rm(init_msg)
-  }
+  solver <- hi_new_solver(model)
   hi_solver_set_options(solver, control)
   solve <- function(...) {
     cntrl <- list(...)
