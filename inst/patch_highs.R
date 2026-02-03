@@ -1,13 +1,21 @@
 #
 # Patch the code so it passes the CRAN checks.
 #
-src_dir <- "inst/HiGHS"
+if (dir.exists("inst/HiGHS")) {
+  src_dir <- normalizePath("inst/HiGHS")
+} else if (dir.exists("HiGHS")) {
+  src_dir <- normalizePath("HiGHS")
+} else {
+  stop("Please run this script from the package root directory.")
+}
+writeLines(sprintf("Using source directory: %s", src_dir))
 
 
 # 1. Remove deprecation message
 file <- normalizePath(file.path(src_dir, "highs/lp_data/HighsDeprecated.cpp"))
-src <- readLines(file)
-writeLines(src[-grep("deprecationMessage.*setLogCallback", src)], file)
+src <- paste(readLines(file), collapse = "\n")
+new_src <- gsub("deprecationMessage\\(.*?\\);", "", src, perl = TRUE)
+writeLines(new_src, file)
 
 # 2. Change C++ std
 files <- normalizePath(file.path(src_dir, c("CMakeLists.txt", "cmake/cpp-highs.cmake")))
@@ -19,11 +27,21 @@ for (file in files) {
 }
 
 # 3. Remove app and examples
-file <- normalizePath(file.path(src_dir, "CMakeLists.txt"))
-src <- readLines(file)
-src <- gsub("add_subdirectory(app)", "", src, fixed = TRUE)
-src <- gsub("add_subdirectory(examples)", "", src, fixed = TRUE)
-writeLines(src, file)
+files <- dir(src_dir, pattern = "CMakeLists.txt", recursive = TRUE, full.names = TRUE)
+remove_us <- c(
+  "add_subdirectory(app)",
+  "add_subdirectory(examples)",
+  "add_subdirectory(check)"
+)
+
+for (file in files) {
+  src <- paste(readLines(file), collapse = "\n")
+  for (remove_u in remove_us) {
+    src <- gsub(remove_u, "", src, fixed = TRUE)
+  }
+  writeLines(src, file)
+}
+
 
 #
 # Overwrite not necessary files with an empty file so the Makefiles don't have to be changed.
@@ -133,3 +151,21 @@ file <- normalizePath("inst/HiGHS/highs/io/HighsIO.cpp")
 src <- paste(readLines(file), collapse = "\n")
 src <- gsub("highsLogUser\\(.*Running HiGHS.*?\\);", "", src)
 writeLines(src, file)
+
+
+#
+# FIX bazel files
+#
+files <- dir(src_dir, pattern = "(.bazel|.build|cmake)$", recursive = TRUE, full.names = TRUE)
+remove_us <- c(
+  "(\\s+|)(\"|'|)(highs/|)interfaces/highs_c_api.cpp(\"|'|)(,|)",
+  "(\\s+|)(\"|'|)(highs/|)interfaces/highs_c_api.h(\"|'|)(,|)"
+)
+
+for (file in files) {
+  src <- paste(readLines(file), collapse = "\n")
+  for (remove_u in remove_us) {
+    src <- gsub(remove_u, "", src, perl = TRUE)
+  }
+  writeLines(src, file)
+}

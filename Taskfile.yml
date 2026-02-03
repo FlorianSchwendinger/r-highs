@@ -21,6 +21,12 @@ tasks:
       - task docs
       - R CMD build .
 
+  build_tree:
+    desc: "Build the package and show the tree of the tar.gz file"
+    deps: [build]
+    cmds:
+      - tar -tf highs_*.tar.gz | tree --fromfile > build_tree.txt
+
   inst:
     cmds:
       - task build

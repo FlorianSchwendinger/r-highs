@@ -10,9 +10,12 @@
 ^README.Rmd
 ^Makefile
 ^Taskfile.yml
+^build_tree.txt
 ^Manual.pdf
 ^highs*.tar.gz
 ^inst/HiGHS/build
+^inst/HiGHS/highs/interfaces
+^inst/HiGHS/highs/highs_bindings.cpp
 ^inst/HiGHS/.clang-format
 ^inst/HiGHS/.coin-or
 ^inst/HiGHS/.github
