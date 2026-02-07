@@ -2,9 +2,11 @@
 # Script interactively sent to the terminal.
 #
 # docker.io/rocker/r-devel-san bash
-podman run -it \
-	-v ${HOME}/gitlab/roigrp/solvers/highs:/home/docker/highs \
-	localhost/r-devel-san-cmake:latest bash
+HDIR=$(realpath ..)
+docker run -it -v ${HDIR}:/home/docker/highs rocker/r-devel-san:latest bash
+
+apt-get install -y libhighs-dev
+R -e "install.packages(c('Rcpp', 'checkmate', 'tinytest'))"
 
 
 cd /home/docker/highs

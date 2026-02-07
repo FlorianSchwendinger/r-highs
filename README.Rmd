@@ -24,6 +24,36 @@ solving linear programming (LP), mixed-integer programming
 
 
 # Installation
+
+## Install system dependencies
+
+### Debian/Ubuntu
+```sh
+sudo apt-get install libhighs-dev
+```
+
+### Fedora
+```sh
+sudo dnf install coin-or-HiGHS-devel
+```
+
+### Arch Linux
+```sh
+sudo pacman -S highs
+```
+
+### Windows    
+- Install Rtools
+- Install highs via MSYS2 
+There is there is more than one version of highs available in MSYS2,
+you most likely need the following
+```sh
+pacman -S mingw-w64-x86_64-highs
+```
+a full list can be found at `https://packages.msys2.org/base/mingw-w64-highs`.
+
+## Install R package
+
 The package can be installed from [**CRAN**](https://CRAN.R-project.org/package=highs)
 ```{r, eval = FALSE}
 install.packages("highs")
@@ -31,25 +61,6 @@ install.packages("highs")
 or [**GitLab**](https://gitlab.com/roigrp/solver/highs).
 ```{r, eval = FALSE}
 remotes::install_gitlab("roigrp/solver/highs")
-```
-
-### Using a preinstalled HiGHS library
-It is possible to use a precompile HiGHS library by providing
-the system variable `R_HIGHS_LIB_DIR`.
-For example I used 
-```sh
-mkdir build
-cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=/Z/bin/highslib -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DSHARED:bool=OFF -DBUILD_TESTING:bool=OFF
-make install
-```
-to install the **HiGHS** library to `/Z/bin/highslib`
-
-```{r, eval = FALSE}
-Sys.setenv(R_HIGHS_LIB_DIR = "/Z/bin/highslib")
-install.packages("highs")
-# or 
-# remotes::install_gitlab("roigrp/solver/highs")
 ```
 
 

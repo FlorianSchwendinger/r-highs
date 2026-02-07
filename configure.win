@@ -1,20 +1,31 @@
-#!/bin/sh
 
-echo "Use 'configure.win'"
+# Use MSYS2/MinGW-w64 Highs locations
+INCLUDE_PATH="C:/rtools45/mingw64/include"
+LIB_PATH="C:/rtools45/mingw64/lib"
 
-if test -z "${R_HIGHS_LIB_DIR}"; then
-    R_HIGHS_PKG_HOME=`pwd`
-    bash inst/build_highs.sh
-    cd ${R_HIGHS_PKG_HOME}
-    rm -rf inst/HiGHS
-    R_HIGHS_LIB_DIR=${R_HIGHS_PKG_HOME}/src/highslib
+# Check for highs/Highs.h in the include path
+if [ ! -f "$INCLUDE_PATH/highs/Highs.h" ]; then
+  echo "highs/Highs.h not found in $INCLUDE_PATH. Please ensure mingw-w64-x86_64-highs is installed via MSYS2." 1>&2
+  exit 1
 fi
 
+# Write to src/Makevars.win
+echo "PKG_CPPFLAGS=-I${INCLUDE_PATH} -I${INCLUDE_PATH}/highs" > src/Makevars.win
+echo "PKG_LIBS=-L${LIB_PATH} -lhighs" >> src/Makevars.win
 
-sed -e "s|@RHIGHS_LIB_DIR@|$R_HIGHS_LIB_DIR|g" src/Makevars.in > src/Makevars.win
-
-
-if [ -z "$(ls ${R_HIGHS_LIB_DIR} | grep 'include')" ]; then
-    echo "'HiGHS' libraries could not be found!"
-    exit 1
-fi
+# Copy the HiGHS DLL and MSYS2 runtime DLLs to inst/libs and inst/libs/x64 for R to find at runtime
+BIN_PATH="C:/rtools45/mingw64/bin"
+for DLL_SUBDIR in libs libs/x64; do
+  DLL_DST="inst/$DLL_SUBDIR"
+  mkdir -p "$DLL_DST"
+  for DLL in libhighs.dll libgcc_s_seh-1.dll libstdc++-6.dll libwinpthread-1.dll zlib1.dll; do
+    DLL_SRC="$BIN_PATH/$DLL"
+    if [ -f "$DLL_SRC" ]; then
+      cp "$DLL_SRC" "$DLL_DST/"
+      # If it's libhighs.dll, also copy as highs.dll for R's loader
+      if [ "$DLL" = "libhighs.dll" ]; then
+        cp "$DLL_SRC" "$DLL_DST/highs.dll"
+      fi
+    fi
+  done
+done
