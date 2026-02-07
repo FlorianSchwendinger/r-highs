@@ -19,6 +19,22 @@ programming (QP) optimization problems.
 
 # 1 Installation
 
+## Debian/Ubuntu
+``` sh
+sudo apt-get install libhighs-dev
+```
+
+## Fedora
+``` sh
+sudo dnf install coin-or-HiGHS-devel
+```
+
+## Arch Linux
+``` sh
+sudo pacman -S highs
+```
+
+
 The package can be installed from
 [**CRAN**](https://CRAN.R-project.org/package=highs)
 
