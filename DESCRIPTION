@@ -13,9 +13,9 @@ Description: R interface to 'HiGHS', an optimization solver for solving mixed in
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.7), checkmate
 Depends: R (>= 4.0.0)
-SystemRequirements: Bash, PkgConfig, CMAKE (>=3.16), C++17
-URL: https://gitlab.com/roigrp/solver/highs
-BugReports: https://gitlab.com/roigrp/solver/highs/-/issues
+SystemRequirements: libhighs-dev (>= 1.10) (deb) or coin-or-HiGHS-devel (rpm) or coin-or-HiGHS-devel (win)
+URL: https://github.com/FlorianSchwendinger/r-highs
+BugReports: https://github.com/FlorianSchwendinger/r-highs/issues
 Suggests: tinytest
 Biarch: FALSE
 LinkingTo: Rcpp
