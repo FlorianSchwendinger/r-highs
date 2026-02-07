@@ -17,3 +17,4 @@ pacman -S --needed highs
 pacman -S --needed pandoc
 
 R -e "install.packages(c('Rcpp', 'checkmate', 'tinytest'))"
+

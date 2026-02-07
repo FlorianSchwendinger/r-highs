@@ -13,7 +13,7 @@ Description: R interface to 'HiGHS', an optimization solver for solving mixed in
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.7), checkmate
 Depends: R (>= 4.0.0)
-SystemRequirements: libhighs-dev (>= 1.10) (deb) or coin-or-HiGHS-devel (rpm) or coin-or-HiGHS-devel (win)
+SystemRequirements: libhighs-dev (>= 1.10) (deb) or coin-or-HiGHS-devel (rpm) or mingw-w64-highs (win)
 URL: https://github.com/FlorianSchwendinger/r-highs
 BugReports: https://github.com/FlorianSchwendinger/r-highs/issues
 Suggests: tinytest

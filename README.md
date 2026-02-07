@@ -1,7 +1,7 @@
 **R** HIGHS Interface
 ================
 Florian Schwendinger</br>
-Updated: 2025-11-23
+Updated: 2026-02-07
 
 <!-- badges: start -->
 
@@ -19,21 +19,40 @@ programming (QP) optimization problems.
 
 # 1 Installation
 
-## Debian/Ubuntu
+## 1.1 Install system dependencies
+
+### 1.1.1 Debian/Ubuntu
+
 ``` sh
 sudo apt-get install libhighs-dev
 ```
 
-## Fedora
+### 1.1.2 Fedora
+
 ``` sh
 sudo dnf install coin-or-HiGHS-devel
 ```
 
-## Arch Linux
+### 1.1.3 Arch Linux
+
 ``` sh
 sudo pacman -S highs
 ```
 
+### 1.1.4 Windows
+
+-   Install Rtools
+-   Install highs via MSYS2 There is there is more than one version of
+    highs available in MSYS2, you most likely need the following
+
+``` sh
+pacman -S mingw-w64-x86_64-highs
+```
+
+a full list can be found at
+`https://packages.msys2.org/base/mingw-w64-highs`.
+
+## 1.2 Install R package
 
 The package can be installed from
 [**CRAN**](https://CRAN.R-project.org/package=highs)
@@ -46,27 +65,6 @@ or [**GitLab**](https://gitlab.com/roigrp/solver/highs).
 
 ``` r
 remotes::install_gitlab("roigrp/solver/highs")
-```
-
-### 1.0.1 Using a preinstalled HiGHS library
-
-It is possible to use a precompile HiGHS library by providing the system
-variable `R_HIGHS_LIB_DIR`. For example I used
-
-``` sh
-mkdir build
-cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=/Z/bin/highslib -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DSHARED:bool=OFF -DBUILD_TESTING:bool=OFF
-make install
-```
-
-to install the **HiGHS** library to `/Z/bin/highslib`
-
-``` r
-Sys.setenv(R_HIGHS_LIB_DIR = "/Z/bin/highslib")
-install.packages("highs")
-# or 
-# remotes::install_gitlab("roigrp/solver/highs")
 ```
 
 # 2 Package
@@ -402,16 +400,17 @@ knitr::kable(d, row.names = FALSE)
 | `infinite_bound`                                | double  |
 | `small_matrix_value`                            | double  |
 | `large_matrix_value`                            | double  |
+| `kkt_tolerance`                                 | double  |
 | `primal_feasibility_tolerance`                  | double  |
 | `dual_feasibility_tolerance`                    | double  |
-| `ipm_optimality_tolerance`                      | double  |
 | `primal_residual_tolerance`                     | double  |
 | `dual_residual_tolerance`                       | double  |
+| `optimality_tolerance`                          | double  |
 | `objective_bound`                               | double  |
 | `objective_target`                              | double  |
 | `threads`                                       | integer |
+| `user_objective_scale`                          | integer |
 | `user_bound_scale`                              | integer |
-| `user_cost_scale`                               | integer |
 | `highs_debug_level`                             | integer |
 | `highs_analysis_level`                          | integer |
 | `simplex_strategy`                              | integer |
@@ -430,17 +429,23 @@ knitr::kable(d, row.names = FALSE)
 | `write_solution_style`                          | integer |
 | `glpsol_cost_row_location`                      | integer |
 | `write_presolved_model_file`                    | string  |
+| `write_iis_model_file`                          | string  |
 | `output_flag`                                   | bool    |
 | `log_to_console`                                | bool    |
 | `timeless_log`                                  | bool    |
+| `ipm_optimality_tolerance`                      | double  |
 | `ipm_iteration_limit`                           | integer |
-| `pdlp_native_termination`                       | bool    |
+| `hipo_system`                                   | string  |
+| `hipo_parallel_type`                            | string  |
+| `hipo_block_size`                               | integer |
+| `hipo_metis_no2hop`                             | bool    |
 | `pdlp_scaling`                                  | bool    |
 | `pdlp_iteration_limit`                          | integer |
 | `pdlp_e_restart_method`                         | integer |
-| `pdlp_d_gap_tol`                                | double  |
+| `pdlp_optimality_tolerance`                     | double  |
 | `qp_iteration_limit`                            | integer |
 | `qp_nullspace_limit`                            | integer |
+| `qp_regularization_value`                       | double  |
 | `iis_strategy`                                  | integer |
 | `blend_multi_objectives`                        | bool    |
 | `log_dev_level`                                 | integer |
@@ -512,12 +517,15 @@ knitr::kable(d, row.names = FALSE)
 | `mip_rel_gap`                                   | double  |
 | `mip_abs_gap`                                   | double  |
 | `mip_heuristic_effort`                          | double  |
-| `mip_min_logging_interval`                      | double  |
+| `mip_heuristic_run_feasibility_jump`            | bool    |
 | `mip_heuristic_run_rins`                        | bool    |
 | `mip_heuristic_run_rens`                        | bool    |
 | `mip_heuristic_run_root_reduced_cost`           | bool    |
 | `mip_heuristic_run_zi_round`                    | bool    |
 | `mip_heuristic_run_shifting`                    | bool    |
+| `mip_min_logging_interval`                      | double  |
+| `mip_lp_solver`                                 | string  |
+| `mip_ipm_solver`                                | string  |
 | `mip_improving_solution_save`                   | bool    |
 | `mip_improving_solution_report_sparse`          | bool    |
 | `mip_improving_solution_file`                   | string  |
