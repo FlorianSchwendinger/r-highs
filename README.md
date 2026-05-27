@@ -1,7 +1,4 @@
----
-title: "R HiGHS interface (GitHub testing mirror)"
-output: github_document
----
+# R HiGHS interface (GitHub testing mirror)
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/highs)](https://CRAN.R-project.org/package=highs)
@@ -17,16 +14,10 @@ The canonical source repository, documentation and issue tracker live on GitLab:
 
 **https://gitlab.com/roigrp/solver/highs/**
 
-# Installation
+## Installation
 
 From [CRAN](https://CRAN.R-project.org/package=highs):
 
-```{r, eval = FALSE}
+```r
 install.packages("highs")
-```
-
-or the development version from GitLab:
-
-```{r, eval = FALSE}
-remotes::install_gitlab("roigrp/solver/highs")
 ```
