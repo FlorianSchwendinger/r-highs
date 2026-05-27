@@ -318,6 +318,28 @@ hi_solver_clear_solver <- function(solver) {
   solver_clear_solver(solver)
 }
 
+#' Set Starting Solution for the Solver
+#'
+#' This function sets the starting solution for the solver.
+#'
+#' @param solver An object of class "highs_solver".
+#' @param val A numeric vector of values for the variables.
+#' Missing values can be used to specify that particular
+#' variables should have their starting values calculated automatically.
+#'
+#' @return An integer value indicating the status.
+#'
+#' @examples
+#' solver <- example_solver()
+#' hi_solver_set_start(solver, c(0, NA, NA))
+#'
+#' @export
+hi_solver_set_start <- function(solver, val) {
+  checkmate::assert_class(solver, classes = "highs_solver")
+  checkmate::assert_numeric(val, any.missing = TRUE, all.missing = FALSE)
+  idx <- which(!is.na(val))
+  solver_set_solution_vec(solver, idx - 1L, val[idx])
+}
 
 #' Run the Solver
 #'
@@ -545,6 +567,210 @@ hi_solver_info <- function(solver) {
 hi_solver_get_solution <- function(solver) {
   checkmate::assert_class(solver, classes = "highs_solver")
   solver_get_solution(solver)
+}
+
+
+#' Set Solution for Warm-Start
+#'
+#' Sets a complete primal and/or dual solution on the solver for warm-starting.
+#'
+#' @param solver An object of class "highs_solver".
+#' @param col_value Numeric vector of primal column values.
+#' @param row_value Numeric vector of primal row values.
+#' @param col_dual Numeric vector of dual column values.
+#' @param row_dual Numeric vector of dual row values.
+#' @param value_valid Logical, whether the primal values are valid.
+#' @param dual_valid Logical, whether the dual values are valid.
+#'
+#' @return An integer status code (0 = OK).
+#'
+#' @export
+hi_solver_set_solution <- function(solver, col_value, row_value,
+                                   col_dual, row_dual,
+                                   value_valid = TRUE, dual_valid = TRUE) {
+  checkmate::assert_class(solver, classes = "highs_solver")
+  solver_set_solution_obj(solver, value_valid, dual_valid,
+                          col_value, col_dual, row_value, row_dual)
+}
+
+
+#' Set Sparse Solution for Warm-Start
+#'
+#' Sets a sparse primal solution (by index/value pairs) for warm-starting.
+#'
+#' @param solver An object of class "highs_solver".
+#' @param index Integer vector of column indices (0-based).
+#' @param value Numeric vector of values for those columns.
+#'
+#' @return An integer status code (0 = OK).
+#'
+#' @export
+hi_solver_set_sparse_solution <- function(solver, index, value) {
+  checkmate::assert_class(solver, classes = "highs_solver")
+  checkmate::assert_integerish(index, any.missing = FALSE)
+  checkmate::assert_numeric(value, len = length(index), any.missing = FALSE)
+  solver_set_solution_vec(solver, as.integer(index), as.double(value))
+}
+
+
+#' Get Basis
+#'
+#' Retrieves the current simplex basis from the solver.
+#'
+#' @param solver An object of class "highs_solver".
+#'
+#' @return A list with components:
+#' \describe{
+#'   \item{valid}{Logical, whether the basis is valid.}
+#'   \item{col_status}{Integer vector of column basis statuses
+#'     (0=Lower, 1=Basic, 2=Upper, 3=Zero, 4=Nonbasic).}
+#'   \item{row_status}{Integer vector of row basis statuses.}
+#' }
+#'
+#' @export
+hi_solver_get_basis <- function(solver) {
+  checkmate::assert_class(solver, classes = "highs_solver")
+  solver_get_basis(solver)
+}
+
+
+#' Set Basis for Warm-Start
+#'
+#' Sets a simplex basis on the solver for warm-starting. Use basis
+#' status values: 0=Lower, 1=Basic, 2=Upper, 3=Zero, 4=Nonbasic.
+#'
+#' @param solver An object of class "highs_solver".
+#' @param col_status Integer vector of column basis statuses.
+#' @param row_status Integer vector of row basis statuses.
+#'
+#' @return An integer status code (0 = OK).
+#'
+#' @export
+hi_solver_set_basis <- function(solver, col_status, row_status) {
+  checkmate::assert_class(solver, classes = "highs_solver")
+  checkmate::assert_integerish(col_status, any.missing = FALSE)
+  checkmate::assert_integerish(row_status, any.missing = FALSE)
+  solver_set_basis(solver, as.integer(col_status), as.integer(row_status))
+}
+
+
+#' Clear Basis
+#'
+#' Invalidates the solver's current basis, allowing presolve to run
+#' on the next call to \code{hi_solver_run}.
+#'
+#' @param solver An object of class "highs_solver".
+#'
+#' @return An integer status code (0 = OK).
+#'
+#' @export
+hi_solver_clear_basis <- function(solver) {
+  checkmate::assert_class(solver, classes = "highs_solver")
+  solver_clear_basis(solver)
+}
+
+
+#' Get Ranging (Sensitivity Analysis)
+#'
+#' Computes ranging information for the solved LP. The solver must have
+#' an optimal LP solution before calling this function.
+#'
+#' @param solver An object of class "highs_solver".
+#'
+#' @return A list with components:
+#' \describe{
+#'   \item{valid}{Logical, whether the ranging data is valid.}
+#'   \item{col_cost_up, col_cost_dn}{Lists with value, objective, in_var, ou_var
+#'     vectors for cost ranging (length num_col).}
+#'   \item{col_bound_up, col_bound_dn}{Lists for column bound ranging.}
+#'   \item{row_bound_up, row_bound_dn}{Lists for row bound ranging (length num_row).}
+#' }
+#'
+#' @export
+hi_solver_get_ranging <- function(solver) {
+  checkmate::assert_class(solver, classes = "highs_solver")
+  solver_get_ranging(solver)
+}
+
+
+#' Get HiGHS Version
+#'
+#' Returns the version string of the bundled HiGHS solver.
+#'
+#' @param solver An object of class "highs_solver".
+#'
+#' @return A character string with the HiGHS version.
+#'
+#' @export
+hi_solver_version <- function(solver) {
+  checkmate::assert_class(solver, classes = "highs_solver")
+  solver_version(solver)
+}
+
+
+#' Get Run Time
+#'
+#' Returns the elapsed time of the last solver run.
+#'
+#' @param solver An object of class "highs_solver".
+#'
+#' @return A numeric value (seconds).
+#'
+#' @export
+hi_solver_get_run_time <- function(solver) {
+  checkmate::assert_class(solver, classes = "highs_solver")
+  solver_get_run_time(solver)
+}
+
+
+#' Presolve
+#'
+#' Runs presolve on the current model without solving.
+#'
+#' @param solver An object of class "highs_solver".
+#'
+#' @return An integer status code (0 = OK).
+#'
+#' @export
+hi_solver_presolve <- function(solver) {
+  checkmate::assert_class(solver, classes = "highs_solver")
+  solver_presolve(solver)
+}
+
+
+#' Postsolve
+#'
+#' Performs postsolve using a given solution from the presolved model.
+#'
+#' @param solver An object of class "highs_solver".
+#' @param col_value Numeric vector of column values.
+#' @param col_dual Numeric vector of column duals.
+#' @param row_value Numeric vector of row values.
+#' @param row_dual Numeric vector of row duals.
+#'
+#' @return An integer status code (0 = OK).
+#'
+#' @export
+hi_solver_postsolve <- function(solver, col_value, col_dual, row_value, row_dual) {
+  checkmate::assert_class(solver, classes = "highs_solver")
+  solver_postsolve_solution(solver, col_value, col_dual, row_value, row_dual)
+}
+
+
+#' Read Model from File
+#'
+#' Reads a model from a file (MPS or LP format).
+#'
+#' @param solver An object of class "highs_solver".
+#' @param filename Path to the model file.
+#'
+#' @return An integer status code (0 = OK).
+#'
+#' @export
+hi_solver_read_model <- function(solver, filename) {
+  checkmate::assert_class(solver, classes = "highs_solver")
+  checkmate::assert_file_exists(filename)
+  solver_read_model(solver, filename)
 }
 
 

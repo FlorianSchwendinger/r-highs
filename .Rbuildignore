@@ -41,3 +41,4 @@
 ^inst/parse_highs_options.R
 ^inst/patch_highs.R
 ^inst/CRAN_upload_TODOs.md
+^tools$

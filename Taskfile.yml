@@ -100,3 +100,13 @@ tasks:
     cmds:
       - R -f 'inst/patch_highs.R'
 
+  cran_like_build:
+    desc: "Build with CRAN-like compiler settings (clang with strict flags)"
+    cmds:
+      - bash inst/build_cran_like.sh
+
+  cran_like_check:
+    desc: "Check package with CRAN-like compiler settings"
+    cmds:
+      - bash inst/build_cran_like.sh --check
+

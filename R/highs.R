@@ -400,6 +400,9 @@ highs_write_model <- function(model, file) {
 #' @param maximum a logical if \code{TRUE} the solver searches for a maximum,
 #'                if \code{FALSE} the solver searches for a minimum.
 #' @param offset a numeric value giving the offset (default is \code{0}).
+#' @param start a numeric vector giving the start solution.
+#' Missing values can be used to specify that particular
+#' variables should have their starting values calculated automatically.
 #' @param control a list giving additional options for the solver,
 #'                see \link{highs_available_solver_options} or the \code{README} file
 #'                for a list of all available options.
@@ -455,6 +458,7 @@ highs_solve <- function(
   types = rep.int(1L, length(L)),
   maximum = FALSE,
   offset = 0,
+  start = NULL,
   control = highs_control()
 ) {
   checkmate::assert_list(control)
@@ -477,6 +481,9 @@ highs_solve <- function(
   set_number_of_threads(control$threads)
   solver <- hi_new_solver(model)
   hi_solver_set_options(solver, control)
+  if (!is.null(start)) {
+    hi_solver_set_start(solver, start)
+  }
 
   run_status <- hi_solver_run(solver)
   status <- solver_status(solver)
@@ -715,6 +722,20 @@ highs_solver <- function(model, control = highs_control()) {
       assert_numeric(upper, any.missing = FALSE, len = length(i))
       solver_set_variable_bounds(solver, as.integer(i) - 1L, lower, upper)
     }
+  }
+  get_basis <- function() {
+    solver_get_basis(solver)
+  }
+  set_basis <- function(col_status, row_status) {
+    solver_set_basis(solver, as.integer(col_status), as.integer(row_status))
+  }
+  clear_basis <- function() {
+    solver_clear_basis(solver)
+  }
+  set_solution <- function(col_value, row_value, col_dual, row_dual,
+                           value_valid = TRUE, dual_valid = TRUE) {
+    solver_set_solution_obj(solver, value_valid, dual_valid,
+                            col_value, col_dual, row_value, row_dual)
   }
   maximum <- function(maximize) {
     if (missing(maximize)) {

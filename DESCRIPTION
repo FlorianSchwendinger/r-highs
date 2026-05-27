@@ -1,14 +1,14 @@
 Package: highs
 Type: Package
 Title: 'HiGHS' Optimization Solver
-Version: 1.12.0-2
+Version: 1.14.0-1
 Authors@R: c(person("Florian", "Schwendinger", email = "FlorianSchwendinger@gmx.at", role = c("aut", "cre")),
              person("Dirk", "Schumacher", role = "aut"),
              person("Julian", "Hall", role = "cph"),
              person("Ivet", "Galabova", role = "cph"),
              person("Leona", "Gottwald", role = "cph"),
              person("Michael", "Feldmeier", role = "cph"))
-Description: R interface to 'HiGHS', an optimization solver for solving mixed integer 
+Description: R interface to 'HiGHS', an optimization solver for solving mixed integer
         optimization problems with quadratic or linear objective and linear constraints.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.7), checkmate
@@ -16,7 +16,8 @@ Depends: R (>= 4.0.0)
 SystemRequirements: Bash, PkgConfig, CMAKE (>=3.16), C++17
 URL: https://gitlab.com/roigrp/solver/highs
 BugReports: https://gitlab.com/roigrp/solver/highs/-/issues
-Suggests: tinytest
+Suggests: tinytest, knitr, rmarkdown, Matrix
+VignetteBuilder: knitr
 Biarch: FALSE
 LinkingTo: Rcpp
 Encoding: UTF-8
