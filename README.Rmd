@@ -1,6 +1,10 @@
 ---
-title: "R HiGHS interface (GitHub testing mirror)"
-output: github_document
+title: "**R** HIGHS Interface"
+author: "Florian Schwendinger</br>"
+date: "Updated: `r Sys.Date()`"
+output:
+  github_document:
+    number_sections: true
 ---
 
 <!-- badges: start -->
@@ -8,25 +12,230 @@ output: github_document
 [![Licence](https://img.shields.io/cran/l/highs)](https://www.gnu.org/licenses/gpl-2.0.en.html)
 <!-- badges: end -->
 
-**This repository is only a testing mirror.** It exists so the package can be
-checked on many platforms with [R-hub](https://github.com/r-hub/rhub) via GitHub
-Actions. For that reason the [HiGHS](https://github.com/ERGO-Code/HiGHS) solver
-sources are included directly under `inst/HiGHS/`.
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
 
-The canonical source repository, documentation and issue tracker live on GitLab:
+This repository contains an **R** interface to the [**HiGHS**](https://github.com/ERGO-Code/HiGHS) solver.
+The [**HiGHS**](https://github.com/ERGO-Code/HiGHS) solver,
+is a **high**-performance open-source **solver** for
+solving linear programming (LP), mixed-integer programming
+(MIP) and quadratic programming (QP) optimization problems.
 
-**https://gitlab.com/roigrp/solver/highs/**
 
 # Installation
-
-From [CRAN](https://CRAN.R-project.org/package=highs):
-
+The package can be installed from [**CRAN**](https://CRAN.R-project.org/package=highs)
 ```{r, eval = FALSE}
 install.packages("highs")
 ```
-
-or the development version from GitLab:
-
+or [**GitLab**](https://gitlab.com/roigrp/solver/highs).
 ```{r, eval = FALSE}
 remotes::install_gitlab("roigrp/solver/highs")
 ```
+
+### Using a preinstalled HiGHS library
+It is possible to use a precompile HiGHS library by providing
+the system variable `R_HIGHS_LIB_DIR`.
+For example I used 
+```sh
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=/Z/bin/highslib -DCMAKE_POSITION_INDEPENDENT_CODE:bool=ON -DSHARED:bool=OFF -DBUILD_TESTING:bool=OFF
+make install
+```
+to install the **HiGHS** library to `/Z/bin/highslib`
+
+```{r, eval = FALSE}
+Sys.setenv(R_HIGHS_LIB_DIR = "/Z/bin/highslib")
+install.packages("highs")
+# or 
+# remotes::install_gitlab("roigrp/solver/highs")
+```
+
+
+# Package
+The **highs** package provides an API similar to **Rglpk** and a low level API to the **HiGHS** solver.
+For most users using `highs_solve` as shown below should be the best choice.
+
+The package functions can be grouped into the following categories:
+
+1. The main function **`highs_solve`**.
+2. Object style wrappers for the model and the solver **`highs_model`** and **`highs_solver`**.
+3. Function **`highs_control`** to construct the control object for **`highs_solve`**and **`highs_solver`**.
+4. Low-level API wrapper functions to create and modify models **`hi_new_model`**
+   and other functions starting with **`hi_model_`**.
+5. Low-level API wrapper functions to create and modify solvers **`hi_new_solver`**
+   and other functions starting with **`hi_solver_`**.
+6. Functions to create example models **`example_model`** and solvers **`example_solver`** for the documentation examples.
+7. Function **`highs_available_solver_options`** to get the available solver options.
+8. Function **`highs_write_model`** to write the model to a file.
+
+```{r}
+library("highs")
+```
+
+## Examples
+The the example models and solvers are included to have small examples available for the manual.
+
+```{r}
+writeLines(ls("package:highs", pattern = "^example"))
+```
+
+## Low level model functions
+The low-level model functions allow to create and modify models.
+More details and examples can be found in the manual.
+
+```{r}
+writeLines(ls("package:highs", pattern = "^hi(|_new)_model"))
+```
+
+## Low level solver functions
+The low-level solver functions allow to create and modify solvers.
+More details and examples can be found in the manual.
+
+```{r}
+writeLines(ls("package:highs", pattern = "^hi(|_new)_solver"))
+```
+
+## High level functions
+The high level functions allow to work with models and solvers.
+More details and examples can be found in the manual.
+
+```{r}
+args(highs_model)
+args(highs_solver)
+args(highs_control)
+args(highs_write_model)
+```
+
+## Main function
+The main function `highs_solve`.
+
+```{r}
+library("highs")
+
+args(highs_solve)
+```
+
+
+## LP
+```{r}
+# Minimize
+#  x_0 +  x_1 + 3
+# Subject to
+#                 x_1 <= 7
+#  5 <=   x_0 + 2 x_1 <= 15
+#  6 <= 3 x_0 + 2 x_1
+#  0 <=   x_0         <= 4
+#  1 <=           x_1
+A <- rbind(c(0, 1), c(1, 2), c(3, 2))
+s <- highs_solve(L = c(1.0, 1), lower = c(0, 1), upper = c(4, Inf),
+                 A = A, lhs = c(-Inf, 5, 6), rhs = c(7, 15, Inf),
+                 offset = 3)
+str(s)
+```
+
+
+## QP
+```{r}
+# Minimize
+#  0.5 x^2 - 2 x + y
+# Subject to
+#  x <= 3
+zero <- .Machine$double.eps * 100
+Q <- rbind(c(1, 0), c(0, zero))
+L <- c(-2, 1)
+A <- t(c(1, 0))
+
+cntrl <- list(log_dev_level = 0L)
+s <- highs_solve(Q = Q, L = L, A = A, lhs = 0, rhs = 3, control = cntrl)
+str(s)
+```
+
+# Additional information
+## Sparse matrices
+The **HiGHs** **C++** library internally supports the matrix formats 
+csc (compressed sparse column matrix) and csr (compressed Sparse Row array).
+The **highs** package currently supports the following matrix classes:
+
+1. `"matrix"` dense matrices,   
+2. `"dgCMatrix"` compressed sparse column matrix from the **Matrix** package,   
+3. `"dgRMatrix"` compressed sparse row matrix from the **Matrix** package,   
+4. `"matrix.csc"` compressed sparse column matrix from the **SparseM** package,   
+5. `"matrix.csr"` compressed sparse row matrix from the **SparseM** package,   
+6. `"simple_triplet_matrix"` coordinate format from the **slam** package.    
+
+If the constraint matrix `A` is provided as `dgCMatrix`, `dgRMatrix`, `matrix.csc`
+or `matrix.csr` the underlying data is directly passed to **HiGHs** otherwise
+it is first transformed into the csc format an afterwards passed to **HiGHs** 
+
+```{r, eval = FALSE}
+library("Matrix")
+
+A <- rbind(c(0, 1), c(1, 2), c(3, 2))
+csc <- as(A, "CsparseMatrix")  # dgCMatrix
+s0 <- highs_solve(L = c(1.0, 1), lower = c(0, 1), upper = c(4, Inf),
+                  A = csc, lhs = c(-Inf, 5, 6), rhs = c(7, 15, Inf),
+                  offset = 3)
+
+csr <- as(A, "RsparseMatrix")  # dgRMatrix
+s1 <- highs_solve(L = c(1.0, 1), lower = c(0, 1), upper = c(4, Inf),
+                  A = csr, lhs = c(-Inf, 5, 6), rhs = c(7, 15, Inf),
+                  offset = 3)
+
+library("SparseM")
+
+csc <- as.matrix.csc(A)
+s2 <- highs_solve(L = c(1.0, 1), lower = c(0, 1), upper = c(4, Inf),
+                  A = csc, lhs = c(-Inf, 5, 6), rhs = c(7, 15, Inf),
+                  offset = 3)
+
+csr <- as.matrix.csr(A)
+s3 <- highs_solve(L = c(1.0, 1), lower = c(0, 1), upper = c(4, Inf),
+                  A = csr, lhs = c(-Inf, 5, 6), rhs = c(7, 15, Inf),
+                  offset = 3)
+
+library("slam")
+stm <- as.simple_triplet_matrix(A)
+s4 <- highs_solve(L = c(1.0, 1), lower = c(0, 1), upper = c(4, Inf),
+                  A = stm, lhs = c(-Inf, 5, 6), rhs = c(7, 15, Inf),
+                  offset = 3)
+```
+
+
+# Options
+The function `highs_available_solver_options` lists the available solver options
+```{r}
+d <- highs_available_solver_options()
+d[["option"]] <- sprintf("`%s`", d[["option"]])
+knitr::kable(d, row.names = FALSE)
+```
+
+for additional information see the [HiGHS homepage](https://highs.dev/).	
+
+
+# Status codes
+HiGHS currently has the following status codes defined in `HConst.h"`.
+
+| enumerator               | status | message                            |
+| -------------------------|-------:|------------------------------------|
+| `kNotset`                |      0 | `"Not Set"`                        |
+| `kLoadError`             |      1 | `"Load error"`                     |
+| `kModelError`            |      2 | `"Model error"`                    |
+| `kPresolveError`         |      3 | `"Presolve error"`                 |
+| `kSolveError`            |      4 | `"Solve error"`                    |
+| `kPostsolveError`        |      5 | `"Postsolve error"`                |
+| `kModelEmpty`            |      6 | `"Empty"`                          |
+| `kOptimal`               |      7 | `"Optimal"`                        |
+| `kInfeasible`            |      8 | `"Infeasible"`                     |
+| `kUnboundedOrInfeasible` |      9 | `"Primal infeasible or unbounded"` |
+| `kUnbounded`             |     10 | `"Unbounded"`                      |
+| `kObjectiveBound`        |     11 | `"Bound on objective reached"`     |
+| `kObjectiveTarget`       |     12 | `"Target for objective reached"`   |
+| `kTimeLimit`             |     13 | `"Time limit reached"`             |
+| `kIterationLimit`        |     14 | `"Iteration limit reached"`        |
+| `kUnknown`               |     15 | `"Unknown"`                        |
+| `kMin`                   |      0 | `"Not Set"`                        |
+| `kMax`                   |     15 | `"Unknown"`                        |
+
+
