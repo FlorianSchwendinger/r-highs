@@ -737,6 +737,12 @@ highs_solver <- function(model, control = highs_control()) {
     solver_set_solution_obj(solver, value_valid, dual_valid,
                             col_value, col_dual, row_value, row_dual)
   }
+  get_dual_ray <- function() {
+    solver_get_dual_ray(solver)
+  }
+  get_primal_ray <- function() {
+    solver_get_primal_ray(solver)
+  }
   maximum <- function(maximize) {
     if (missing(maximize)) {
       as.logical(solver_get_sense(solver))

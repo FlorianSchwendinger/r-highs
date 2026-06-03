@@ -964,6 +964,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// solver_get_dual_ray
+Rcpp::List solver_get_dual_ray(SEXP hi);
+RcppExport SEXP _highs_solver_get_dual_ray(SEXP hiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_get_dual_ray(hi));
+    return rcpp_result_gen;
+END_RCPP
+}
+// solver_get_primal_ray
+Rcpp::List solver_get_primal_ray(SEXP hi);
+RcppExport SEXP _highs_solver_get_primal_ray(SEXP hiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type hi(hiSEXP);
+    rcpp_result_gen = Rcpp::wrap(solver_get_primal_ray(hi));
+    return rcpp_result_gen;
+END_RCPP
+}
 // solver_get_basis
 Rcpp::List solver_get_basis(SEXP hi);
 RcppExport SEXP _highs_solver_get_basis(SEXP hiSEXP) {
@@ -1152,6 +1174,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_highs_solver_get_solution", (DL_FUNC) &_highs_solver_get_solution, 1},
     {"_highs_solver_set_solution_obj", (DL_FUNC) &_highs_solver_set_solution_obj, 7},
     {"_highs_solver_set_solution_vec", (DL_FUNC) &_highs_solver_set_solution_vec, 3},
+    {"_highs_solver_get_dual_ray", (DL_FUNC) &_highs_solver_get_dual_ray, 1},
+    {"_highs_solver_get_primal_ray", (DL_FUNC) &_highs_solver_get_primal_ray, 1},
     {"_highs_solver_get_basis", (DL_FUNC) &_highs_solver_get_basis, 1},
     {"_highs_solver_set_basis", (DL_FUNC) &_highs_solver_set_basis, 3},
     {"_highs_solver_clear_basis", (DL_FUNC) &_highs_solver_clear_basis, 1},

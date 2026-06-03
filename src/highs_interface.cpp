@@ -978,6 +978,44 @@ int32_t solver_set_solution_vec(SEXP hi, IntegerVector idx, NumericVector val) {
     return static_cast<int32_t>(return_status);
 }
 
+
+// [[Rcpp::export]]
+Rcpp::List solver_get_dual_ray(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    bool has_dual_ray = false;
+    HighsInt num_row = highs->getNumRow();
+    std::vector<double> dual_ray_value(num_row);
+    // Passing a non-null buffer makes HiGHS return the ray (solving an LP if it
+    // must). A dual (Farkas) ray certifies PRIMAL INFEASIBILITY and exists only
+    // for an infeasible LP solved by simplex -- not interior point.
+    HighsStatus return_status =
+        highs->getDualRay(has_dual_ray, num_row > 0 ? dual_ray_value.data() : nullptr);
+    Rcpp::List ret = Rcpp::List::create(
+        Named("status") = static_cast<int32_t>(return_status),
+        Named("has_dual_ray") = has_dual_ray,
+        Named("dual_ray") = (has_dual_ray && num_row > 0) ? Rcpp::wrap(dual_ray_value) : R_NilValue
+    );
+    return ret;
+}
+
+
+// [[Rcpp::export]]
+Rcpp::List solver_get_primal_ray(SEXP hi) {
+    Rcpp::XPtr<Highs>highs(hi);
+    bool has_primal_ray = false;
+    HighsInt num_col = highs->getNumCol();
+    std::vector<double> primal_ray_value(num_col);
+    // A primal ray certifies PRIMAL UNBOUNDEDNESS (dual infeasibility).
+    HighsStatus return_status =
+        highs->getPrimalRay(has_primal_ray, num_col > 0 ? primal_ray_value.data() : nullptr);
+    Rcpp::List ret = Rcpp::List::create(
+        Named("status") = static_cast<int32_t>(return_status),
+        Named("has_primal_ray") = has_primal_ray,
+        Named("primal_ray") = (has_primal_ray && num_col > 0) ? Rcpp::wrap(primal_ray_value) : R_NilValue
+    );
+    return ret;
+}
+
 // solver_set_hotstart
 // HighsStatus return_status = highs->setHotStart(hotstart);
 

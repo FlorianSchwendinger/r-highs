@@ -313,6 +313,14 @@ solver_set_solution_vec <- function(hi, idx, val) {
     .Call(`_highs_solver_set_solution_vec`, hi, idx, val)
 }
 
+solver_get_dual_ray <- function(hi) {
+    .Call(`_highs_solver_get_dual_ray`, hi)
+}
+
+solver_get_primal_ray <- function(hi) {
+    .Call(`_highs_solver_get_primal_ray`, hi)
+}
+
 solver_get_basis <- function(hi) {
     .Call(`_highs_solver_get_basis`, hi)
 }

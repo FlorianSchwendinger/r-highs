@@ -613,6 +613,48 @@ hi_solver_set_sparse_solution <- function(solver, index, value) {
 }
 
 
+#' Get the Dual Ray (Farkas Infeasibility Certificate)
+#'
+#' For a primal-infeasible LP, returns the dual unbounded ray: a Farkas
+#' certificate of primal infeasibility, with one entry per constraint (row).
+#'
+#' A dual ray is available only after an LP detected to be **infeasible** and
+#' solved by the **simplex** method (the interior-point solver does not produce
+#' a ray). Disable presolve, or rely on HiGHS's postsolve, to recover the ray on
+#' the original model. Requesting the ray may solve an auxiliary LP.
+#'
+#' @param solver An object of class "highs_solver".
+#'
+#' @return A list with `status` (integer, 0 = OK), `has_dual_ray` (logical), and
+#'   `dual_ray` (numeric vector of length `n_row`, or `NULL` when no ray exists).
+#'
+#' @export
+hi_solver_get_dual_ray <- function(solver) {
+  checkmate::assert_class(solver, classes = "highs_solver")
+  solver_get_dual_ray(solver)
+}
+
+
+#' Get the Primal Ray (Unboundedness Certificate)
+#'
+#' For a primal-unbounded LP (i.e. dual-infeasible), returns the primal unbounded
+#' ray: a certificate of unboundedness, with one entry per variable (column).
+#'
+#' As with the dual ray, this is a simplex-method certificate; requesting it may
+#' solve an auxiliary LP.
+#'
+#' @param solver An object of class "highs_solver".
+#'
+#' @return A list with `status` (integer, 0 = OK), `has_primal_ray` (logical), and
+#'   `primal_ray` (numeric vector of length `n_col`, or `NULL` when no ray exists).
+#'
+#' @export
+hi_solver_get_primal_ray <- function(solver) {
+  checkmate::assert_class(solver, classes = "highs_solver")
+  solver_get_primal_ray(solver)
+}
+
+
 #' Get Basis
 #'
 #' Retrieves the current simplex basis from the solver.

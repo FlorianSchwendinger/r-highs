@@ -3,6 +3,7 @@ Type: Package
 Title: 'HiGHS' Optimization Solver
 Version: 1.14.0-1
 Authors@R: c(person("Florian", "Schwendinger", email = "FlorianSchwendinger@gmx.at", role = c("aut", "cre")),
+             person("Balasubramanian", "Narasimhan", role = c("aut"), email = "naras@stat.stanford.edu"),
              person("Dirk", "Schumacher", role = "aut"),
              person("Julian", "Hall", role = "cph"),
              person("Ivet", "Galabova", role = "cph"),
