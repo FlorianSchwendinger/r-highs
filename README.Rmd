@@ -28,10 +28,7 @@ The package can be installed from [**CRAN**](https://CRAN.R-project.org/package=
 ```{r, eval = FALSE}
 install.packages("highs")
 ```
-or [**GitLab**](https://gitlab.com/roigrp/solver/highs).
-```{r, eval = FALSE}
-remotes::install_gitlab("roigrp/solver/highs")
-```
+
 
 ### Using a preinstalled HiGHS library
 It is possible to use a precompile HiGHS library by providing
@@ -48,14 +45,14 @@ to install the **HiGHS** library to `/Z/bin/highslib`
 ```{r, eval = FALSE}
 Sys.setenv(R_HIGHS_LIB_DIR = "/Z/bin/highslib")
 install.packages("highs")
-# or 
-# remotes::install_gitlab("roigrp/solver/highs")
 ```
 
 
 # Package
 The **highs** package provides an API similar to **Rglpk** and a low level API to the **HiGHS** solver.
 For most users using `highs_solve` as shown below should be the best choice.
+
+> **Note:** The low-level API is only meant for developers. Most users should avoid it and just use the high-level API (`highs_solve`).
 
 The package functions can be grouped into the following categories:
 
@@ -235,7 +232,11 @@ HiGHS currently has the following status codes defined in `HConst.h"`.
 | `kTimeLimit`             |     13 | `"Time limit reached"`             |
 | `kIterationLimit`        |     14 | `"Iteration limit reached"`        |
 | `kUnknown`               |     15 | `"Unknown"`                        |
+| `kSolutionLimit`         |     16 | `"Solution limit reached"`         |
+| `kInterrupt`             |     17 | `"Interrupted by user"`            |
+| `kMemoryLimit`           |     18 | `"Memory limit reached"`           |
+| `kHighsInterrupt`        |     19 | `"Interrupted by HiGHS"`           |
 | `kMin`                   |      0 | `"Not Set"`                        |
-| `kMax`                   |     15 | `"Unknown"`                        |
+| `kMax`                   |     19 | `"Interrupted by HiGHS"`           |
 
 

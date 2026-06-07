@@ -565,7 +565,7 @@ solver_get_amatrix <- function(solver) {
   mat <- solver_get_constraint_matrix(solver)
   mat_formats <- c("colwise", "rowwise", "rowwise_partitioned")
   mat[["format"]] <- mat_formats[mat[["format"]]]
-  structure(mat, "highs_sparse_matrix")
+  structure(mat, class = "highs_sparse_matrix")
 }
 
 

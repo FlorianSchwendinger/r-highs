@@ -948,9 +948,14 @@ hi_solver_change_variable_bounds <- function(solver, idx, lower, upper) {
 #' This function updates the bounds of an existing constraint in the model.
 #'
 #' @param solver An object of class "highs_solver".
-#' @param idx An integer vector specifying the constraint indices.
+#' @param idx An integer vector specifying the constraint indices. Note that idx starts at 0.
 #' @param lhs The new left-hand side bound.
 #' @param rhs The new right-hand side bound.
+#'
+#' @details
+#' This is a low-level wrapper for `highs.changeRowsBounds` that only does basic
+#' checks to prevent segfaults, but otherwise behaves exactly like
+#' `highs.changeRowsBounds`.
 #'
 #' @return The solver instance with updated constraint bounds.
 #'
