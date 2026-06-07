@@ -993,15 +993,19 @@ Rcpp::List solver_get_dual_ray(SEXP hi) {
     bool has_dual_ray = false;
     HighsInt num_row = highs->getNumRow();
     std::vector<double> dual_ray_value(num_row);
-    // Passing a non-null buffer makes HiGHS return the ray (solving an LP if it
-    // must). A dual (Farkas) ray certifies PRIMAL INFEASIBILITY and exists only
-    // for an infeasible LP solved by simplex -- not interior point.
+    // A dual ray certifies DUAL UNBOUNDEDNESS (primal infeasibility).
     HighsStatus return_status =
         highs->getDualRay(has_dual_ray, num_row > 0 ? dual_ray_value.data() : nullptr);
+
+    Rcpp::RObject dual_ray_obj = R_NilValue;
+    if (has_dual_ray && num_row > 0) {
+        dual_ray_obj = Rcpp::NumericVector(dual_ray_value.begin(), dual_ray_value.end());
+    }
+
     Rcpp::List ret = Rcpp::List::create(
         Named("status") = static_cast<int32_t>(return_status),
         Named("has_dual_ray") = has_dual_ray,
-        Named("dual_ray") = (has_dual_ray && num_row > 0) ? Rcpp::wrap(dual_ray_value) : R_NilValue
+        Named("dual_ray") = dual_ray_obj
     );
     return ret;
 }
@@ -1016,10 +1020,16 @@ Rcpp::List solver_get_primal_ray(SEXP hi) {
     // A primal ray certifies PRIMAL UNBOUNDEDNESS (dual infeasibility).
     HighsStatus return_status =
         highs->getPrimalRay(has_primal_ray, num_col > 0 ? primal_ray_value.data() : nullptr);
+
+    Rcpp::RObject primal_ray_obj = R_NilValue;
+    if (has_primal_ray && num_col > 0) {
+        primal_ray_obj = Rcpp::NumericVector(primal_ray_value.begin(), primal_ray_value.end());
+    }
+
     Rcpp::List ret = Rcpp::List::create(
         Named("status") = static_cast<int32_t>(return_status),
         Named("has_primal_ray") = has_primal_ray,
-        Named("primal_ray") = (has_primal_ray && num_col > 0) ? Rcpp::wrap(primal_ray_value) : R_NilValue
+        Named("primal_ray") = primal_ray_obj
     );
     return ret;
 }
