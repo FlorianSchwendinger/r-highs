@@ -183,3 +183,28 @@ for (file in files) {
   }
   writeLines(src, file)
 }
+
+
+#
+# Fix MacM1 Warnings
+#
+
+# FilereaderLp.cpp: Fix implicit double-to-bool conversion warnings
+file <- normalizePath(file.path(src_dir, "highs/io/FilereaderLp.cpp"))
+src <- paste(readLines(file), collapse = "\n")
+src <- gsub("if \\(mat2\\[var\\]\\[i\\]\\)", "if (mat2[var][i] != 0.0)", src, perl = TRUE)
+src <- gsub("if \\(value\\) \\{", "if (value != 0.0) {", src, perl = TRUE)
+src <- gsub("if \\(column\\[iRow\\]\\)", "if (column[iRow] != 0.0)", src, perl = TRUE)
+# Fix size_t to HighsInt conversion warnings
+src <- gsub("lp\\.num_col_ = m\\.variables\\.size\\(\\);", "lp.num_col_ = static_cast<HighsInt>(m.variables.size());", src, fixed = TRUE)
+src <- gsub("lp\\.num_row_ = m\\.constraints\\.size\\(\\);", "lp.num_row_ = static_cast<HighsInt>(m.constraints.size());", src, fixed = TRUE)
+src <- gsub("hessian\\.dim_ = m\\.variables\\.size\\(\\);", "hessian.dim_ = static_cast<HighsInt>(m.variables.size());", src, fixed = TRUE)
+src <- gsub("varindex\\[m\\.variables\\[i\\]->name\\] = i;", "varindex[m.variables[i]->name] = static_cast<unsigned int>(i);", src, fixed = TRUE)
+src <- gsub("consofvarmap_index\\[lt->var\\]\\.push_back\\(i\\);", "consofvarmap_index[lt->var].push_back(static_cast<unsigned int>(i));", src, fixed = TRUE)
+writeLines(src, file)
+
+# HighsIO.cpp: Fix size_t to HighsInt conversion warning
+file <- normalizePath(file.path(src_dir, "highs/io/HighsIO.cpp"))
+src <- paste(readLines(file), collapse = "\n")
+src <- gsub("HighsInt from_string_length = from_string.length();", "HighsInt from_string_length = static_cast<HighsInt>(from_string.length());", src, fixed = TRUE)
+writeLines(src, file)

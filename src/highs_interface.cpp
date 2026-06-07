@@ -773,10 +773,10 @@ int32_t solver_add_rows(SEXP hi, NumericVector lhs, NumericVector rhs,
     IntegerVector start, IntegerVector index, NumericVector value) {
     Rcpp::XPtr<Highs>highs(hi);
     HighsStatus return_status = highs->addRows(
-        lhs.size(), //!< num_new_row = Number of new rows
+        static_cast<int32_t>(lhs.size()), //!< num_new_row = Number of new rows
         &(lhs[0]),  //!< lower = Array of size num_new_row with lower bounds
         &(rhs[0]),  //!< upper = Array of size num_new_row with upper bounds
-        value.size(), //!< num_new_nz = Number of new nonzeros
+        static_cast<int32_t>(value.size()), //!< num_new_nz = Number of new nonzeros
         &(start[0]),   //!< starts = Array of size num_new_row with start indices of the rows
         &(index[0]),   //!< indices = Array of size num_new_nz with column indices for all rows
         &(value[0])    //!< values = Array of size num_new_nz with column values for all rows
@@ -791,11 +791,11 @@ int32_t solver_add_cols(SEXP hi, NumericVector costs,
     IntegerVector start, IntegerVector index, NumericVector value) {
     Rcpp::XPtr<Highs>highs(hi);
     HighsStatus return_status = highs->addCols(
-        lower.size(), //!< num_new_col = Number of new columns
+        static_cast<int32_t>(lower.size()), //!< num_new_col = Number of new columns
         &(costs[0]),   //!< costs = Array of size num_new_col with costs
         &(lower[0]),   //!< lower = Array of size num_new_col with lower bounds
         &(upper[0]),   //!< upper = Array of size num_new_col with upper bounds
-        value.size(), //!< num_new_nz = Number of new nonzeros
+        static_cast<int32_t>(value.size()), //!< num_new_nz = Number of new nonzeros
         &(start[0]),   //!< starts = Array of size num_new_row with start indices of the columns
         &(index[0]),   //!< indices = Array of size num_new_nz with row indices for all columns
         &(value[0])    //!< values = Array of size num_new_nz with row values for all columns
@@ -889,7 +889,7 @@ std::vector<double> solver_get_row_upper(SEXP hi) {
 IntegerVector solver_get_integrality(SEXP hi) {
     Rcpp::XPtr<Highs>highs(hi);
     HighsModel model = highs->getModel();
-    int len = model.lp_.integrality_.size();
+    int len = static_cast<int>(model.lp_.integrality_.size());
     IntegerVector vec(len);
     for (int32_t i = 0; i < len; i++) {
         vec[i] = static_cast<int>(model.lp_.integrality_[i]);
@@ -920,7 +920,7 @@ Rcpp::List solver_get_constraint_matrix(SEXP hi) {
 Rcpp::IntegerVector solver_get_vartype(SEXP hi) {
     Rcpp::XPtr<Highs>highs(hi);
     const HighsLp& lp = highs->getLp();
-    int32_t m = lp.integrality_.size();
+    int32_t m = static_cast<int32_t>(lp.integrality_.size());
     IntegerVector type(m);
     for (int32_t i = 0; i < type.size(); ++i) {
         type[i] = static_cast<int32_t>(lp.integrality_[i]);
@@ -982,7 +982,7 @@ int32_t solver_set_solution_obj(SEXP hi,
 // [[Rcpp::export]]
 int32_t solver_set_solution_vec(SEXP hi, IntegerVector idx, NumericVector val) {
     Rcpp::XPtr<Highs>highs(hi);
-    HighsStatus return_status = highs->setSolution(idx.size(), &(idx[0]), &(val[0]));
+    HighsStatus return_status = highs->setSolution(static_cast<int32_t>(idx.size()), &(idx[0]), &(val[0]));
     return static_cast<int32_t>(return_status);
 }
 
