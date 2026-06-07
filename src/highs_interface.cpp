@@ -17,7 +17,15 @@ class HighsR: public Highs {
 */
 
 static void R_message_handler(HighsLogType type, const char* message, void* log_callback_data) {
-    Rcpp::Rcout << message << std::endl;
+    // Only print if log_callback_data is valid and output_flag is true
+    if (log_callback_data) {
+        Highs* highs = static_cast<Highs*>(log_callback_data);
+        const HighsOptions& options = highs->getOptions();
+        if (options.log_options.output_flag &&
+            *options.log_options.output_flag) {
+            Rcpp::Rcout << message << std::endl;
+        }
+    }
 }
 
 
@@ -196,7 +204,7 @@ RCPP_MODULE(RcppHighs) {
 // [[Rcpp::export]]
 SEXP new_solver(SEXP mpt) {
     Rcpp::XPtr<Highs> highs(new Highs(), true);
-    highs->setLogCallback(R_message_handler);
+    highs->setLogCallback(R_message_handler, highs.get());
 
     if (Rf_isNull(mpt)) {
         return Rcpp::List::create(
