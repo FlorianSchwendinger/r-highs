@@ -993,20 +993,18 @@ Rcpp::List solver_get_dual_ray(SEXP hi) {
     bool has_dual_ray = false;
     HighsInt num_row = highs->getNumRow();
     std::vector<double> dual_ray_value(num_row);
-    // A dual ray certifies DUAL UNBOUNDEDNESS (primal infeasibility).
     HighsStatus return_status =
         highs->getDualRay(has_dual_ray, num_row > 0 ? dual_ray_value.data() : nullptr);
 
-    Rcpp::RObject dual_ray_obj = R_NilValue;
-    if (has_dual_ray && num_row > 0) {
-        dual_ray_obj = Rcpp::NumericVector(dual_ray_value.begin(), dual_ray_value.end());
-    }
-
     Rcpp::List ret = Rcpp::List::create(
         Named("status") = static_cast<int32_t>(return_status),
-        Named("has_dual_ray") = has_dual_ray,
-        Named("dual_ray") = dual_ray_obj
+        Named("has_dual_ray") = has_dual_ray
     );
+    if (has_dual_ray && num_row > 0) {
+        ret["dual_ray"] = Rcpp::NumericVector(dual_ray_value.begin(), dual_ray_value.end());
+    } else {
+        ret["dual_ray"] = R_NilValue;
+    }
     return ret;
 }
 
@@ -1017,20 +1015,18 @@ Rcpp::List solver_get_primal_ray(SEXP hi) {
     bool has_primal_ray = false;
     HighsInt num_col = highs->getNumCol();
     std::vector<double> primal_ray_value(num_col);
-    // A primal ray certifies PRIMAL UNBOUNDEDNESS (dual infeasibility).
     HighsStatus return_status =
         highs->getPrimalRay(has_primal_ray, num_col > 0 ? primal_ray_value.data() : nullptr);
 
-    Rcpp::RObject primal_ray_obj = R_NilValue;
-    if (has_primal_ray && num_col > 0) {
-        primal_ray_obj = Rcpp::NumericVector(primal_ray_value.begin(), primal_ray_value.end());
-    }
-
     Rcpp::List ret = Rcpp::List::create(
         Named("status") = static_cast<int32_t>(return_status),
-        Named("has_primal_ray") = has_primal_ray,
-        Named("primal_ray") = primal_ray_obj
+        Named("has_primal_ray") = has_primal_ray
     );
+    if (has_primal_ray && num_col > 0) {
+        ret["primal_ray"] = Rcpp::NumericVector(primal_ray_value.begin(), primal_ray_value.end());
+    } else {
+        ret["primal_ray"] = R_NilValue;
+    }
     return ret;
 }
 
