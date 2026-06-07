@@ -343,20 +343,28 @@ hi_solver_set_start <- function(solver, val) {
 
 #' Run the Solver
 #'
-#' This function executes the optimization solver on the current model.
+#' Executes the optimization solver on the current model.
+#'
+#' Solver output is controlled by the `output_flag` option:
+#' use `hi_solver_set_option(solver, "output_flag", "off")` to suppress logging.
 #'
 #' @param solver An object of class "highs_solver".
+#' @param verbose a logical if TRUE, prints solver log messages to the console.
 #'
-#' @return The solver instance after optimization.
+#' @return An integer status code (-1 = error, 0 = success, 1 = warning).
 #'
 #' @examples
 #' solver <- example_solver()
 #' hi_solver_run(solver)
 #'
 #' @export
-hi_solver_run <- function(solver) {
+hi_solver_run <- function(solver, verbose = FALSE) {
   checkmate::assert_class(solver, classes = "highs_solver")
-  solver_run(solver)
+  msgs <- capture.output(status <- solver_run(solver))
+  if (isTRUE(verbose)) {
+    writeLines(msgs)
+  }
+  status
 }
 
 

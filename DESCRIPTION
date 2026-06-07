@@ -16,7 +16,7 @@ Imports: Rcpp (>= 1.0.7), checkmate
 Depends: R (>= 4.0.0)
 SystemRequirements: Bash, PkgConfig, CMAKE (>=3.16), C++17
 URL: https://gitlab.com/roigrp/solver/highs
-BugReports: https://gitlab.com/roigrp/solver/highs/-/issues
+BugReports: https://gitlab.com/roigrp/solver/highs/-/work_items
 Suggests: tinytest, knitr, rmarkdown, Matrix
 VignetteBuilder: knitr
 Biarch: FALSE

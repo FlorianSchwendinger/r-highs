@@ -465,6 +465,7 @@ highs_solve <- function(
   if (!inherits(control, "highs_control")) {
     control <- do.call(highs_control, control)
   }
+  verbose <- control$log_to_console %||% FALSE
   model <- highs_model(
     Q = Q,
     L = L,
@@ -485,7 +486,7 @@ highs_solve <- function(
     hi_solver_set_start(solver, start)
   }
 
-  run_status <- hi_solver_run(solver)
+  run_status <- hi_solver_run(solver, verbose = verbose)
   status <- solver_status(solver)
   status_message <- solver_status_message(solver)
 

@@ -4,6 +4,7 @@
 
 # Session Data files
 .RData
+.RDataTmp
 
 # User-specific files
 .Ruserdata
@@ -37,6 +38,18 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 
+# R Environment Variables
+.Renviron
+
+# pkgdown site
+docs/
+
+# translation temp files
+po/*~
+
+# VS code files
+.vscode
+
 # HTML-files
 *.html
 
@@ -57,16 +70,11 @@ vignettes/*.pdf
 *.Rhistory
 *.Rhistories
 
-# R Environment Variables
-.Renviron
-
-# pkgdown site
-docs/
-
-# translation temp files
-po/*~
-
-# VS code files
-.vscode
-
-.github/
+# Build Artifacts
+src/Makevars
+src/Makevars.win
+src/highslib/
+src/*.o
+src/*.so
+src/*.dll
+src/*.dylib
